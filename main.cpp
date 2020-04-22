@@ -88,15 +88,15 @@ void printDetails(StudentCredit* studentArr) {
 }
 
 Option resolveInput(std::string input) {
+    Option option = OptionInvalid;
     if(input == "1") {
-        return Option1;
+        option = Option1;
     } else if (input == "2") {
-        return Option2;
+        option = Option2;
     } else if (input == "3") {
-        return Option3;
+        option = Option3;
     } else if(input == "4") {
-        return Option4;
-    } else {
-        return OptionInvalid;
+        option = Option4;
     }
+    return option;
 }
