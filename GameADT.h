@@ -1,3 +1,8 @@
+
+#ifndef GAMEADT_H
+#define GAMEADT_H
+
+
 class GameADT {
     public:
 
@@ -11,3 +16,5 @@ class GameADT {
 
     private:
 };
+
+#endif //GAMEADT_H

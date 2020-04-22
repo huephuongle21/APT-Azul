@@ -1,21 +1,27 @@
-#include <string>
+
+#ifndef STUDENTCREDIT_H
+#define STUDENTCREDIT_H
+
 #include <iostream>
+#include <string>
+
+#include "Utility.h"
 
 class StudentCredit {
     public:
 
-    StudentCredit(std::string name, std::string email, std::string id);
+    StudentCredit();
 
     ~StudentCredit();
 
-    void getDetails();
+    void createStudentInfo(std::string studentArr[]);
+
+    void printDetails();
 
     private:
 
-    std::string name;
-
-    std::string email;
-
-    std::string id;
+    std::string* studentArr[STUDENT_CREDITS_LENGTH];
 
 };
+
+#endif // STUDENTCREDIT_H
