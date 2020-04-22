@@ -22,25 +22,19 @@ int main(int argc, char** argv) {
     std::string input;
     
     while(!isQuit && getline(std::cin, input)) {
-        switch(resolveInput(input)) {
-            case Option1:
-                game->newGame();
-                // if one player win => isQuit = true
-                break;
-            case Option2: 
-                game->loadGame();
-                break;
-            case Option3: 
-                printDetails(studentArr);
-                break;
-            case Option4:
-                isQuit = true;
-                break;
-            default:
-                std::cout << "Invalid Input" << std::endl;
-                break;
+        Option option = resolveInput(input);
+        if(option == Option1) {
+            game->newGame();
+        } else if(option == Option2) {
+            game->loadGame();
+        } else if(option == Option3) {
+            printDetails(studentArr);
+        } else if(option == Option4) {
+            isQuit = true;
+        } else {
+            std::cout << "Invalid Input" << std::endl;
         }
-        if(resolveInput(input) != Option4 && !std::cin.eof()) {
+        if(option != Option4 && !std::cin.eof()) {
             std::cout << USER_PROMPT << " ";
         }
     }
