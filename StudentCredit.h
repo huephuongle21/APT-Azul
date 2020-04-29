@@ -14,7 +14,7 @@ class StudentCredit {
 
     ~StudentCredit();
 
-    void createStudentInfo(std::string studentArr[]);
+    void createStudentInfo();
 
     void printDetails();
 

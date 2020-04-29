@@ -11,10 +11,9 @@ void printMenu();
 Option resolveInput(std::string input);
 
 int main(int argc, char** argv) {
-
     GameADT* game = new GameADT();
     StudentCredit* studentArr = new StudentCredit();
-    // printMenu();
+    printMenu();
     std::cout << USER_PROMPT << " ";
     bool isQuit = false;
     std::string input;
