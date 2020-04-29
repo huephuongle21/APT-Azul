@@ -30,7 +30,7 @@ unsigned int LinkedList::size() const {
 // Version of get that throws an exception when index is out of range.
 int LinkedList::get(const unsigned int index) const {
    
-   int count = 0;
+   unsigned int count = 0;
    Node* current = head;
    int returnValue = 0;
    
@@ -50,10 +50,10 @@ int LinkedList::get(const unsigned int index) const {
 }
 
 // Version of get that returns error "code" when index is out of range.
-bool LinkedList::get(const int index, int& returnValue) const {
+bool LinkedList::get(const unsigned int index, int& returnValue) const {
    
    bool error = true;
-   int count = 0;
+   unsigned int count = 0;
    Node* current = head;
    
    if (index >= 0 && index < size()) {

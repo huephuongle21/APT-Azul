@@ -26,7 +26,7 @@ public:
     * 
     */
    int get(const unsigned int index) const;
-   bool get(const int index, int& returnValue) const;
+   bool get(const unsigned int index, int& returnValue) const;
 
    /**
     * Add the value to the back of the Linked List
