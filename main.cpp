@@ -26,6 +26,7 @@ int main(int argc, char** argv) {
             game->loadGame();
         } else if(option == Option3) {
             studentArr->printDetails();
+            printMenu();
         } else if(option == Option4) {
             isQuit = true;
         } else {
