@@ -1,21 +1,22 @@
 #include <iostream>
 #include <string>
+
 #include "StudentCredit.h"
 #include "GameADT.h"
-#include "Utility.h"
-
-void printMenu();
-StudentCredit* createStudentInfo();
-void printDetails(StudentCredit* studentArr);
-
-Option resolveInput(std::string input);
+#include "Types.h"
+#include "Player.h"
 
 // Seed for generating random numbers
 void processArgcs(int argc, char** argv);
+void printMenu();
+Option resolveInput(std::string input);
 
 int main(int argc, char** argv) {
     GameADT* game = new GameADT();
-    StudentCredit* studentArr = createStudentInfo();
+    StudentCredit* studentArr = new StudentCredit();
+    
+    game->saveGame();
+    
     printMenu();
     std::cout << USER_PROMPT << " ";
     bool isQuit = false;
@@ -28,7 +29,7 @@ int main(int argc, char** argv) {
         } else if(option == Option2) {
             game->loadGame();
         } else if(option == Option3) {
-            printDetails(studentArr);
+            studentArr->printDetails();
         } else if(option == Option4) {
             isQuit = true;
         } else {
@@ -41,7 +42,7 @@ int main(int argc, char** argv) {
     std::cout << std::endl;
     std::cout << "Goodbye" << std::endl;
 
-    delete[] studentArr;
+    delete studentArr;
     delete game;
 }
 
@@ -59,26 +60,6 @@ void printMenu() {
     std::cout << "2. Load Game" << std::endl;
     std::cout << "3. Credits (Show student information)" << std::endl;
     std::cout << "4. Quit" << std::endl;    
-}
-
-StudentCredit* createStudentInfo() {
-    StudentCredit* student_1 = new StudentCredit("Hue Phuong Le", "s3687477@student.rmit.edu.au", "s3687477");
-    StudentCredit* student_2 = new StudentCredit("Erik Olivesjoe", "s3810119@student.rmit.edu.au", "s3810119");
-    StudentCredit* student_3 = new StudentCredit("Matt Meskell", "s3385819@student.rmit.edu.au", "s3385819");
-    StudentCredit* studentArr = new StudentCredit[STUDENT_CREDITS_LENGTH] {*student_1, *student_2, *student_3};
-    delete student_1;
-    delete student_2;
-    delete student_3;
-    return studentArr;
-}
-
-void printDetails(StudentCredit* studentArr) {
-    std::cout << "---------------------------------" << std::endl;
-    for(int i = 0; i < STUDENT_CREDITS_LENGTH; i++) {
-        studentArr[i].getDetails();
-        std::cout << std::endl;
-    }
-    std::cout << "---------------------------------" << std::endl;
 }
 
 Option resolveInput(std::string input) {
