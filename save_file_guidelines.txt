@@ -1,0 +1,76 @@
+# blank lines are ok
+# comments are ok. starting with a #
+# dots must be explicit (every location must be a colour or a dot)
+
+# Bag (contains up to 100 items).
+_
+# an empty lid is represented by an _
+# as our lid is an empty list, 
+lid _
+factory1
+factory2
+etc.
+factory5
+central factory
+
+# the seed for the program
+random number
+
+
+playerx
+	score
+	triangle
+	wall
+	floor
+
+
+# A game where player 1 is one move away from winning
+LRDY
+RRRR
+YYDD
+DSDD
+DJ11
+
+# centre factory
+.
+
+# random seed
+7
+
+# player 1
+A
+AB
+ABC
+ABCD
+ABC..
+ABVC.
+ABVC.
+ABVC.
+ABVC.
+ABVC.
+40
+
+# player 2
+name
+player_id
+.
+FF
+ABC
+ABCD
+ABC..
+
+# wall
+AB...
+ABVC.
+ABVC.
+ABVC.
+ABVC.
+
+# current score
+40
+
+# penalty section
+EUDD...
+
+# player who's turn it is
+player_id (int)
