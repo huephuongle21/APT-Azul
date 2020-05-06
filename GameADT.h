@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #ifndef GAMEADT_H
 #define GAMEADT_H
 
@@ -6,6 +7,12 @@
 #include "Player.h"
 #include <vector>
 #include <iostream>
+=======
+
+#ifndef GAMEADT_H
+#define GAMEADT_H
+
+>>>>>>> master
 
 class GameADT {
     public:
@@ -21,6 +28,7 @@ class GameADT {
     void saveGame();
 
     private:
+<<<<<<< HEAD
 
     LinkedList* tileBag;
 
@@ -37,3 +45,8 @@ class GameADT {
 
 #endif //GAMEADT_H
 
+=======
+};
+
+#endif //GAMEADT_H
+>>>>>>> master

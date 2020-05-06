@@ -1,10 +1,18 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 #ifndef STUDENTCREDIT_H
 #define STUDENTCREDIT_H
 
 #include <iostream>
 #include <string>
 
+<<<<<<< HEAD
 #include "Types.h"
+=======
+#include "Utility.h"
+>>>>>>> master
 
 class StudentCredit {
     public:

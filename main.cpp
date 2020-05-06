@@ -3,8 +3,12 @@
 
 #include "StudentCredit.h"
 #include "GameADT.h"
+<<<<<<< HEAD
 #include "Types.h"
 #include "Player.h"
+=======
+#include "Utility.h"
+>>>>>>> master
 
 // Seed for generating random numbers
 void processArgcs(int argc, char** argv);
@@ -14,9 +18,12 @@ Option resolveInput(std::string input);
 int main(int argc, char** argv) {
     GameADT* game = new GameADT();
     StudentCredit* studentArr = new StudentCredit();
+<<<<<<< HEAD
     
     game->saveGame();
     
+=======
+>>>>>>> master
     printMenu();
     std::cout << USER_PROMPT << " ";
     bool isQuit = false;
@@ -30,6 +37,10 @@ int main(int argc, char** argv) {
             game->loadGame();
         } else if(option == Option3) {
             studentArr->printDetails();
+<<<<<<< HEAD
+=======
+            printMenu();
+>>>>>>> master
         } else if(option == Option4) {
             isQuit = true;
         } else {
