@@ -14,7 +14,7 @@ class Player {
 
     void setCurrent(bool isCurrent);
 
-    int getPoint();
+    int getPoints();
 
     std::string getName();
 
@@ -28,7 +28,7 @@ class Player {
 
     std::string playerName;
 
-    int playerPoint;
+    int playerPoints;
     
     Board* playerBoard;
     
