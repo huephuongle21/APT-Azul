@@ -1,4 +1,7 @@
+# --- README ---
+# _ chosen to represent linked list
 # <> chosen to represent vector
+# ---SAVE BEGINS---
 # Tile Bag
 _
 # Box Lid
@@ -9,7 +12,7 @@ _
 ....
 ....
 ....
-# Discarded from Factories
+# Discards from Factories
 # (this save uses a vector to represent discards)
 <>
 # Seed for Program
@@ -57,3 +60,4 @@ F
 .....
 # Floor Line
 .......
+# ---SAVE ENDS---

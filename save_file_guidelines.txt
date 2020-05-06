@@ -2,7 +2,8 @@
 # comments are ok. starting with a #
 # dots must be explicit (every location must be a colour or a dot)
 
-bag (must have 100 items)
+# Bag (contains up to 100 items).
+_
 # an empty lid is represented by an _
 # as our lid is an empty list, 
 lid _
