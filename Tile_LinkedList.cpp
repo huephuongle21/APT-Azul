@@ -1,11 +1,16 @@
-#include "LinkedList.h"
+#include "Tile_LinkedList.h"
 
 #include <exception>
 #include <iostream>
 
-Node::Node(int value, Node* next) {
+Node::Node(TilePtr value, Node* next) {
     this->value = value;
     this->next = next;
+}
+
+Node::~Node() {
+   delete this->value;
+   this->value = nullptr;
 }
 
 LinkedList::LinkedList() {
@@ -28,11 +33,10 @@ unsigned int LinkedList::size() const {
 }
 
 // Version of get that throws an exception when index is out of range.
-int LinkedList::get(const unsigned int index) const {
-   
-   int count = 0;
+TilePtr LinkedList::get(const unsigned int index) const {
+   unsigned int count = 0;
    Node* current = head;
-   int returnValue = 0;
+   TilePtr returnValue = nullptr;
    
    if (index < size()) {
       
@@ -50,10 +54,10 @@ int LinkedList::get(const unsigned int index) const {
 }
 
 // Version of get that returns error "code" when index is out of range.
-bool LinkedList::get(const int index, int& returnValue) const {
+bool LinkedList::get(const unsigned int index, TilePtr returnValue) const {
    
    bool error = true;
-   int count = 0;
+   unsigned int count = 0;
    Node* current = head;
    
    if (index >= 0 && index < size()) {
@@ -70,17 +74,17 @@ bool LinkedList::get(const int index, int& returnValue) const {
    return error;
 }
 
-void LinkedList::addFront(int value) {
+void LinkedList::addFront(TilePtr tile) {
 
-    Node* toAdd = new Node(value, head);
+    Node* toAdd = new Node(tile, head);
     head = toAdd;
     ++length;
 
 }
 
-void LinkedList::addBack(int value) {
+void LinkedList::addBack(TilePtr tile) {
    
-   Node* toAdd = new Node(value, nullptr);
+   Node* toAdd = new Node(tile, nullptr);
 
    if (head == nullptr) {
         head = toAdd;
@@ -90,8 +94,8 @@ void LinkedList::addBack(int value) {
             current = current->next;
       }
       current->next = toAdd;
-      ++length;
    }
+   ++length;
 }
 
 void LinkedList::removeBack() {
@@ -102,7 +106,7 @@ void LinkedList::removeBack() {
 
         while (current->next != nullptr) {
             current = current->next;
-        }
+         }
 
         delete current;
         --length;
@@ -112,19 +116,19 @@ void LinkedList::removeBack() {
 
 void LinkedList::removeFront() {
    
-    if (length > 0) {
-        Node* newHead = head->next;
-        delete head;
-        head = newHead;
-        --length;
+   if (length > 0) {
+         Node* newHead = head->next;
+         delete head;
+         head = newHead;
+         --length;
    }
 }
 
 void LinkedList::clear() {
 
-    while (length > 0) {
-        removeFront();
-        --length;
-    }
+   while (length > 0) {
+      removeFront();
+      --length;
+   }
 
 }

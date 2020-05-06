@@ -1,11 +1,10 @@
-
 #ifndef STUDENTCREDIT_H
 #define STUDENTCREDIT_H
 
 #include <iostream>
 #include <string>
 
-#include "Utility.h"
+#include "Types.h"
 
 class StudentCredit {
     public:
@@ -14,7 +13,7 @@ class StudentCredit {
 
     ~StudentCredit();
 
-    void createStudentInfo(std::string studentArr[]);
+    void createStudentInfo();
 
     void printDetails();
 
