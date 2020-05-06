@@ -1,5 +1,4 @@
 # <> chosen to represent vector
-
 # Tile Bag
 _
 # Box Lid
@@ -10,10 +9,10 @@ _
 ....
 ....
 ....
-# Discarded from factory
+# Discarded from Factories
 # (this save uses a vector to represent discards)
 <>
-# Seed for Program (-1 dummy seed)
+# Seed for Program
 -1
 # --- Player 1 ---
 # Name
