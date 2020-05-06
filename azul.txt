@@ -1,5 +1,5 @@
 #Tile Bag
-R
+_
 #Box Lid
 _
 #Factory

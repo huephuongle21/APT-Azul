@@ -24,18 +24,18 @@ int main(int argc, char** argv) {
     
     while(!isQuit && getline(std::cin, input)) {
         Option option = resolveInput(input);
-        if(option == Option1) {
+        if(option == newGame) {
             game->newGame();
-        } else if(option == Option2) {
+        } else if(option == loadGame) {
             game->loadGame();
-        } else if(option == Option3) {
+        } else if(option == displayCredits) {
             studentArr->printDetails();
-        } else if(option == Option4) {
+        } else if(option == quit) {
             isQuit = true;
         } else {
             std::cout << "Invalid Input" << std::endl;
         }
-        if(option != Option4 && !std::cin.eof()) {
+        if(option != quit && !std::cin.eof()) {
             std::cout << USER_PROMPT << " ";
         }
     }
@@ -58,20 +58,20 @@ void printMenu() {
     std::cout << "----" << std::endl;
     std::cout << "1. New Game" << std::endl;
     std::cout << "2. Load Game" << std::endl;
-    std::cout << "3. Credits (Show student information)" << std::endl;
+    std::cout << "3. Display Credits" << std::endl;
     std::cout << "4. Quit" << std::endl;    
 }
 
 Option resolveInput(std::string input) {
     Option option = OptionInvalid;
     if(input == "1") {
-        option = Option1;
+        option = newGame;
     } else if (input == "2") {
-        option = Option2;
+        option = loadGame;
     } else if (input == "3") {
-        option = Option3;
+        option = displayCredits;
     } else if(input == "4") {
-        option = Option4;
+        option = quit;
     }
     return option;
 }

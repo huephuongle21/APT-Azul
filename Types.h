@@ -13,10 +13,10 @@
 #define FLOOR_LINE_SIZE         7
 
 enum Option {
-    Option1,
-    Option2,
-    Option3,
-    Option4,
+    newGame,
+    loadGame,
+    displayCredits,
+    quit,
     OptionInvalid
 };
 
