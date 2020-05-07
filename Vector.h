@@ -15,13 +15,11 @@ public:
 
    int size();
 
-   TilePtr get(int index);
+   TilePtr get(unsigned int index);
 
    void addTile(TilePtr tile);
 
-   void addTile(TilePtr tile, int index);
-
-   void removeTile(int index);
+   void removeTile(unsigned int index);
 
    void clear();
 
