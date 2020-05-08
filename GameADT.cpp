@@ -7,11 +7,12 @@
 #include <vector>
 
 GameADT::GameADT() {
+
     this->tileBag = new LinkedList();
     this->boxLid = new LinkedList();
 
-    this->player1 = new Player();
-    this->player2 = new Player();
+    this->player1 = new Player("Alice", 1);
+    this->player2 = new Player("Bob", 2);
 
     for(int i = 0; i < NUMBER_OF_FACTORY; i++) {
         for(int j = 0; j < FACTORY_SIZE; j++) {
