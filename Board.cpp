@@ -4,7 +4,6 @@
 
 Board::Board() {
     floorLineLength = 0;
-    floorLine = new TilePtr[FLOOR_LINE_SIZE];
     for (int i = 0; i != FLOOR_LINE_SIZE; ++i) {
         floorLine[i] = nullptr;
     }
@@ -13,6 +12,14 @@ Board::Board() {
             wall[i][j] = nullptr;
         }
     }
+
+    for(int i= 0; i != PATTERN_LINES_SIZE; i++) {
+        patternLines[i] = new TilePtr[i+1];
+        for(int j = 0; j != (i+1); j++) {
+            patternLines[i][j] = nullptr;
+        }
+    }
+
 }
 
 Board::~Board() {
@@ -22,7 +29,6 @@ Board::~Board() {
             floorLine[i] = nullptr;
         }
     }
-    delete[] floorLine;
 
     for(int i = 0; i < WALL_DIM; i++) {
         for(int j = 0; j < WALL_DIM; j++) {
@@ -32,6 +38,17 @@ Board::~Board() {
             }
         }
     }
+
+    for(int i = 0; i != PATTERN_LINES_SIZE; i++) {
+        for(int j = 0; j != (i+1); j++) {
+            if(patternLines[i][j] != nullptr) {
+                delete patternLines[i][j];
+                patternLines[i][j] = nullptr;
+            }
+        }
+        delete patternLines[i];
+    }
+    
 }
 
 Wall& Board::getWall() {
@@ -42,6 +59,20 @@ TilePtr* Board::getFloor() {
     return floorLine;
 }
 
-int Board::getFloorSize() {
-    return floorLineLength;
+TilePtr* Board::getPatternLines(int i) {
+    return patternLines[i];
+}
+
+void Board::setPatternLines(int row, int col, TilePtr value) {
+    patternLines[row][col] = value;
+}
+
+void Board::setWall(int row, int col, TilePtr value) {
+    wall[row][col] = value;
+}
+
+void Board::setFloor(int index, TilePtr value) {
+    // if floorLineLength > FLOOR_LINE_SIZE => add to Box Lid
+    floorLine[index] = value;
+    floorLineLength++;
 }

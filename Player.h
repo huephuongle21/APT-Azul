@@ -24,6 +24,8 @@ class Player {
 
     bool isCurrent();
 
+    void setName(std::string name);
+
     private:
 
     std::string playerName;

@@ -18,17 +18,28 @@ class Board {
 
     TilePtr* getFloor();
 
-    int getFloorSize();
+    TilePtr* getPatternLines(int i);
+
+    void setPatternLines(int row, int col, TilePtr value);
+
+    void setWall(int row, int col, TilePtr value);
+
+    void setFloor(int index, TilePtr value);
 
     private:
 
     Wall wall;
 
-    TilePtr* floorLine;
+    TilePtr floorLine[FLOOR_LINE_SIZE];
 
     int floorLineLength;
 
-    TilePtr* patternLines;
+    TilePtr* patternLines[5];
+    // TilePtr pattern_1[1];
+    // TilePtr pattern_2[2];
+    // TilePtr pattern_3[3];
+    // TilePtr pattern_4[4];
+    // TilePtr pattern_5[5];
 
 };
 

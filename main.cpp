@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
     
     game->saveGame();
     
-    printMenu();
+    //printMenu();
     std::cout << USER_PROMPT << " ";
     bool isQuit = false;
     std::string input;
@@ -41,6 +41,8 @@ int main(int argc, char** argv) {
     }
     std::cout << std::endl;
     std::cout << "Goodbye" << std::endl;
+
+    game->loadGame();
 
     delete studentArr;
     delete game;

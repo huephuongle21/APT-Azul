@@ -4,14 +4,16 @@
 #include <string>
 
 // First player tile
-#define NO_TILE '.'
+#define NO_TILE       '.'
+#define FIRST_PLAYER  'F'
 
 enum Colour {
    RED,
    YELLOW,
    DARK_BLUE,
    LIGHT_BLUE,
-   BLACK
+   BLACK,
+   WHITE
 };
 
 class Tile {

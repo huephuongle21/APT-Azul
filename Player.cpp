@@ -4,7 +4,7 @@
 Player::Player() {
     this->playerPoints = 0;
     this->playerBoard = new Board();
-    this->playerName = "";
+    this->playerName = "Player name";
     this->isCurrentPlayer = false;
 }
 
@@ -24,8 +24,12 @@ std::string Player::getName() {
     return this->playerName;
 }
 
+void Player::setName(std::string name) {
+    this->playerName = name;
+}
+
 void Player::addPoints(int points) {
-    this->playerPoint += points;
+    this->playerPoints += points;
 }
 
 Board* Player::getBoard() {
