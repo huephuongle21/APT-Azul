@@ -7,7 +7,7 @@
 
 class Player {
 
-    public:
+public:
 
     Player(std::string playerName, int id);
 
