@@ -1,11 +1,10 @@
 #include <iostream>
 
 #include "Vector.h"
-#include "Tile.h"
 
 int main(void) {
 
-    Vector *testVec = new Vector;
+    Vector* testVec = new Vector;
 
     testVec->addTile(new Tile(RED));
 
