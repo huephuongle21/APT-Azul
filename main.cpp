@@ -2,7 +2,7 @@
 #include <string>
 
 #include "StudentCredit.h"
-#include "GameADT.h"
+#include "GameManager.h"
 #include "Types.h"
 #include "Player.h"
 
@@ -12,7 +12,7 @@ void printMenu();
 Option resolveInput(std::string input);
 
 int main(int argc, char** argv) {
-    GameADT* game = new GameADT();
+    GameManager* game = new GameManager();
     StudentCredit* studentArr = new StudentCredit();
     
     game->saveGame();

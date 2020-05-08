@@ -1,5 +1,5 @@
-#ifndef GAMEADT_H
-#define GAMEADT_H
+#ifndef GAMEMANAGER_H
+#define GAMEMANAGER_H
 
 #include "Types.h"
 #include "LinkedList.h"
@@ -7,18 +7,24 @@
 #include <vector>
 #include <iostream>
 
-class GameADT {
+class GameManager {
     public:
 
-    GameADT();
+    GameManager();
 
-    ~GameADT();
+    ~GameManager();
 
     void newGame();
     
     void loadGame();
 
     void saveGame();
+
+    void swapCurrentPlayer();
+
+    int getCurrentPlayerID();
+
+    void setCurrentPlayerID(int currentPlayerID);
 
     private:
 
@@ -33,7 +39,9 @@ class GameADT {
     Player* player1;
     Player* player2;
 
+    int currentPlayerID;
+
 };
 
-#endif //GAMEADT_H
+#endif //GAMEMANAGER_H
 
