@@ -6,33 +6,32 @@
 #include <iostream>
 
 class Player {
-    public:
 
-    Player();
+public:
+
+    Player(std::string playerName, int id);
 
     ~Player();
 
-    void setCurrent(bool isCurrent);
+    std::string getName();
+
+    int getID();
 
     int getPoints();
-
-    std::string getName();
 
     void addPoints(int points);
 
     Board* getBoard();
 
-    bool isCurrent();
-
-    private:
+private:
 
     std::string playerName;
+
+    int id;
 
     int playerPoints;
     
     Board* playerBoard;
-    
-    bool isCurrentPlayer;
 
 };
 

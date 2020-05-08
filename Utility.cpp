@@ -82,9 +82,8 @@ void printCenterOfTable(std::ostream& outStream, std::vector<TilePtr>& centerOfT
 
 void printPlayer(std::ostream& outStream, Player* player) {
     std::string name = player->getName();
-    int point = player->getPoint();
-    bool current = player->isCurrent();
-    outStream << name << "\n" << point << "\n" << (current ? "T" : "F") << std::endl;
+    int point = player->getPoints();
+    outStream << name << "\n" << point << "\n" << std::endl;
     printBoard(outStream, player->getBoard());
 }
 
