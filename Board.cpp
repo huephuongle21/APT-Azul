@@ -17,17 +17,6 @@ Board::Board() {
             patternLines[i][j] = nullptr;
         }
     }
-
-    patternLines[0][0] = new Tile(RED);
-    patternLines[1][0] = new Tile(YELLOW);
-    patternLines[2][2] = new Tile(BLACK);
-
-    wall[3][3] = new Tile(LIGHT_BLUE);
-    wall[4][4] = new Tile(BLACK);
-
-    floorLine->addTile(new Tile (YELLOW));
-    floorLine->addTile(new Tile(WHITE));
-
 }
 
 Board::~Board() {

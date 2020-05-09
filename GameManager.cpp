@@ -25,19 +25,6 @@ GameManager::GameManager() {
     }
 
     centerOfTable = new Vector();
-
-    tileBag->addBack(new Tile(RED));
-    tileBag->addFront(new Tile(YELLOW));
-    boxLid->addBack(new Tile(BLACK));
-    boxLid->addFront(new Tile(YELLOW));
-
-    factories[0][1] = new Tile(RED);
-    factories[1][2] = new Tile(YELLOW);
-    factories[3][4] = new Tile(DARK_BLUE);
-    centerOfTable->addTile(new Tile(YELLOW));
-    centerOfTable->addTile(new Tile(DARK_BLUE));
-
-
 }
 
 GameManager::~GameManager() {
