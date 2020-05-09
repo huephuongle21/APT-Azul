@@ -1,12 +1,14 @@
 #ifndef ARRAY_H
 #define ARRAY_H
 
+#include <array>
+
 #include "Tile.h"
 
 class Array {
 public:
    Array(int arraySize);
-   Array(Array& other);
+   // Array(Array& other);
    ~Array();
 
    int size();
@@ -23,9 +25,10 @@ public:
 
 private:
 
-   TilePtr* tileArray;
    int length;
    int arraySize;
+
+   TilePtr* tileArray;
 };
 
 #endif // ARRAY_H
