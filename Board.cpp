@@ -3,32 +3,36 @@
 #include <iostream>
 
 Board::Board() {
-    floorLineLength = 0;
-    for (int i = 0; i != FLOOR_LINE_SIZE; ++i) {
-        floorLine[i] = nullptr;
-    }
+    floorLine = new Array(FLOOR_LINE_SIZE);
+
     for(int i = 0; i < WALL_DIM; i++) {
         for(int j = 0; j < WALL_DIM; j++) {
             wall[i][j] = nullptr;
         }
     }
 
-    for(int i= 0; i != PATTERN_LINES_SIZE; i++) {
+    for(int i = 0; i != PATTERN_LINES_SIZE; i++) {
         patternLines[i] = new TilePtr[i+1];
         for(int j = 0; j != (i+1); j++) {
             patternLines[i][j] = nullptr;
         }
     }
 
+    patternLines[0][0] = new Tile(RED);
+    patternLines[1][0] = new Tile(YELLOW);
+    patternLines[2][2] = new Tile(BLACK);
+
+    wall[3][3] = new Tile(LIGHT_BLUE);
+    wall[4][4] = new Tile(BLACK);
+
+    floorLine->addTile(new Tile (YELLOW));
+    floorLine->addTile(new Tile(WHITE));
+
 }
 
 Board::~Board() {
-    for(int i = 0; i != FLOOR_LINE_SIZE; ++i) {
-        if(floorLine[i] != nullptr) {
-            delete floorLine[i];
-            floorLine[i] = nullptr;
-        }
-    }
+    
+    // delete floorLine;
 
     for(int i = 0; i < WALL_DIM; i++) {
         for(int j = 0; j < WALL_DIM; j++) {
@@ -46,7 +50,7 @@ Board::~Board() {
                 patternLines[i][j] = nullptr;
             }
         }
-        delete patternLines[i];
+        delete[] patternLines[i];
     }
     
 }
@@ -55,24 +59,18 @@ Wall& Board::getWall() {
     return wall;
 }
 
-TilePtr* Board::getFloor() {
+Array* Board::getFloor() {
     return floorLine;
 }
 
-TilePtr* Board::getPatternLines(int i) {
-    return patternLines[i];
+TilePtr** Board::getPatternLines() {
+    return patternLines;
 }
 
-void Board::setPatternLines(int row, int col, TilePtr value) {
+void Board::addPatternLines(int row, int col, TilePtr value) {
     patternLines[row][col] = value;
 }
 
-void Board::setWall(int row, int col, TilePtr value) {
+void Board::addWall(int row, int col, TilePtr value) {
     wall[row][col] = value;
-}
-
-void Board::setFloor(int index, TilePtr value) {
-    // if floorLineLength > FLOOR_LINE_SIZE => add to Box Lid
-    floorLine[index] = value;
-    floorLineLength++;
 }

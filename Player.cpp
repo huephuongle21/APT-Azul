@@ -1,27 +1,27 @@
 
 #include "Player.h"
 
-Player::Player() {
+Player::Player(std::string playerName, int id) {
+    this->playerName = playerName;
+    this->id = id;
     this->playerPoints = 0;
     this->playerBoard = new Board();
-    this->playerName = "Player name";
-    this->isCurrentPlayer = false;
 }
 
 Player::~Player() {
     delete this->playerBoard;
 }
 
-void Player::setCurrent(bool isCurrent) {
-    this->isCurrentPlayer = isCurrent;
+std::string Player::getName() {
+    return this->playerName;
+}
+
+int Player::getID() {
+    return this->id;
 }
 
 int Player::getPoints() {
     return this->playerPoints;
-}
-
-std::string Player::getName() {
-    return this->playerName;
 }
 
 void Player::setName(std::string name) {
@@ -34,8 +34,4 @@ void Player::addPoints(int points) {
 
 Board* Player::getBoard() {
     return this->playerBoard;
-}
-
-bool Player::isCurrent() {
-    return this->isCurrentPlayer;
 }

@@ -1,55 +1,53 @@
+# ---SAVE BEGINS---
+
 #Tile Bag
-_
+YR
 #Box Lid
-_
+YU
 #Factories
+.R..
+..Y.
 ....
 ....
-....
-....
-....
+B...
 #Discards from Factories
-<>
+YB
 #Seed for Program
+10
+# Current Player's ID
+1
 # --- Player 1 ---
-# Name
-Player name
-# Score
+Alice
 0
-# Is Current Player
-F
 # Pattern Lines
-.
-..
-...
+R
+Y.
+..U
 ....
 .....
 # Wall
 .....
 .....
 .....
-.....
-.....
+...L.
+....U
 # Floor Line
-.......
+YF
 # --- Player 2 ---
-# Name
-Player name
-# Score
+Bob
 0
-# Is Current Player
-F
 # Pattern Lines
-.
-..
-...
+R
+Y.
+..U
 ....
 .....
 # Wall
 .....
 .....
 .....
-.....
-.....
+...L.
+....U
 # Floor Line
-.......
+YF
+# ---SAVE ENDS---

@@ -12,7 +12,6 @@
 #define NUMBER_OF_FACTORY       5
 #define FLOOR_LINE_SIZE         7
 #define TILE_BAG_MAXIMUM        100
-#define NUMBER_OF_PLAYER        2
 #define EMPTY_COLLECTION        '_'
 
 enum Option {

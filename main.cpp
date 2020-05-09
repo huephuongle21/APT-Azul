@@ -2,7 +2,7 @@
 #include <string>
 
 #include "StudentCredit.h"
-#include "GameADT.h"
+#include "GameManager.h"
 #include "Types.h"
 #include "Player.h"
 
@@ -12,12 +12,12 @@ void printMenu();
 Option resolveInput(std::string input);
 
 int main(int argc, char** argv) {
-    GameADT* game = new GameADT();
+    GameManager* game = new GameManager();
     StudentCredit* studentArr = new StudentCredit();
     
-    game->saveGame();
+    game->saveGame("azul.txt");
     
-    //printMenu();
+    printMenu();
     std::cout << USER_PROMPT << " ";
     bool isQuit = false;
     std::string input;
@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
         if(option == newGame) {
             game->newGame();
         } else if(option == loadGame) {
-            game->loadGame();
+            game->loadGame("azul.txt");
         } else if(option == displayCredits) {
             studentArr->printDetails();
         } else if(option == quit) {
@@ -41,8 +41,6 @@ int main(int argc, char** argv) {
     }
     std::cout << std::endl;
     std::cout << "Goodbye" << std::endl;
-
-    game->loadGame();
 
     delete studentArr;
     delete game;
