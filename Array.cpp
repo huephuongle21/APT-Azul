@@ -6,24 +6,24 @@ Array::Array(int arraySize) {
    this->arraySize = arraySize;
 
    tileArray = new TilePtr[arraySize];
-   for (int i = 0; i != arraySize; ++i) {
+   for (int i = 0; i != 5; ++i) {
       tileArray[i] = nullptr;
    }
 }
 
-Array::Array(Array& other) :
-   Array()
-{
-   length = other.length;
+// Array::Array(Array& other) :
+//    Array()
+// {
+//    length = other.length;
 
-   for (int i = 0; i != length; ++i) {
-      tileArray[i] = new tilePtr(*other.tileArray[i]);
-   }
-}
+//    for (int i = 0; i != length; ++i) {
+//       tileArray[i] = new tilePtr(*other.tileArray[i]);
+//    }
+// }
 
 Array::~Array() {
    clear();
-   delete tile;
+   delete tileArray;
 }
 
 int Array::size() {
@@ -74,8 +74,11 @@ void Array::removeTile(int index) {
 }
 
 void Array::clear() {
-   for (int i = 0; i != length; ++i) {
-      delete tileArray[i];
-      tileArray[i] = nullptr;
+   for (int i = 0; i != arraySize; ++i) {
+      if(tileArray[i] != nullptr) {
+         delete tileArray[i];
+         tileArray[i] = nullptr;
+      }
    }
+   length = 0;
 }
