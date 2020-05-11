@@ -1,17 +1,17 @@
 # ---SAVE BEGINS---
 
 #Tile Bag
-RURURU
+_
 #Box Lid
 _
 #Factories
-R.B.
-.R..
-..B.
-L.L.
-Y.Y.
+....
+....
+....
+....
+....
 #Discards from Factories
-RYURYURYU
+_
 #Seed for Program
 10
 # Current Player's ID
@@ -20,34 +20,34 @@ RYURYURYU
 Alice
 0
 # Pattern Lines
-R
-.R
-U.F
-.L.F
-BUL.B
+.
+..
+...
+....
+.....
 # Wall
-RR.Y.
-BB..L
-..Y..
-...L.
-U...U
+.....
+.....
+.....
+.....
+.....
 # Floor Line
-RYRYRY
+_
 # --- Player 2 ---
 Bob
 0
 # Pattern Lines
-R
-R.
-.U.
-.B.F
-LFULB
+.
+..
+...
+....
+.....
 # Wall
-.RY..
-.RL..
-...U.
-..B.Y
-BL.U.
+.....
+.....
+.....
+.....
+.....
 # Floor Line
-BLBLBL
+_
 # ---SAVE ENDS---
