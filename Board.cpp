@@ -21,7 +21,7 @@ Board::Board() {
 
 Board::~Board() {
     
-    // delete floorLine;
+    delete floorLine;
 
     for(int i = 0; i < WALL_DIM; i++) {
         for(int j = 0; j < WALL_DIM; j++) {

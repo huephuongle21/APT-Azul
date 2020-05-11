@@ -4,7 +4,6 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <vector>
 
 GameManager::GameManager() {
 
@@ -20,11 +19,12 @@ GameManager::GameManager() {
 
     for(int i = 0; i < NUMBER_OF_FACTORY; i++) {
         for(int j = 0; j < FACTORY_SIZE; j++) {
-            this->factories[i][j] = nullptr;
+            factories[i][j] = nullptr;
         }
     }
 
     centerOfTable = new Vector();
+
 }
 
 GameManager::~GameManager() {
@@ -35,8 +35,8 @@ GameManager::~GameManager() {
 
     for(int i = 0; i < NUMBER_OF_FACTORY; i++) {
         for(int j = 0; j < FACTORY_SIZE; j++) {
-            this->factories[i][j] = nullptr;
             delete this->factories[i][j];
+            this->factories[i][j] = nullptr;
         }
     }
 
@@ -48,7 +48,6 @@ void GameManager::newGame() {
 }
 
 void GameManager::loadGame(std::string filename) {
-    std::string filename(filename);
     std::ifstream inFile;
     inFile.open(filename);
 
@@ -62,7 +61,6 @@ void GameManager::loadGame(std::string filename) {
 }
 
 void GameManager::saveGame(std::string filename) {
-    std::string filename(filename);
     std::ofstream outFile;
     outFile.open(filename);
 

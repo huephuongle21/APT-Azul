@@ -16,6 +16,13 @@ Vector::Vector(Vector& other) :
 }
 
 Vector::~Vector() {
+   for(TilePtr tile : tileVector) {
+      if(tile != nullptr) {
+         delete tile;
+         tile = nullptr;
+      }
+   }
+   clear();
 }
 
  int Vector::size() {

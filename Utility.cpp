@@ -250,3 +250,34 @@ void readBoard(std::vector<std::string>& lines, int* i, Board* board) {
 
     *i = index;
 }
+
+void printBoard(std::ostream& outStream, Wall& wall, TilePtr** patternLines, Array* floorLine) {
+    for(int row = 0; row != PATTERN_LINES_SIZE; row++) {
+        for(int col = 0; col != PATTERN_LINES_SIZE; col++) {
+            if((col + 1) >= (PATTERN_LINES_SIZE - row)) {
+                TilePtr tile = patternLines[row][col-(PATTERN_LINES_SIZE-row-1)];
+                if(tile == nullptr) {
+                    outStream << NO_TILE;
+                } else {
+                    outStream << tile->getColourByChar();
+                }               
+            } else {
+                outStream << " ";
+            }
+
+            if(col == PATTERN_LINES_SIZE - 1) {
+                outStream << " || ";
+                for(int wCol = 0; wCol != WALL_DIM; wCol++) {
+                    if(wall[row][wCol] != nullptr) {
+                        outStream << wall[row][wCol]->getColourByChar();
+                    } else {
+                        outStream << NO_TILE;
+                    }
+                }
+            }
+        }
+        outStream << "\n";
+    }
+    outStream << "broken: ";
+    printFloorLine(outStream, floorLine);
+}

@@ -11,6 +11,8 @@ Node::Node(TilePtr value, Node* next) {
 Node::~Node() {
    delete this->value;
    this->value = nullptr;
+   delete this->next;
+   this->next = nullptr;
 }
 
 LinkedList::LinkedList() {
