@@ -4,7 +4,7 @@
 #include "Types.h"
 #include "LinkedList.h"
 #include "Player.h"
-#include <vector>
+#include "Vector.h"
 #include <iostream>
 
 class GameManager {
@@ -16,15 +16,27 @@ class GameManager {
 
     void newGame();
     
-    void loadGame();
+    void loadGame(std::string filename);
 
-    void saveGame();
+    void saveGame(std::string filename);
 
     void swapCurrentPlayer();
 
     int getCurrentPlayerID();
 
     void setCurrentPlayerID(int currentPlayerID);
+
+    LinkedList* getTileBag();
+
+    LinkedList* getBoxLid();
+
+    Factory* getFactory();
+
+    Vector* getCenter();
+
+    Player* getPlayer(int id);
+
+    int getSeedNumber();
 
     private:
 
@@ -34,12 +46,14 @@ class GameManager {
 
     Factory factories[NUMBER_OF_FACTORY];
 
-    std::vector<TilePtr> centerOfTable;
+    Vector* centerOfTable;
 
     Player* player1;
     Player* player2;
 
     int currentPlayerID;
+
+    int seedNumber;
 
 };
 

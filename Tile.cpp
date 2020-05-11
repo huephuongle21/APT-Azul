@@ -28,6 +28,8 @@ char Tile::getColourByChar() {
         returnColour = 'L';
     } else if (colour == BLACK) {
         returnColour = 'U';
+    } else if (colour == WHITE) {
+        returnColour = FIRST_PLAYER;
     }
     return returnColour;
 }

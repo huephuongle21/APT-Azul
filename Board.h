@@ -3,6 +3,7 @@
 
 #include "Types.h"
 #include "Tile.h"
+#include <array>
 
 #include <string>
 #include <iostream>
@@ -16,20 +17,27 @@ class Board {
 
     Wall& getWall();
 
-    TilePtr* getFloor();
+    void addFloorLine(TilePtr value);
 
-    int getFloorSize();
+    void addPatternLines(int row, int col, TilePtr value);
+
+    void addWall(int row, int col, TilePtr value);
+
+    TilePtr** getPatternLines();
+
+    std::array<TilePtr, FLOOR_LINE_SIZE>& getFloorLine();
+
+    int getLength();
 
     private:
 
     Wall wall;
 
-    TilePtr* floorLine;
+    std::array <TilePtr, FLOOR_LINE_SIZE> floorLine;
 
-    int floorLineLength;
+    int length;
 
-    TilePtr* patternLines;
-
+    TilePtr* patternLines[PATTERN_LINES_SIZE];
 };
 
 #endif // BOARD_H

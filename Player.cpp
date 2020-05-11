@@ -24,6 +24,10 @@ int Player::getPoints() {
     return this->playerPoints;
 }
 
+void Player::setName(std::string name) {
+    this->playerName = name;
+}
+
 void Player::addPoints(int points) {
     this->playerPoints += points;
 }

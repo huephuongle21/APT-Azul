@@ -4,7 +4,6 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <vector>
 
 GameManager::GameManager() {
 
@@ -16,15 +15,16 @@ GameManager::GameManager() {
 
     currentPlayerID = player1->getID();
 
-
+    seedNumber = 10;
 
     for(int i = 0; i < NUMBER_OF_FACTORY; i++) {
         for(int j = 0; j < FACTORY_SIZE; j++) {
-            this->factories[i][j] = nullptr;
+            factories[i][j] = nullptr;
         }
     }
 
-    this->centerOfTable = {};
+    centerOfTable = new Vector();
+
 }
 
 GameManager::~GameManager() {
@@ -35,43 +35,39 @@ GameManager::~GameManager() {
 
     for(int i = 0; i < NUMBER_OF_FACTORY; i++) {
         for(int j = 0; j < FACTORY_SIZE; j++) {
-            this->factories[i][j] = nullptr;
             delete this->factories[i][j];
+            this->factories[i][j] = nullptr;
         }
     }
 
-    for(unsigned int i = 0; i < centerOfTable.size(); ++i) {
-        delete centerOfTable[i];
-    }
-    centerOfTable.clear();
+    delete centerOfTable;
 }
 
 void GameManager::newGame() {
     
 }
 
-void GameManager::loadGame() {
-    std::string filename("azul.txt");
+void GameManager::loadGame(std::string filename) {
     std::ifstream inFile;
     inFile.open(filename);
 
     if(inFile.fail()) {
         std::cout << "File does not exist" << std::endl;
     } else {
-        readGame(inFile, tileBag, boxLid, player1, player2, factories, centerOfTable);
+        readGame(inFile, tileBag, boxLid, &currentPlayerID, player1, player2, factories, centerOfTable, &seedNumber);
         inFile.close();
     }
+    printGame(std::cout, tileBag, boxLid, currentPlayerID, player1, player2, factories, centerOfTable, seedNumber);
 }
 
-void GameManager::saveGame() {
-    std::string filename("azul.txt");
+void GameManager::saveGame(std::string filename) {
     std::ofstream outFile;
     outFile.open(filename);
 
     if(outFile.fail()) {
         std::cout << "File does not exist" << std::endl;
     } else {
-        printGame(outFile, tileBag, boxLid, player1, player2, factories, centerOfTable);
+        printGame(outFile, tileBag, boxLid, currentPlayerID, player1, player2, factories, centerOfTable, seedNumber);
         outFile.close();
     }   
 }
@@ -90,4 +86,32 @@ int GameManager::getCurrentPlayerID() {
 
 void GameManager::setCurrentPlayerID(int currentPlayerID) {
     this->currentPlayerID = currentPlayerID;
+}
+
+LinkedList* GameManager::getTileBag() {
+    return tileBag;
+}
+
+LinkedList* GameManager::getBoxLid() {
+    return boxLid;
+}
+
+Factory* GameManager::getFactory() {
+    return factories;
+}
+
+Vector* GameManager::getCenter() {
+    return centerOfTable;
+}
+
+Player* GameManager::getPlayer(int id) {
+    if(id == 1) {
+        return player1;
+    } else {
+        return player2;
+    }
+}
+
+int GameManager::getSeedNumber() {
+    return seedNumber;
 }

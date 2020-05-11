@@ -1,35 +1,53 @@
+# ---SAVE BEGINS---
+
 #Tile Bag
-_
+RURURU
 #Box Lid
 _
-#Factory
-....
-....
-....
-....
-....
-#Center Of Table
-_
-#Random number
-#Player1
+#Factories
+R.B.
+.R..
+..B.
+L.L.
+Y.Y.
+#Discards from Factories
+RYURYURYU
+#Seed for Program
+10
+# Current Player's ID
+1
+# --- Player 1 ---
 Alice
 0
-
-.....
-.....
-.....
-.....
-.....
-
-_
-#Player2
+# Pattern Lines
+R
+.R
+U.F
+.L.F
+BUL.B
+# Wall
+RR.Y.
+BB..L
+..Y..
+...L.
+U...U
+# Floor Line
+RYRYRY
+# --- Player 2 ---
 Bob
 0
-
-.....
-.....
-.....
-.....
-.....
-
-_
+# Pattern Lines
+R
+R.
+.U.
+.B.F
+LFULB
+# Wall
+.RY..
+.RL..
+...U.
+..B.Y
+BL.U.
+# Floor Line
+BLBLBL
+# ---SAVE ENDS---
