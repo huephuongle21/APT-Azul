@@ -1,5 +1,4 @@
 #include "Utility.h"
-#include <vector>
 #include <fstream>
 #include <iostream>
 
@@ -105,7 +104,7 @@ void printBoard(std::ostream& outStream, Board* board) {
     outStream << "# Wall" << std::endl;
     printWall(outStream, board->getWall());
     outStream << "# Floor Line" << std::endl;
-    printFloorLine(outStream, board->getFloor());
+    printFloorLine(outStream, board->getFloorLine(), board->getLength());
 }
 
 void printPatternLines(std::ostream& outStream, TilePtr** patternLines) {
@@ -134,14 +133,13 @@ void printWall(std::ostream& outStream, Wall& wall) {
     }
 }
 
-void printFloorLine(std::ostream& outStream, Array* floorLine) {
-    int size = floorLine->size();
-    if(size == 0) {
+void printFloorLine(std::ostream& outStream, std::array<TilePtr, FLOOR_LINE_SIZE>& floorLine, int length) {
+    if(length == 0) {        
         outStream << EMPTY_COLLECTION;
     } else {
-        for(int i = 0; i != size; i++) {
-            if(floorLine->get(i) != nullptr) {
-                outStream << floorLine->get(i)->getColourByChar();
+        for(int i = 0; i != length; i++) {
+            if(floorLine[i] != nullptr) {
+                outStream << floorLine[i]->getColourByChar();
             } 
         }
     }
@@ -244,14 +242,14 @@ void readBoard(std::vector<std::string>& lines, int* i, Board* board) {
     if(lines[index][0] != EMPTY_COLLECTION) {
         for(int pos = 0; pos != size; pos++) {
             TilePtr tile = new Tile(readColour(lines[index][pos]));
-            board->getFloor()->addTile(tile);
+            board->addFloorLine(tile);
         }
     }
 
     *i = index;
 }
 
-void printBoard(std::ostream& outStream, Wall& wall, TilePtr** patternLines, Array* floorLine) {
+void printBoard(std::ostream& outStream, Wall& wall, TilePtr** patternLines, std::array<TilePtr, FLOOR_LINE_SIZE>& floorLine, int length) {
     for(int row = 0; row != PATTERN_LINES_SIZE; row++) {
         for(int col = 0; col != PATTERN_LINES_SIZE; col++) {
             if((col + 1) >= (PATTERN_LINES_SIZE - row)) {
@@ -279,5 +277,5 @@ void printBoard(std::ostream& outStream, Wall& wall, TilePtr** patternLines, Arr
         outStream << "\n";
     }
     outStream << "broken: ";
-    printFloorLine(outStream, floorLine);
+    printFloorLine(outStream, floorLine, length);
 }

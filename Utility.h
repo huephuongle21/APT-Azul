@@ -6,7 +6,6 @@
 #include "Player.h"
 #include "Board.h"
 #include "Vector.h"
-#include "Array.h"
 
 Colour readColour(char c);
 
@@ -21,7 +20,7 @@ void printPlayer(std::ostream& outStream, Player* player);
 
 void printBoard(std::ostream& outStream, Board* board);
 
-void printFloorLine(std::ostream& outStream, Array* floorLine);
+void printFloorLine(std::ostream& outStream, std::array<TilePtr, FLOOR_LINE_SIZE>& floorLine, int length);
 
 void printWall(std::ostream& outStream, Wall& wall);
 
@@ -30,7 +29,7 @@ void printPatternLines(std::ostream& outStream, TilePtr** patternLines);
 void printLinkedList(std::ostream& outStream, LinkedList* list);
 
 // Print board during the game
-void printBoard(std::ostream& outStream, Wall& wall, TilePtr** patternLines, Array* floorLine);
+void printBoard(std::ostream& outStream, Wall& wall, TilePtr** patternLines, std::array<TilePtr, FLOOR_LINE_SIZE>& floorLine, int length);
 
 void readGame(std::istream& inStream, LinkedList* tileBag, LinkedList* boxLid, int* currentPlayerID,
         Player* player1, Player* player2, Factory factories[], Vector* centerOfTable, int* seedNumber);

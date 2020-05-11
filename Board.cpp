@@ -3,7 +3,8 @@
 #include <iostream>
 
 Board::Board() {
-    floorLine = new Array(FLOOR_LINE_SIZE);
+    floorLine = {};
+    length = 0;
 
     for(int i = 0; i < WALL_DIM; i++) {
         for(int j = 0; j < WALL_DIM; j++) {
@@ -21,7 +22,13 @@ Board::Board() {
 
 Board::~Board() {
     
-    delete floorLine;
+    for(TilePtr tile : floorLine) {
+        if(tile != nullptr) {
+            delete tile;
+            tile = nullptr;
+        }
+    }
+    length = 0;
 
     for(int i = 0; i < WALL_DIM; i++) {
         for(int j = 0; j < WALL_DIM; j++) {
@@ -48,8 +55,17 @@ Wall& Board::getWall() {
     return wall;
 }
 
-Array* Board::getFloor() {
+std::array<TilePtr, FLOOR_LINE_SIZE>& Board::getFloorLine() {
     return floorLine;
+}
+
+void Board::addFloorLine(TilePtr value) {
+    floorLine[length] = value;
+    length++;
+}
+
+int Board::getLength() {
+    return length;
 }
 
 TilePtr** Board::getPatternLines() {

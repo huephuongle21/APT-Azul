@@ -3,7 +3,7 @@
 
 #include "Types.h"
 #include "Tile.h"
-#include "Array.h"
+#include <array>
 
 #include <string>
 #include <iostream>
@@ -17,7 +17,7 @@ class Board {
 
     Wall& getWall();
 
-    Array* getFloor();
+    void addFloorLine(TilePtr value);
 
     void addPatternLines(int row, int col, TilePtr value);
 
@@ -25,11 +25,17 @@ class Board {
 
     TilePtr** getPatternLines();
 
+    std::array<TilePtr, FLOOR_LINE_SIZE>& getFloorLine();
+
+    int getLength();
+
     private:
 
     Wall wall;
 
-    Array* floorLine;
+    std::array <TilePtr, FLOOR_LINE_SIZE> floorLine;
+
+    int length;
 
     TilePtr* patternLines[PATTERN_LINES_SIZE];
 };

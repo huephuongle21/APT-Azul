@@ -87,3 +87,31 @@ int GameManager::getCurrentPlayerID() {
 void GameManager::setCurrentPlayerID(int currentPlayerID) {
     this->currentPlayerID = currentPlayerID;
 }
+
+LinkedList* GameManager::getTileBag() {
+    return tileBag;
+}
+
+LinkedList* GameManager::getBoxLid() {
+    return boxLid;
+}
+
+Factory* GameManager::getFactory() {
+    return factories;
+}
+
+Vector* GameManager::getCenter() {
+    return centerOfTable;
+}
+
+Player* GameManager::getPlayer(int id) {
+    if(id == 1) {
+        return player1;
+    } else {
+        return player2;
+    }
+}
+
+int GameManager::getSeedNumber() {
+    return seedNumber;
+}

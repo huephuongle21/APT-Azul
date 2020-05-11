@@ -26,6 +26,18 @@ class GameManager {
 
     void setCurrentPlayerID(int currentPlayerID);
 
+    LinkedList* getTileBag();
+
+    LinkedList* getBoxLid();
+
+    Factory* getFactory();
+
+    Vector* getCenter();
+
+    Player* getPlayer(int id);
+
+    int getSeedNumber();
+
     private:
 
     LinkedList* tileBag;
