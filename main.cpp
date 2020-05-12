@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
     GameManager* game = new GameManager();
     StudentCredit* studentArr = new StudentCredit();
     
-    game->saveGame();
+    game->saveGame("azul.txt");
     
     printMenu();
     std::cout << USER_PROMPT << " ";
@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
         if(option == newGame) {
             game->newGame();
         } else if(option == loadGame) {
-            game->loadGame();
+            game->loadGame("azul.txt");
         } else if(option == displayCredits) {
             studentArr->printDetails();
         } else if(option == quit) {

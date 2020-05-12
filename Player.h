@@ -23,6 +23,8 @@ public:
 
     Board* getBoard();
 
+    void setName(std::string name);
+
 private:
 
     std::string playerName;
