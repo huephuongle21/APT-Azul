@@ -3,7 +3,9 @@
 #include <iostream>
 
 Colour readColour(char c) {
+
     Colour colour = RED;
+    
     if(c == 'R') {
         colour = RED;
     } else if (c == 'Y') {

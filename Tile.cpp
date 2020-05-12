@@ -5,7 +5,7 @@ Tile::Tile(Colour colour) {
 }
    
 Tile::Tile(Tile& other) {
-
+    this->colour = other.colour;
 }
 
 Tile::~Tile() {
@@ -17,7 +17,9 @@ Tile::~Tile() {
 */
 
 char Tile::getColourByChar() {
+
     char returnColour = NO_TILE;
+    
     if(colour == RED) {
         returnColour = 'R';
     } else if(colour == YELLOW) {
@@ -32,4 +34,8 @@ char Tile::getColourByChar() {
         returnColour = FIRST_PLAYER;
     }
     return returnColour;
+}
+
+Colour Tile::getColour() {
+    return this->colour;
 }

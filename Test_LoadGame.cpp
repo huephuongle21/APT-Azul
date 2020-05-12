@@ -15,7 +15,7 @@ int main(void) {
     LinkedList* bag = game->getTileBag();
     LinkedList* box = game->getBoxLid();
 
-    Factory* factories = game->getFactory();
+    Factory* factories = game->getFactories();
 
     Vector* centerOfTable = game->getCenter();
     

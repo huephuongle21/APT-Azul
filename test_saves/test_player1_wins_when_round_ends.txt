@@ -1,0 +1,81 @@
+# ---SAVE BEGINS---
+
+# Tile Bag
+_
+
+# Box Lid
+_
+
+# Factories
+_
+_
+_
+_
+_
+
+# Discards from Factories
+_
+
+# Seed for Program
+-1
+
+# Current Player's ID
+1
+
+# --- Player 1 ---
+
+# Name
+Alice
+
+# Player ID
+1
+
+# Score 
+0
+
+# Pattern Lines
+R
+_
+_
+_
+_
+
+# Wall
+BY.UL
+_
+_
+_
+_
+
+# Floor Line
+_
+
+# --- Player 2 ---
+
+# Name
+Bob
+
+# Player ID
+2
+
+# Score 
+0
+
+# Pattern Lines
+_
+_
+_
+_
+_
+
+# Wall
+_
+_
+_
+_
+_
+
+# Floor Line
+_
+
+# ---SAVE ENDS---

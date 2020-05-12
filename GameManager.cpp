@@ -1,4 +1,5 @@
 #include "GameManager.h"
+#include "SetupManager.h"
 #include "Utility.h"
 
 #include <iostream>
@@ -44,6 +45,11 @@ GameManager::~GameManager() {
 }
 
 void GameManager::newGame() {
+
+    SetupManager* sm = new SetupManager(this->seedNumber);
+
+    sm->populateTileBag(tileBag);
+    sm->populateFactories(tileBag, factories, boxLid);
     
 }
 
@@ -96,7 +102,7 @@ LinkedList* GameManager::getBoxLid() {
     return boxLid;
 }
 
-Factory* GameManager::getFactory() {
+Factory* GameManager::getFactories() {
     return factories;
 }
 
@@ -115,3 +121,4 @@ Player* GameManager::getPlayer(int id) {
 int GameManager::getSeedNumber() {
     return seedNumber;
 }
+
