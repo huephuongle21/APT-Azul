@@ -30,7 +30,7 @@ class GameManager {
 
     LinkedList* getBoxLid();
 
-    Factory* getFactory();
+    Factory* getFactories();
 
     Vector* getCenter();
 
