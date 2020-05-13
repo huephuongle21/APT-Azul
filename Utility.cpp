@@ -59,7 +59,7 @@ void printLinkedList(std::ostream& outStream, LinkedList* list) {
     } else {
         for(int i = 0; i != length; i++) {
             if(list->get(i) != nullptr) {
-                outStream << list->get(i)->getColourByChar();
+                outStream << list->get(i)->getColourAsChar();
             }
         }
     }
@@ -72,7 +72,7 @@ void printFactory(std::ostream& outStream, Factory factories[]) {
             if(factories[i][j] == nullptr) {
                 outStream << NO_TILE;
             } else {
-                outStream << factories[i][j]->getColourByChar();
+                outStream << factories[i][j]->getColourAsChar();
             }
         } 
         outStream << std::endl;
@@ -86,7 +86,7 @@ void printCenter(std::ostream& outStream, Vector* centerOfTable) {
     } else {
         for(int i = 0; i != size; i++) {
             if(centerOfTable->get(i) != nullptr) {
-                outStream << centerOfTable->get(i)->getColourByChar();
+                outStream << centerOfTable->get(i)->getColourAsChar();
             }
         }
     }
@@ -115,7 +115,7 @@ void printPatternLines(std::ostream& outStream, TilePtr** patternLines) {
             if(patternLines[i][j] == nullptr) {
                 outStream << NO_TILE;
             } else {
-                outStream << patternLines[i][j]->getColourByChar();
+                outStream << patternLines[i][j]->getColourAsChar();
             }
         }
         outStream << std::endl;
@@ -128,7 +128,7 @@ void printWall(std::ostream& outStream, Wall& wall) {
             if(wall[i][j] == nullptr) {
                 outStream << NO_TILE;
             } else {
-                outStream << wall[i][j]->getColourByChar();
+                outStream << wall[i][j]->getColourAsChar();
             }
         }
         outStream << std::endl;
@@ -141,7 +141,7 @@ void printFloorLine(std::ostream& outStream, std::array<TilePtr, FLOOR_LINE_SIZE
     } else {
         for(int i = 0; i != length; i++) {
             if(floorLine[i] != nullptr) {
-                outStream << floorLine[i]->getColourByChar();
+                outStream << floorLine[i]->getColourAsChar();
             } 
         }
     }
@@ -259,7 +259,7 @@ void printBoard(std::ostream& outStream, Wall& wall, TilePtr** patternLines, std
                 if(tile == nullptr) {
                     outStream << NO_TILE;
                 } else {
-                    outStream << tile->getColourByChar();
+                    outStream << tile->getColourAsChar();
                 }               
             } else {
                 outStream << " ";
@@ -269,7 +269,7 @@ void printBoard(std::ostream& outStream, Wall& wall, TilePtr** patternLines, std
                 outStream << " || ";
                 for(int wCol = 0; wCol != WALL_DIM; wCol++) {
                     if(wall[row][wCol] != nullptr) {
-                        outStream << wall[row][wCol]->getColourByChar();
+                        outStream << wall[row][wCol]->getColourAsChar();
                     } else {
                         outStream << NO_TILE;
                     }

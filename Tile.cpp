@@ -16,7 +16,7 @@ Tile::~Tile() {
 * Get the Tile colour
 */
 
-char Tile::getColourByChar() {
+char Tile::getColourAsChar() {
 
     char returnColour = NO_TILE;
     
