@@ -25,7 +25,7 @@ public:
    /**
     * Get the Tile colour
     */
-   char getColourByChar();
+   char getColourAsChar();
    Colour getColour();
 
 private:
