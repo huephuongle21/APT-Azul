@@ -15,13 +15,7 @@ Vector::Vector(Vector& other) :
    
 }
 
-Vector::~Vector() {
-   for(TilePtr tile : tileVector) {
-      if(tile != nullptr) {
-         delete tile;
-         tile = nullptr;
-      }
-   }
+Vector::~Vector() { 
    clear();
 }
 
@@ -29,8 +23,8 @@ Vector::~Vector() {
    return tileVector.size();
 }
 
-TilePtr Vector::get(unsigned int index) {
-   TilePtr tile = nullptr;
+char Vector::get(unsigned int index) {
+   char tile = NO_TILE;
    if (index >=0 && index < tileVector.size()) {
       tile = tileVector.at(index);
    }
@@ -38,7 +32,7 @@ TilePtr Vector::get(unsigned int index) {
    return tile;
 }
 
-void Vector::addTile(TilePtr tile) {
+void Vector::addTile(char tile) {
    tileVector.push_back(tile);
 }
 

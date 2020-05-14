@@ -1,7 +1,6 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-#include "Tile.h"
 #include <vector>
 
 #define STUDENT_CREDITS_LENGTH  3
@@ -16,6 +15,14 @@
 #define TILE_BAG_MAXIMUM        100
 #define EMPTY_COLLECTION        '_'
 
+#define NO_TILE       '.'
+#define RED           'R'
+#define YELLOW        'Y'
+#define DARK_BLUE     'B'
+#define LIGHT_BLUE    'L'
+#define BLACK         'U'
+#define FIRST_PLAYER  'F'
+
 enum Option {
     newGame,
     loadGame,
@@ -24,7 +31,7 @@ enum Option {
     OptionInvalid
 };
 
-typedef TilePtr Factory[FACTORY_SIZE];
-typedef TilePtr Wall[WALL_DIM][WALL_DIM];
+typedef char Factory[FACTORY_SIZE];
+typedef char Wall[WALL_DIM][WALL_DIM];
 
 #endif // TYPES_H

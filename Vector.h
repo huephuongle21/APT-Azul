@@ -3,9 +3,7 @@
 #define VECTOR_H 
 
 #include <vector>
-
-#include "Tile.h"
-
+#include "Types.h"
 
 class Vector {
 public:
@@ -15,9 +13,9 @@ public:
 
    int size();
 
-   TilePtr get(unsigned int index);
+   char get(unsigned int index);
 
-   void addTile(TilePtr tile);
+   void addTile(char tile);
 
    void removeTile(unsigned int index);
 
@@ -25,7 +23,7 @@ public:
 
 private:
 
-   std::vector<TilePtr> tileVector;
+   std::vector<char> tileVector;
 };
 
 #endif // VECTOR_H

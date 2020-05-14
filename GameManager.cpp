@@ -8,48 +8,27 @@
 
 GameManager::GameManager() {
 
-    this->tileBag = new LinkedList();
-    this->boxLid = new LinkedList();
-
     this->player1 = new Player("Alice", 1);
     this->player2 = new Player("Bob", 2);
 
     currentPlayerID = player1->getID();
 
-    seedNumber = 10;
-
-    for(int i = 0; i < NUMBER_OF_FACTORY; i++) {
-        for(int j = 0; j < FACTORY_SIZE; j++) {
-            factories[i][j] = nullptr;
-        }
-    }
-
-    centerOfTable = new Vector();
+    this->table = new Table();
 
 }
 
 GameManager::~GameManager() {
     delete player1;
     delete player2;
-    delete tileBag;
-    delete boxLid;
-
-    for(int i = 0; i < NUMBER_OF_FACTORY; i++) {
-        for(int j = 0; j < FACTORY_SIZE; j++) {
-            delete this->factories[i][j];
-            this->factories[i][j] = nullptr;
-        }
-    }
-
-    delete centerOfTable;
+    delete table;
 }
 
 void GameManager::newGame() {
 
-    SetupManager* sm = new SetupManager(this->seedNumber);
+    // SetupManager* sm = new SetupManager(table->getSeedNumber());
 
-    sm->populateTileBag(tileBag);
-    sm->populateFactories(tileBag, factories, boxLid);
+    // sm->populateTileBag(table->getTileBag());
+    // sm->populateFactories(table->getTileBag(), table->getFactories(), table->getBoxLid());
     
 }
 
@@ -60,10 +39,10 @@ void GameManager::loadGame(std::string filename) {
     if(inFile.fail()) {
         std::cout << "File does not exist" << std::endl;
     } else {
-        readGame(inFile, tileBag, boxLid, &currentPlayerID, player1, player2, factories, centerOfTable, &seedNumber);
+        readGame(inFile, table, &currentPlayerID, player1, player2);
         inFile.close();
     }
-    printGame(std::cout, tileBag, boxLid, currentPlayerID, player1, player2, factories, centerOfTable, seedNumber);
+    printGame(std::cout, table, currentPlayerID, player1, player2);
 }
 
 void GameManager::saveGame(std::string filename) {
@@ -73,7 +52,7 @@ void GameManager::saveGame(std::string filename) {
     if(outFile.fail()) {
         std::cout << "File does not exist" << std::endl;
     } else {
-        printGame(outFile, tileBag, boxLid, currentPlayerID, player1, player2, factories, centerOfTable, seedNumber);
+        printGame(outFile, table, currentPlayerID, player1, player2);
         outFile.close();
     }   
 }
@@ -94,22 +73,6 @@ void GameManager::setCurrentPlayerID(int currentPlayerID) {
     this->currentPlayerID = currentPlayerID;
 }
 
-LinkedList* GameManager::getTileBag() {
-    return tileBag;
-}
-
-LinkedList* GameManager::getBoxLid() {
-    return boxLid;
-}
-
-Factory* GameManager::getFactories() {
-    return factories;
-}
-
-Vector* GameManager::getCenter() {
-    return centerOfTable;
-}
-
 Player* GameManager::getPlayer(int id) {
     if(id == 1) {
         return player1;
@@ -117,8 +80,3 @@ Player* GameManager::getPlayer(int id) {
         return player2;
     }
 }
-
-int GameManager::getSeedNumber() {
-    return seedNumber;
-}
-

@@ -6,11 +6,10 @@
 #include "Player.h"
 #include "Board.h"
 #include "Vector.h"
+#include "Table.h"
 
-Colour readColour(char c);
-
-void printGame(std::ostream& outStream, LinkedList* tileBag, LinkedList* boxLid, int currentPlayerID, 
-        Player* player1, Player* player2, Factory factories[], Vector* centerOfTable, int seedNumber);
+void printGame(std::ostream& outStream, Table* table, int currentPlayerID, 
+        Player* player1, Player* player2);
 
 void printFactory(std::ostream& outStream, Factory factories[]);
 
@@ -20,19 +19,19 @@ void printPlayer(std::ostream& outStream, Player* player);
 
 void printBoard(std::ostream& outStream, Board* board);
 
-void printFloorLine(std::ostream& outStream, std::array<TilePtr, FLOOR_LINE_SIZE>& floorLine, int length);
+void printFloorLine(std::ostream& outStream, std::array<char, FLOOR_LINE_SIZE>& floorLine, int length);
 
 void printWall(std::ostream& outStream, Wall& wall);
 
-void printPatternLines(std::ostream& outStream, TilePtr** patternLines);
+void printPatternLines(std::ostream& outStream, char** patternLines);
 
 void printLinkedList(std::ostream& outStream, LinkedList* list);
 
 // Print board during the game
-void printBoard(std::ostream& outStream, Wall& wall, TilePtr** patternLines, std::array<TilePtr, FLOOR_LINE_SIZE>& floorLine, int length);
+void printBoard(std::ostream& outStream, Wall& wall, char** patternLines, std::array<char, FLOOR_LINE_SIZE>& floorLine, int length);
 
-void readGame(std::istream& inStream, LinkedList* tileBag, LinkedList* boxLid, int* currentPlayerID,
-        Player* player1, Player* player2, Factory factories[], Vector* centerOfTable, int* seedNumber);
+void readGame(std::istream& inStream, Table* table, int* currentPlayerID,
+        Player* player1, Player* player2);
 
 void readLinkedList(LinkedList* list, std::string line);
 

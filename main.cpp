@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
     GameManager* game = new GameManager();
     StudentCredit* studentArr = new StudentCredit();
     
-    game->saveGame("azul.txt");
+    // game->saveGame("azul.txt");
     
     printMenu();
     std::cout << USER_PROMPT << " ";

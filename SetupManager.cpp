@@ -1,7 +1,5 @@
 #include "SetupManager.h"
 #include "Types.h"
-#include <array>
-
 
 SetupManager::SetupManager(int seed) {
     std::srand(seed);
@@ -9,9 +7,9 @@ SetupManager::SetupManager(int seed) {
 
 // input: an integer between 0 and 4 (inclusive)
 // output: the corresponding tile colour (white if input > 4)
-Colour SetupManager::intToColour(unsigned int number) {
+char SetupManager::intToChar(unsigned int number) {
 
-    Colour returnColour = WHITE;
+    char returnColour = FIRST_PLAYER;
 
     if(number == 0) {
         returnColour = RED;
@@ -29,13 +27,13 @@ Colour SetupManager::intToColour(unsigned int number) {
 
 }
 
-void SetupManager::swap(TilePtr a, TilePtr b)  {  
-    TilePtr temp = a;  
-    *a = *b;  
-    *b = *temp;
+void SetupManager::swap(char a, char b)  {  
+    char temp = a;  
+    a = b;  
+    b = temp;
 }
 
-void SetupManager::shuffle(std::array<TilePtr, TILE_BAG_MAXIMUM> tiles, int size) {
+void SetupManager::shuffle(std::array<char, TILE_BAG_MAXIMUM> tiles, int size) {
     
     for (int i = size - 1; i > 0; --i)  {  
         
@@ -50,19 +48,19 @@ void SetupManager::shuffle(std::array<TilePtr, TILE_BAG_MAXIMUM> tiles, int size
 // Tile Bag Methods
 void SetupManager::populateTileBag(LinkedList* tileBag) {
 
-    std::array<TilePtr, TILE_BAG_MAXIMUM> tiles;
+    std::array<char, TILE_BAG_MAXIMUM> tiles;
     int index = 0;
 
     // Set up ordered array of tiles.
     for (int i = 0; i != NUM_PLAYABLE_COLOURS; ++i) {
 
         // Iterate through all playable tile colours.
-        Colour colourToAdd = intToColour(i); 
+        char colourToAdd = intToChar(i); 
         
         for (int j = 0; j != TILES_PER_COLOUR; ++j) {
 
             // Add 20 tiles of each colour.
-            TilePtr tileToAdd = new Tile(colourToAdd);
+            char tileToAdd = colourToAdd;
             tiles[index] = tileToAdd;
             ++index;
         }
@@ -82,7 +80,7 @@ void SetupManager::populateTileBag(LinkedList* tileBag) {
 // Currently does not shuffle.
 void SetupManager::refillTileBagFromBoxLid(LinkedList* tileBag, LinkedList* boxLid) {
     
-    for (int i = 0; i != boxLid->size(); ++i) {
+    for (unsigned int i = 0; i != boxLid->size(); ++i) {
         tileBag->addFront(boxLid->get(i));
     }
 
@@ -102,10 +100,7 @@ void SetupManager::populateFactories(LinkedList* tileBag, Factory factories[NUMB
         // Fill each tile index in factory.
         for (int tileIndex = 0; tileIndex != FACTORY_SIZE; ++tileIndex) {
 
-            TilePtr original = tileBag->get(0);
-            TilePtr copy = new Tile(*original);
-
-            factories[factoryIndex][tileIndex] = copy;
+            factories[factoryIndex][tileIndex] = tileBag->get(0);
             tileBag->removeFront();
             
         }

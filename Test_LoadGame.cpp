@@ -36,47 +36,47 @@ int main(void) {
     printBoard(std::cout, player1->getBoard()->getWall(), player1->getBoard()->getPatternLines(), player1->getBoard()->getFloorLine(), player1->getBoard()->getLength());
     printBoard(std::cout, player2->getBoard()->getWall(), player2->getBoard()->getPatternLines(), player2->getBoard()->getFloorLine(), player2->getBoard()->getLength());
 
-    player2->getBoard()->addPatternLines(1,0,new Tile(RED));
-    player2->getBoard()->addPatternLines(4,2, new Tile(BLACK));
-    player2->getBoard()->addPatternLines(4,3, new Tile(LIGHT_BLUE));
-    player2->getBoard()->addPatternLines(4,4, new Tile(DARK_BLUE));
-    player2->getBoard()->addPatternLines(3,3, new Tile(WHITE));
+    player2->getBoard()->addPatternLines(1,0,RED);
+    player2->getBoard()->addPatternLines(4,2, BLACK);
+    player2->getBoard()->addPatternLines(4,3, LIGHT_BLUE);
+    player2->getBoard()->addPatternLines(4,4, DARK_BLUE);
+    player2->getBoard()->addPatternLines(3,3, FIRST_PLAYER);
 
-    player2->getBoard()->addWall(0,1, new Tile(RED));
-    player2->getBoard()->addWall(0,2, new Tile(YELLOW));
-    player2->getBoard()->addWall(4,0, new Tile(DARK_BLUE));
-    player2->getBoard()->addWall(4,1, new Tile(LIGHT_BLUE));
-    player2->getBoard()->addWall(4,3, new Tile(BLACK));
+    player2->getBoard()->addWall(0,1, RED);
+    player2->getBoard()->addWall(0,2, YELLOW);
+    player2->getBoard()->addWall(4,0, DARK_BLUE);
+    player2->getBoard()->addWall(4,1, LIGHT_BLUE);
+    player2->getBoard()->addWall(4,3, BLACK);
 
-    player2->getBoard()->addFloorLine(new Tile(DARK_BLUE));
-    player2->getBoard()->addFloorLine(new Tile(LIGHT_BLUE));
+    player2->getBoard()->addFloorLine(DARK_BLUE);
+    player2->getBoard()->addFloorLine(LIGHT_BLUE);
 
-    player1->getBoard()->addPatternLines(0,0, new Tile(RED));
-    player1->getBoard()->addPatternLines(4,1, new Tile(BLACK));
-    player1->getBoard()->addPatternLines(4,2, new Tile(LIGHT_BLUE));
-    player1->getBoard()->addPatternLines(4,4, new Tile(DARK_BLUE));
-    player1->getBoard()->addPatternLines(2,2, new Tile(WHITE));
+    player1->getBoard()->addPatternLines(0,0,RED);
+    player1->getBoard()->addPatternLines(4,1, BLACK);
+    player1->getBoard()->addPatternLines(4,2, LIGHT_BLUE);
+    player1->getBoard()->addPatternLines(4,4, DARK_BLUE);
+    player1->getBoard()->addPatternLines(2,2, FIRST_PLAYER);
 
-    player1->getBoard()->addWall(0,1, new Tile(RED));
-    player1->getBoard()->addWall(0,3, new Tile(YELLOW));
-    player1->getBoard()->addWall(1,1, new Tile(DARK_BLUE));
-    player1->getBoard()->addWall(1,4, new Tile(LIGHT_BLUE));
-    player1->getBoard()->addWall(4,4, new Tile(BLACK));
+    player1->getBoard()->addWall(0,1, RED);
+    player1->getBoard()->addWall(0,3, YELLOW);
+    player1->getBoard()->addWall(1,1, DARK_BLUE);
+    player1->getBoard()->addWall(1,4, LIGHT_BLUE);
+    player1->getBoard()->addWall(4,4, BLACK);
 
-    player1->getBoard()->addFloorLine(new Tile(RED));
-    player1->getBoard()->addFloorLine(new Tile(YELLOW));
+    player1->getBoard()->addFloorLine(RED);
+    player1->getBoard()->addFloorLine(YELLOW);
 
-    centerOfTable->addTile(new Tile(RED));
-    centerOfTable->addTile(new Tile(YELLOW));
-    centerOfTable->addTile(new Tile(BLACK));
+    centerOfTable->addTile(RED);
+    centerOfTable->addTile(YELLOW);
+    centerOfTable->addTile(BLACK);
 
-    factories[0][0] = new Tile(RED);
-    factories[0][2] = new Tile(DARK_BLUE);
-    factories[3][2] = new Tile(LIGHT_BLUE);
-    factories[4][2] = new Tile(YELLOW);
+    factories[0][0] = RED;
+    factories[0][2] = DARK_BLUE;
+    factories[3][2] = LIGHT_BLUE;
+    factories[4][2] = YELLOW;
 
-    bag->addBack(new Tile(RED));
-    bag->addBack(new Tile(BLACK));
+    bag->addBack(RED);
+    bag->addBack(BLACK);
 
     std::ofstream inFile;
     inFile.open("azul.txt");

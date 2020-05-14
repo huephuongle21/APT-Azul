@@ -19,8 +19,8 @@ int main(void) {
     // Prints all tile colours as chars from tile bag.
     for (int i = 0; i != TILE_BAG_MAXIMUM; ++i) {
 
-        TilePtr tile = tileBag->get(i);
-        std::cout << tile->getColourByChar();
+        char tile = tileBag->get(i);
+        std::cout << tile;
 
     }
 
@@ -35,7 +35,7 @@ int main(void) {
         
         // Print each tile colour
         for (int tileIndex = 0; tileIndex != FACTORY_SIZE; ++tileIndex) {
-            std::cout << factories[factoryIndex][tileIndex]->getColourByChar();
+            std::cout << factories[factoryIndex][tileIndex];
         }
 
         std::cout << std::endl;
