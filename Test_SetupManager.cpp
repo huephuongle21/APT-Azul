@@ -19,7 +19,7 @@ int main(void) {
     // Prints all tile colours as chars from tile bag.
     for (int i = 0; i != TILE_BAG_MAXIMUM; ++i) {
 
-        char tile = tileBag->get(i);
+        Tile tile = tileBag->get(i);
         std::cout << tile;
 
     }

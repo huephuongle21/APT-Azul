@@ -25,7 +25,7 @@ public:
 
     void setSeedNumber(int seedNumber);
 
-    void addFactory(int row, int col, char value);
+    void addFactory(int row, int col, Tile value);
 
 
 private:

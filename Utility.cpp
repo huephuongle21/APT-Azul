@@ -85,7 +85,7 @@ void printBoard(std::ostream& outStream, Board* board) {
     printFloorLine(outStream, board->getFloorLine(), board->getLength());
 }
 
-void printPatternLines(std::ostream& outStream, char** patternLines) {
+void printPatternLines(std::ostream& outStream, Tile** patternLines) {
     for(int i = 0; i != PATTERN_LINES_SIZE; i++) {
         for(int j = 0; j != (i+1); j++) {
             outStream << patternLines[i][j];
@@ -104,7 +104,7 @@ void printWall(std::ostream& outStream, Wall& wall) {
     }
 }
 
-void printFloorLine(std::ostream& outStream, std::array<char, FLOOR_LINE_SIZE>& floorLine, int length) {
+void printFloorLine(std::ostream& outStream, std::array<Tile, FLOOR_LINE_SIZE>& floorLine, int length) {
     if(length == 0) {        
         outStream << EMPTY_COLLECTION;
     } else {
@@ -211,7 +211,7 @@ void readBoard(std::vector<std::string>& lines, int* i, Board* board) {
     *i = index;
 }
 
-void printBoard(std::ostream& outStream, Wall& wall, char** patternLines, std::array<char, FLOOR_LINE_SIZE>& floorLine, int length) {
+void printBoard(std::ostream& outStream, Wall& wall, Tile** patternLines, std::array<Tile, FLOOR_LINE_SIZE>& floorLine, int length) {
     for(int row = 0; row != PATTERN_LINES_SIZE; row++) {
         for(int col = 0; col != PATTERN_LINES_SIZE; col++) {
             if((col + 1) >= (PATTERN_LINES_SIZE - row)) {

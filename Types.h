@@ -31,6 +31,7 @@ enum Option {
     OptionInvalid
 };
 
+typedef char Tile;
 typedef char Factory[FACTORY_SIZE];
 typedef char Wall[WALL_DIM][WALL_DIM];
 

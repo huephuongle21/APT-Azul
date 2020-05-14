@@ -10,11 +10,11 @@ public:
 
     SetupManager(int seed);
 
-    char intToChar(unsigned int number);
+    Tile intToChar(unsigned int number);
 
     // Shuffle methods.
-    void swap(char a, char b);
-    void shuffle(std::array<char, TILE_BAG_MAXIMUM> tiles, int size);
+    void swap(Tile a, Tile b);
+    void shuffle(std::array<Tile, TILE_BAG_MAXIMUM> tiles, int size);
 
     // Tile Bag Methods
     void populateTileBag(LinkedList* tileBag);

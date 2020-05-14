@@ -13,9 +13,9 @@ public:
 
    int size();
 
-   char get(unsigned int index);
+   Tile get(unsigned int index);
 
-   void addTile(char tile);
+   void addTile(Tile tile);
 
    void removeTile(unsigned int index);
 
@@ -23,7 +23,7 @@ public:
 
 private:
 
-   std::vector<char> tileVector;
+   std::vector<Tile> tileVector;
 };
 
 #endif // VECTOR_H

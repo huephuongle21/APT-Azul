@@ -45,6 +45,6 @@ void Table::setSeedNumber(int seedNumber) {
     this->seedNumber = seedNumber;
 }
 
-void Table::addFactory(int row, int col, char value) {
+void Table::addFactory(int row, int col, Tile value) {
     factories[row][col] = value;
 }

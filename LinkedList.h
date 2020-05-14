@@ -6,11 +6,11 @@
 
 class Node {
 public:
-   Node(char value, Node* next);
+   Node(Tile value, Node* next);
 
    ~Node();
    
-   char value;
+   Tile value;
    Node* next;
 };
 
@@ -30,18 +30,18 @@ public:
     * input: Index must be >=0 and < size()
     * 
     */
-   char get(const unsigned int index) const;
-   bool get(const unsigned int index, char returnValue) const;
+   Tile get(const unsigned int index) const;
+   bool get(const unsigned int index, Tile returnValue) const;
 
    /**
     * Add the value to the back of the Linked List
     */
-   void addBack(char tile);
+   void addBack(Tile tile);
 
    /**
     * Add the value to the front of the Linked List
     */
-   void addFront(char tile);
+   void addFront(Tile tile);
 
    /**
     * Remove the value at the back of the Linked List

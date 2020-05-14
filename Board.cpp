@@ -13,7 +13,7 @@ Board::Board() {
     }
 
     for(int i = 0; i != PATTERN_LINES_SIZE; i++) {
-        patternLines[i] = new char[i+1];
+        patternLines[i] = new Tile[i+1];
         for(int j = 0; j != (i+1); j++) {
             patternLines[i][j] = NO_TILE;
         }
@@ -34,11 +34,11 @@ Wall& Board::getWall() {
     return wall;
 }
 
-std::array<char, FLOOR_LINE_SIZE>& Board::getFloorLine() {
+std::array<Tile, FLOOR_LINE_SIZE>& Board::getFloorLine() {
     return floorLine;
 }
 
-void Board::addFloorLine(char value) {
+void Board::addFloorLine(Tile value) {
     floorLine[length] = value;
     length++;
 }
@@ -47,14 +47,14 @@ int Board::getLength() {
     return length;
 }
 
-char** Board::getPatternLines() {
+Tile** Board::getPatternLines() {
     return patternLines;
 }
 
-void Board::addPatternLines(int row, int col, char value) {
+void Board::addPatternLines(int row, int col, Tile value) {
     patternLines[row][col] = value;
 }
 
-void Board::addWall(int row, int col, char value) {
+void Board::addWall(int row, int col, Tile value) {
     wall[row][col] = value;
 }

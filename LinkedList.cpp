@@ -3,16 +3,12 @@
 #include <exception>
 #include <iostream>
 
-Node::Node(char value, Node* next) {
+Node::Node(Tile value, Node* next) {
     this->value = value;
     this->next = next;
 }
 
 Node::~Node() {
-   if(next != nullptr) {
-      delete next;
-      next = nullptr;
-   }
 }
 
 LinkedList::LinkedList() {
@@ -35,10 +31,10 @@ unsigned int LinkedList::size() const {
 }
 
 // Version of get that throws an exception when index is out of range.
-char LinkedList::get(const unsigned int index) const {
+Tile LinkedList::get(const unsigned int index) const {
    unsigned int count = 0;
    Node* current = head;
-   char returnValue = NO_TILE;
+   Tile returnValue = NO_TILE;
    
    if (index < size()) {
       
@@ -56,7 +52,7 @@ char LinkedList::get(const unsigned int index) const {
 }
 
 // Version of get that returns error "code" when index is out of range.
-bool LinkedList::get(const unsigned int index, char returnValue) const {
+bool LinkedList::get(const unsigned int index, Tile returnValue) const {
    
    bool error = true;
    unsigned int count = 0;
@@ -76,7 +72,7 @@ bool LinkedList::get(const unsigned int index, char returnValue) const {
    return error;
 }
 
-void LinkedList::addFront(char tile) {
+void LinkedList::addFront(Tile tile) {
 
     Node* toAdd = new Node(tile, head);
     head = toAdd;
@@ -84,7 +80,7 @@ void LinkedList::addFront(char tile) {
 
 }
 
-void LinkedList::addBack(char tile) {
+void LinkedList::addBack(Tile tile) {
    
    Node* toAdd = new Node(tile, nullptr);
 

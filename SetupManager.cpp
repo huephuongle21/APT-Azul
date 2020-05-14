@@ -7,9 +7,9 @@ SetupManager::SetupManager(int seed) {
 
 // input: an integer between 0 and 4 (inclusive)
 // output: the corresponding tile colour (white if input > 4)
-char SetupManager::intToChar(unsigned int number) {
+Tile SetupManager::intToChar(unsigned int number) {
 
-    char returnColour = FIRST_PLAYER;
+    Tile returnColour = FIRST_PLAYER;
 
     if(number == 0) {
         returnColour = RED;
@@ -27,13 +27,13 @@ char SetupManager::intToChar(unsigned int number) {
 
 }
 
-void SetupManager::swap(char a, char b)  {  
-    char temp = a;  
+void SetupManager::swap(Tile a, Tile b)  {  
+    Tile temp = a;  
     a = b;  
     b = temp;
 }
 
-void SetupManager::shuffle(std::array<char, TILE_BAG_MAXIMUM> tiles, int size) {
+void SetupManager::shuffle(std::array<Tile, TILE_BAG_MAXIMUM> tiles, int size) {
     
     for (int i = size - 1; i > 0; --i)  {  
         
@@ -48,19 +48,19 @@ void SetupManager::shuffle(std::array<char, TILE_BAG_MAXIMUM> tiles, int size) {
 // Tile Bag Methods
 void SetupManager::populateTileBag(LinkedList* tileBag) {
 
-    std::array<char, TILE_BAG_MAXIMUM> tiles;
+    std::array<Tile, TILE_BAG_MAXIMUM> tiles;
     int index = 0;
 
     // Set up ordered array of tiles.
     for (int i = 0; i != NUM_PLAYABLE_COLOURS; ++i) {
 
         // Iterate through all playable tile colours.
-        char colourToAdd = intToChar(i); 
+        Tile colourToAdd = intToChar(i); 
         
         for (int j = 0; j != TILES_PER_COLOUR; ++j) {
 
             // Add 20 tiles of each colour.
-            char tileToAdd = colourToAdd;
+            Tile tileToAdd = colourToAdd;
             tiles[index] = tileToAdd;
             ++index;
         }

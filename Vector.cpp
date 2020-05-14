@@ -23,8 +23,8 @@ Vector::~Vector() {
    return tileVector.size();
 }
 
-char Vector::get(unsigned int index) {
-   char tile = NO_TILE;
+Tile Vector::get(unsigned int index) {
+   Tile tile = NO_TILE;
    if (index >=0 && index < tileVector.size()) {
       tile = tileVector.at(index);
    }
@@ -32,7 +32,7 @@ char Vector::get(unsigned int index) {
    return tile;
 }
 
-void Vector::addTile(char tile) {
+void Vector::addTile(Tile tile) {
    tileVector.push_back(tile);
 }
 

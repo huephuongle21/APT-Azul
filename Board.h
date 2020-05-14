@@ -16,15 +16,15 @@ class Board {
 
     Wall& getWall();
 
-    void addFloorLine(char value);
+    void addFloorLine(Tile value);
 
-    void addPatternLines(int row, int col, char value);
+    void addPatternLines(int row, int col, Tile value);
 
-    void addWall(int row, int col, char value);
+    void addWall(int row, int col, Tile value);
 
-    char** getPatternLines();
+    Tile** getPatternLines();
 
-    std::array<char, FLOOR_LINE_SIZE>& getFloorLine();
+    std::array<Tile, FLOOR_LINE_SIZE>& getFloorLine();
 
     int getLength();
 
@@ -32,11 +32,11 @@ class Board {
 
     Wall wall;
 
-    std::array <char, FLOOR_LINE_SIZE> floorLine;
+    std::array <Tile, FLOOR_LINE_SIZE> floorLine;
 
     int length;
 
-    char* patternLines[PATTERN_LINES_SIZE];
+    Tile* patternLines[PATTERN_LINES_SIZE];
 };
 
 #endif // BOARD_H
