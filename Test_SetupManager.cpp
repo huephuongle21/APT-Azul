@@ -5,7 +5,7 @@
 int main(void) {
 
     // Set random seed.
-    int seed = 50;
+    int seed = 1;
     
     LinkedList* tileBag = new LinkedList();
     LinkedList* boxLid = new LinkedList();
@@ -19,7 +19,7 @@ int main(void) {
     // Prints all tile colours as chars from tile bag.
     for (int i = 0; i != TILE_BAG_MAXIMUM; ++i) {
 
-        Tile tile = tileBag->get(i);
+        char tile = tileBag->get(i);
         std::cout << tile;
 
     }
