@@ -27,13 +27,13 @@ Tile SetupManager::intToChar(unsigned int number) {
 
 }
 
-void SetupManager::swap(Tile a, Tile b)  {  
-    Tile temp = a;  
+void SetupManager::swap(Tile &a, Tile &b)  {  
+    Tile tmp = a;  
     a = b;  
-    b = temp;
+    b = tmp;
 }
 
-void SetupManager::shuffle(std::array<Tile, TILE_BAG_MAXIMUM> tiles, int size) {
+void SetupManager::shuffle(std::array<Tile, TILE_BAG_MAXIMUM> &tiles, int size) {
     
     for (int i = size - 1; i > 0; --i)  {  
         
@@ -41,7 +41,7 @@ void SetupManager::shuffle(std::array<Tile, TILE_BAG_MAXIMUM> tiles, int size) {
         int j = rand() % (i + 1);
   
         // Swap arr[i] with the element at random index  
-        swap(tiles[i], tiles[j]);
+        swap(tiles[j], tiles[i]);
     } 
 }
 

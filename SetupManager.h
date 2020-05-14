@@ -13,8 +13,8 @@ public:
     Tile intToChar(unsigned int number);
 
     // Shuffle methods.
-    void swap(Tile a, Tile b);
-    void shuffle(std::array<Tile, TILE_BAG_MAXIMUM> tiles, int size);
+    void swap(Tile& a, Tile& b);
+    void shuffle(std::array<Tile, TILE_BAG_MAXIMUM> &tiles, int size);
 
     // Tile Bag Methods
     void populateTileBag(LinkedList* tileBag);
