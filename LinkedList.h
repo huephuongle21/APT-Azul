@@ -1,17 +1,16 @@
 #ifndef LINKED_LIST_H
 #define LINKED_LIST_H 
 
-#include "Tile.h"
 #include "Types.h"
 #include <iostream>
 
 class Node {
 public:
-   Node(TilePtr value, Node* next);
+   Node(Tile value, Node* next);
 
    ~Node();
    
-   TilePtr value;
+   Tile value;
    Node* next;
 };
 
@@ -31,18 +30,18 @@ public:
     * input: Index must be >=0 and < size()
     * 
     */
-   TilePtr get(const unsigned int index) const;
-   bool get(const unsigned int index, TilePtr returnValue) const;
+   Tile get(const unsigned int index) const;
+   bool get(const unsigned int index, Tile returnValue) const;
 
    /**
     * Add the value to the back of the Linked List
     */
-   void addBack(TilePtr tile);
+   void addBack(Tile tile);
 
    /**
     * Add the value to the front of the Linked List
     */
-   void addFront(TilePtr tile);
+   void addFront(Tile tile);
 
    /**
     * Remove the value at the back of the Linked List

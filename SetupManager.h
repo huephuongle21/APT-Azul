@@ -2,6 +2,7 @@
 #define SETUPMANAGER_H
 
 #include "LinkedList.h"
+#include <array>
 
 class SetupManager {
 
@@ -9,11 +10,11 @@ public:
 
     SetupManager(int seed);
 
-    Colour intToColour(unsigned int number);
+    Tile intToChar(unsigned int number);
 
     // Shuffle methods.
-    void swap(TilePtr a, TilePtr b);
-    void shuffle(std::array<TilePtr, TILE_BAG_MAXIMUM> tiles, int size);
+    void swap(Tile a, Tile b);
+    void shuffle(std::array<Tile, TILE_BAG_MAXIMUM> tiles, int size);
 
     // Tile Bag Methods
     void populateTileBag(LinkedList* tileBag);

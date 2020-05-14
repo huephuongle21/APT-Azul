@@ -5,6 +5,7 @@
 #include "LinkedList.h"
 #include "Player.h"
 #include "Vector.h"
+#include "Table.h"
 #include <iostream>
 
 class GameManager {
@@ -26,34 +27,17 @@ class GameManager {
 
     void setCurrentPlayerID(int currentPlayerID);
 
-    LinkedList* getTileBag();
-
-    LinkedList* getBoxLid();
-
-    Factory* getFactories();
-
-    Vector* getCenter();
-
     Player* getPlayer(int id);
-
-    int getSeedNumber();
 
     private:
 
-    LinkedList* tileBag;
-
-    LinkedList* boxLid;
-
-    Factory factories[NUMBER_OF_FACTORY];
-
-    Vector* centerOfTable;
+    Table* table;
 
     Player* player1;
     Player* player2;
+    
 
     int currentPlayerID;
-
-    int seedNumber;
 
 };
 
