@@ -40,9 +40,13 @@ void GameManager::startGame(bool isNewGame) {
     std::cout << "Let's Play!" << "\n" << std::endl;
     
     bool gameOver = false;
+    bool isEOF = false;
+
     while(!gameOver) {
-        gameOver = commenceRound();
-        if(gameOver != true) {
+        isEOF = commenceRound();
+        if(isEOF) {
+            gameOver = isEOF;
+        } else if(!isEOF) {
             gameOver = isEndGame(player1, player2);
         }
     }
@@ -89,17 +93,21 @@ bool GameManager::saveGame(std::string input) {
 bool GameManager::commenceRound() {
     std::cout << "=== Start Round ===" << std::endl;
     bool endRound = false;
+    bool isEOF = false;
+
     while(!endRound) {
         if(currentPlayerID == player1->getID()) {
             printTableAndBoard(player1);
-            endRound = commenceTurn(player1);
+            isEOF = commenceTurn(player1);
         } else {
             printTableAndBoard(player2);
-            endRound = commenceTurn(player2);
+            isEOF = commenceTurn(player2);
         }
-        if(endRound != true) {
+        if(!isEOF) {
             endRound = isEndRound(); 
             swapCurrentPlayer();
+        } else if(isEOF) {
+            endRound = isEOF;
         } 
     }
     moveTilesFromPatternLinesToWall();
@@ -148,8 +156,6 @@ bool GameManager::commenceTurn(Player* player) {
     }
 
     if(std::cin.eof()) {
-        // std::cout << std::endl;
-        // std::cout << "Goodbye" << std::endl;
         isEOF = true;
     }
         
@@ -276,5 +282,3 @@ void GameManager::moveTilesFromPatternLinesToWall() {
     */
 
 }
-
-
