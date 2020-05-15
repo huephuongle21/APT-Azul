@@ -13,12 +13,15 @@ Table::Table() {
     }
 
     centerOfTable = new Vector();
+
+    sm = new SetupManager(seedNumber);
 }
 
 Table::~Table() {
     delete tileBag;
     delete boxLid;
     delete centerOfTable;
+    delete sm;
 }
 
 LinkedList* Table::getTileBag() {
@@ -47,4 +50,45 @@ void Table::setSeedNumber(int seedNumber) {
 
 void Table::addFactory(int row, int col, Tile value) {
     factories[row][col] = value;
+}
+
+bool Table::isFactoryEmpty(int& pos) {
+    bool isEmpty = true;
+    for(int i = 0; i != FACTORY_SIZE; i++) {
+        if(factories[pos][i] != NO_TILE) {
+            isEmpty = false;
+        }
+    }
+    return isEmpty;
+}
+
+bool Table::isCenterEmpty() {
+    return centerOfTable->size() == 0 ? true : false;
+}
+
+bool Table::findColourInFactory(int& pos, char& colourChoice) {
+    bool isFound = false;
+    for(int i = 0; i != FACTORY_SIZE; i++) {
+        if(factories[pos-1][i] == colourChoice) {
+            isFound = true;
+        }
+    }
+    return isFound;
+}
+
+bool Table::findColourInCenter(char& colourChoice) {
+    bool isFound = false;
+    if(!isCenterEmpty()) {
+        for(int i = 0; i != centerOfTable->size(); i++) {
+            if(centerOfTable->get(i) == colourChoice) {
+                isFound = true;
+            }
+        }
+    }
+    return isFound;
+}
+
+void Table::setupGame() {
+    sm->populateTileBag(tileBag);
+    sm->populateFactories(tileBag, factories, boxLid);
 }

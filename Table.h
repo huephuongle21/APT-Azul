@@ -4,6 +4,7 @@
 #include "LinkedList.h"
 #include "Vector.h"
 #include "Types.h"
+#include "SetupManager.h"
 
 class Table {
 
@@ -27,6 +28,15 @@ public:
 
     void addFactory(int row, int col, Tile value);
 
+    bool isFactoryEmpty(int& pos);
+
+    bool isCenterEmpty();
+
+    bool findColourInFactory(int& pos,char& colourChoice);
+
+    bool findColourInCenter(char& colourChoice);
+
+    void setupGame();
 
 private:
 
@@ -39,6 +49,8 @@ private:
     Vector* centerOfTable;
     
     int seedNumber;
+    
+    SetupManager* sm;
   
 };
 

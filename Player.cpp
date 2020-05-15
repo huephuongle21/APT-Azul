@@ -7,6 +7,13 @@ Player::Player(std::string playerName, int id) {
     this->playerBoard = new Board();
 }
 
+Player::Player() {
+    this->playerName = "";
+    this->id = 0;
+    this->playerPoints = 0;
+    this->playerBoard = new Board();
+}
+
 Player::~Player() {
     delete this->playerBoard;
 }

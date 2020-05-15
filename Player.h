@@ -9,7 +9,11 @@ class Player {
 
 public:
 
+    // Constructor to start a new game
     Player(std::string playerName, int id);
+
+    // Constructor to load game from file
+    Player();
 
     ~Player();
 

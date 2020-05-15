@@ -98,7 +98,11 @@ void printPatternLines(std::ostream& outStream, Tile** patternLines) {
 void printWall(std::ostream& outStream, Wall& wall) {
     for(int i = 0; i < WALL_DIM; i++) {
         for(int j = 0; j < WALL_DIM; j++) {
-            outStream << wall[i][j];
+            if(wall[i][j] >= 'a' && wall[i][j] <= 'z') {
+                outStream << NO_TILE;
+            } else {
+                outStream << wall[i][j];
+            }
         }
         outStream << std::endl;
     }
@@ -197,7 +201,10 @@ void readBoard(std::vector<std::string>& lines, int* i, Board* board) {
     for(int row = 0; row != WALL_DIM; row++) {
         int size = lines[++index].length();
         for(int col = 0; col != size; col++) {
-            board->addWall(row, col, lines[index][col]);
+            char tile = lines[index][col];
+            if(tile >= 'A' && tile <= 'Z') {
+                board->addWall(row, col, tile);
+            }
         }
     }
     
@@ -224,7 +231,12 @@ void printBoard(std::ostream& outStream, Wall& wall, Tile** patternLines, std::a
             if(col == PATTERN_LINES_SIZE - 1) {
                 outStream << " || ";
                 for(int wCol = 0; wCol != WALL_DIM; wCol++) {
-                    outStream << wall[row][wCol];
+                    char tile = wall[row][wCol];
+                    if(tile >= 'a' && tile <= 'z') {
+                        outStream << NO_TILE;
+                    } else {
+                        outStream << tile;
+                    }
                 }
             }
         }
