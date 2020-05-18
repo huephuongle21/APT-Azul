@@ -69,25 +69,27 @@ bool GameManager::loadGame(std::string filename) {
     return isLoaded;
 }
 
-bool GameManager::saveGame(std::string input) {
-    std::stringstream saveGame(input);
-    std::string command;
-    std::string filename;
-    saveGame >> command >> filename;
+bool GameManager::saveGame(std::string savePath) {
 
-    bool isSaved = true;
+    bool saved = false;
 
-    std::ofstream outFile;
-    outFile.open(filename);
+    std::ofstream os;
+    os.open(savePath);
 
-    if(outFile.fail()) {
-        isSaved = false;
+    if (os.fail()) {
+        std::cout << "Could not create save." << std::endl;
     } else {
-        printGame(outFile, table, currentPlayerID, player1, player2);
-        outFile.close();
-        std::cout << "Game successfully saved to '" + filename + "'" << std::endl;
-    }  
-    return isSaved; 
+        
+        printGame(os, table, currentPlayerID, player1, player2);
+        os.close();
+        
+        std::cout << "Save successful!" << std::endl;
+        std::cout << "Game saved as: '" << savePath << "'" << std::endl;
+        saved = true;
+    }
+
+    return saved;
+
 }
 
 bool GameManager::commenceRound() {

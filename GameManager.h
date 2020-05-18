@@ -24,7 +24,7 @@ class GameManager {
     
     bool loadGame(std::string filename);
 
-    bool saveGame(std::string input);
+    bool saveGame(std::string savePath);
 
     void swapCurrentPlayer();
 
