@@ -7,8 +7,8 @@
 #include <sstream>
 
 GameManager::GameManager() {
-    this->player1 = new Player();
-    this->player2 = new Player();
+    this->player1 = new Player(1);
+    this->player2 = new Player(2);
 
     currentPlayerID = 0;
 
