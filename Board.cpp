@@ -121,6 +121,16 @@ bool Board::isPatternLinesFilled(int& pos) {
     return isFilled;
 }
 
+bool Board::hasPatternLineColour(int& pos) {
+    bool retVal = false;
+    for(int i = 0; i != pos; i++) {
+        if(patternLines[pos][i] != NO_TILE) {
+            retVal = true;
+        }
+    }
+    return retVal;
+}
+
 Tile Board::removeFromPatternLines(int& pos) {
     Tile tile = patternLines[pos][0];
     for(int i = 0; i != (pos+1); i++) {

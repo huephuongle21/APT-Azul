@@ -61,6 +61,8 @@ class GameManager {
 
     int moveTilesFromPatternLines(Player* player);
 
+    void moveTilesToPatternLines(Player* player);
+
     void commenceEndOfRound(Player* player);
 
     private:

@@ -42,6 +42,8 @@ class Board {
 
     bool isPatternLinesFilled(int& pos);
 
+    bool hasPatternLineColour(int& pos);
+
     Tile removeFromPatternLines(int& pos);
 
     bool isRowFilled();
