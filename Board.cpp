@@ -4,7 +4,7 @@
 
 Board::Board() {
     floorLine = {};
-    length = 0;
+    floorLineLength = 0;
 
     for(int i = 0; i != PATTERN_LINES_SIZE; i++) {
         patternLines[i] = new Tile[i+1];
@@ -30,7 +30,7 @@ Board::Board() {
 
 Board::~Board() {
     
-    length = 0;
+    floorLineLength = 0;
 
     for(int i = 0; i != PATTERN_LINES_SIZE; i++) {
         delete[] patternLines[i];
@@ -47,12 +47,12 @@ std::array<Tile, FLOOR_LINE_SIZE>& Board::getFloorLine() {
 }
 
 void Board::addFloorLine(Tile value) {
-    floorLine[length] = value;
-    length++;
+    floorLine[floorLineLength] = value;
+    floorLineLength++;
 }
 
 int Board::getLength() {
-    return length;
+    return floorLineLength;
 }
 
 Tile** Board::getPatternLines() {
@@ -109,4 +109,34 @@ bool Board::findColourInPatternLines(char& colourChoice, int& pos) {
         }
     }
     return isFound;
+}
+
+bool Board::isPatternLinesFilled(int& pos) {
+    bool isFilled = true;
+    for(int i = 0; i != pos; i++) {
+        if(patternLines[pos][i] == NO_TILE) {
+            isFilled = false;
+        }
+    }
+    return isFilled;
+}
+
+Tile Board::removeFromPatternLines(int& pos) {
+    Tile tile = patternLines[pos][0];
+    for(int i = 0; i != (pos+1); i++) {
+        patternLines[pos][i] = NO_TILE;
+    }
+    return tile;
+}
+
+void Board::addWall(int& pos, Tile value) {
+    for(int i = 0; i != WALL_DIM; i++) {
+        if(wall[pos][i] == tolower(value)) {
+            wall[pos][i] = value;
+        }
+    }
+}
+
+bool Board::isRowFilled() {
+    return false;
 }

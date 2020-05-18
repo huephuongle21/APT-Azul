@@ -4,7 +4,6 @@
 #include <vector>
 
 #define STUDENT_CREDITS_LENGTH  3
-#define USER_PROMPT             '>'
 #define FACTORY_SIZE            4
 #define NUM_PLAYABLE_COLOURS    5
 #define WALL_DIM                5 
@@ -13,7 +12,10 @@
 #define FLOOR_LINE_SIZE         7
 #define TILES_PER_COLOUR        20
 #define TILE_BAG_MAXIMUM        100
+
+#define USER_PROMPT             '>'
 #define EMPTY_COLLECTION        '_'
+
 #define COMMAND_TURN            "turn"
 #define COMMAND_SAVE            "save"
 

@@ -19,7 +19,8 @@ void printPlayer(std::ostream& outStream, Player* player);
 
 void printBoard(std::ostream& outStream, Board* board);
 
-void printFloorLine(std::ostream& outStream, std::array<Tile, FLOOR_LINE_SIZE>& floorLine, int length);
+void printFloorLine(std::ostream& outStream, 
+        std::array<Tile, FLOOR_LINE_SIZE>& floorLine, int length);
 
 void printWall(std::ostream& outStream, Wall& wall);
 
@@ -28,7 +29,8 @@ void printPatternLines(std::ostream& outStream, Tile** patternLines);
 void printLinkedList(std::ostream& outStream, LinkedList* list);
 
 // Print board during the game
-void printBoard(std::ostream& outStream, Wall& wall, Tile** patternLines, std::array<Tile, FLOOR_LINE_SIZE>& floorLine, int length);
+void printBoard(std::ostream& outStream, Wall& wall, Tile** patternLines, 
+        std::array<Tile, FLOOR_LINE_SIZE>& floorLine, int length);
 
 void readGame(std::istream& inStream, Table* table, int* currentPlayerID,
         Player* player1, Player* player2);

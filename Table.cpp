@@ -92,3 +92,7 @@ void Table::setupGame() {
     sm->populateTileBag(tileBag);
     sm->populateFactories(tileBag, factories, boxLid);
 }
+
+void Table::refillTable() {
+    sm->populateFactories(tileBag, factories, boxLid);
+}

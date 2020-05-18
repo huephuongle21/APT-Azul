@@ -17,8 +17,6 @@ int main(int argc, char** argv) {
 
     StudentCredit* studentArr = new StudentCredit();
     
-    // game->saveGame("azul.txt");
-    
     printMenu();
     std::cout << USER_PROMPT << " ";
     bool isQuit = false;

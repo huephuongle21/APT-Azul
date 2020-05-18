@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Vector.h"
 #include "Table.h"
+#include "ScoreCalculator.h"
 #include <iostream>
 #include <string>
 
@@ -56,7 +57,9 @@ class GameManager {
 
     Table* getTable();
 
-    void moveTilesFromPatternLinesToWall();
+    void moveTilesFromPatternLines(Player* player);
+
+    void commenceEndOfRound(Player* player);
 
     private:
 
@@ -64,9 +67,12 @@ class GameManager {
 
     Player* player1;
     Player* player2;
-    
 
+    ScoreCalculator* calculator;
+    
     int currentPlayerID;
+
+    int roundCount;
 
 };
 
