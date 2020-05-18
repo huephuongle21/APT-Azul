@@ -10,9 +10,11 @@
 void processArgcs(int argc, char** argv);
 void printMenu();
 Option resolveInput(std::string input);
+void startNewGame();
+void loadGameFromFile();
 
 int main(int argc, char** argv) {
-    GameManager* game = new GameManager();
+
     StudentCredit* studentArr = new StudentCredit();
     
     // game->saveGame("azul.txt");
@@ -25,9 +27,9 @@ int main(int argc, char** argv) {
     while(!isQuit && getline(std::cin, input)) {
         Option option = resolveInput(input);
         if(option == newGame) {
-            game->newGame();
+            startNewGame();
         } else if(option == loadGame) {
-            game->loadGame("azul.txt");
+            loadGameFromFile();
         } else if(option == displayCredits) {
             studentArr->printDetails();
         } else if(option == quit) {
@@ -43,7 +45,7 @@ int main(int argc, char** argv) {
     std::cout << "Goodbye" << std::endl;
 
     delete studentArr;
-    delete game;
+
 }
 
 void processArgcs(int argc, char** argv) {
@@ -74,4 +76,47 @@ Option resolveInput(std::string input) {
         option = quit;
     }
     return option;
+}
+
+void startNewGame() {
+    std::cout << "Starting a New Game" << "\n" << std::endl;
+
+    std::cout << "Enter a name for player 1" << "\n" << USER_PROMPT << " ";    
+    std::string player1Name;
+    getline(std::cin, player1Name);
+    while(player1Name.empty()) {
+        std::cout << "Please enter name" << "\n" << USER_PROMPT << " ";
+        getline(std::cin, player1Name);
+    }
+
+    std::cout << "Enter a name for player 2" << "\n" << USER_PROMPT << " ";
+    std::string player2Name;
+    getline(std::cin, player2Name);
+    while(player2Name.empty()) {
+        std::cout << "Please enter name" << "\n" << USER_PROMPT << " ";
+        getline(std::cin, player2Name);
+    }
+
+    std::cout << std::endl;
+
+    GameManager* gm = new GameManager(player1Name, player2Name);
+    gm->startGame(true);
+
+    delete gm;
+
+}
+
+void loadGameFromFile() {
+    GameManager* gm = new GameManager();
+    std::cout << "Enter the filename from which load a game" << "\n" << USER_PROMPT << " ";
+    std::string filename;
+    getline(std::cin, filename);
+    while(!gm->loadGame(filename)) {
+        std::cout << "File does not exist. Please enter again" << "\n" << USER_PROMPT << " ";
+        getline(std::cin, filename);
+    }
+    gm->startGame(false);
+            
+    delete gm;
+
 }

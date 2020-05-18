@@ -28,6 +28,14 @@ class Board {
 
     int getLength();
 
+    bool findColourInWall(char& colourChoice, int& pos);
+
+    bool findColourInBoard(char& colourChoice, int& pos);
+
+    bool findColourInPatternLines(char& colourChoice, int& pos);
+
+    bool isPatternLinesEmpty(int& pos);
+
     private:
 
     Wall wall;
@@ -37,6 +45,7 @@ class Board {
     int length;
 
     Tile* patternLines[PATTERN_LINES_SIZE];
+
 };
 
 #endif // BOARD_H

@@ -12,12 +12,12 @@ int main(void) {
 
     GameManager* game = new GameManager();
 
-    LinkedList* bag = game->getTileBag();
-    LinkedList* box = game->getBoxLid();
+    LinkedList* bag = game->getTable()->getTileBag();
+    LinkedList* box = game->getTable()->getBoxLid();
 
-    Factory* factories = game->getFactories();
+    Factory* factories = game->getTable()->getFactories();
 
-    Vector* centerOfTable = game->getCenter();
+    Vector* centerOfTable = game->getTable()->getCenter();
     
 
     Player* player1 = game->getPlayer(1);
@@ -26,11 +26,11 @@ int main(void) {
     Player* player2 = game->getPlayer(2);
 
     int currentID = player1->getID();
-    int seedNumber = game->getSeedNumber();
+    int seedNumber = game->getTable()->getSeedNumber();
 
     std::ifstream outFile;
     outFile.open("azul.txt");
-    readGame(outFile, bag, box, &currentID, player1, player2, factories, centerOfTable, &seedNumber);
+    readGame(outFile, game->getTable(), &currentID, player1, player2);
     outFile.close();
 
     printBoard(std::cout, player1->getBoard()->getWall(), player1->getBoard()->getPatternLines(), player1->getBoard()->getFloorLine(), player1->getBoard()->getLength());
@@ -80,10 +80,10 @@ int main(void) {
 
     std::ofstream inFile;
     inFile.open("azul.txt");
-    printGame(inFile, bag, box, currentID, player1, player2, factories, centerOfTable, seedNumber);
+    printGame(inFile, game->getTable(), game->getCurrentPlayerID(), player1, player2);
     inFile.close();
 
-    printGame(std::cout, bag, box, currentID, player1, player2, factories, centerOfTable, seedNumber);
+    printGame(std::cout, game->getTable(), game->getCurrentPlayerID(), player1, player2);
     printBoard(std::cout, player1->getBoard()->getWall(), player1->getBoard()->getPatternLines(), player1->getBoard()->getFloorLine(), player1->getBoard()->getLength());
     printBoard(std::cout, player2->getBoard()->getWall(), player2->getBoard()->getPatternLines(), player2->getBoard()->getFloorLine(), player2->getBoard()->getLength());
 

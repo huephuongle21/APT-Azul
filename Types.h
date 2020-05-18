@@ -14,6 +14,8 @@
 #define TILES_PER_COLOUR        20
 #define TILE_BAG_MAXIMUM        100
 #define EMPTY_COLLECTION        '_'
+#define COMMAND_TURN            "turn"
+#define COMMAND_SAVE            "save"
 
 #define NO_TILE       '.'
 #define RED           'R'
@@ -22,6 +24,13 @@
 #define LIGHT_BLUE    'L'
 #define BLACK         'U'
 #define FIRST_PLAYER  'F'
+
+#define W_RED         'r'
+#define W_YELLOW      'y'
+#define W_DARK_BLUE   'b'
+#define W_LIGHT_BLUE  'l'
+#define W_BLACK       'u'
+
 
 enum Option {
     newGame,

@@ -7,27 +7,31 @@ void printGame(std::ostream& outStream, Table* table, int currentPlayerID,
 
     outStream << "# ---SAVE BEGINS---" << "\n" << std::endl;
 
-    outStream << "#Tile Bag" << std::endl;
+    outStream << "# Tile Bag" << std::endl;
     printLinkedList(outStream, table->getTileBag());
+    
 
-    outStream << "#Box Lid" << std::endl;
+    outStream << "\n" << "# Box Lid" << std::endl;
     printLinkedList(outStream, table->getBoxLid());
+    
 
-    outStream << "#Factories" << std::endl;
+    outStream << "\n" << "# Factories" << std::endl;
     printFactory(outStream, table->getFactories());
+    
 
-    outStream << "#Discards from Factories" << std::endl;
+    outStream << "\n" << "# Centre of Table" << std::endl;
     printCenter(outStream, table->getCenter());
+    
 
-    outStream << "#Seed for Program" << "\n" << table->getSeedNumber() << std::endl;
+    outStream << "\n" << "# Seed for Program" << "\n" << table->getSeedNumber() << "\n" << std::endl;
 
-    outStream << "# Current Player's ID" << "\n" << currentPlayerID << std::endl;
+    outStream << "# Current Player's ID" << "\n" << currentPlayerID << "\n" << std::endl;
 
-    outStream << "# --- Player 1 ---" << std::endl;
+    outStream << "# --- Player 1 ---" << "\n" << std::endl;
     printPlayer(outStream, player1);
 
-    outStream << "# --- Player 2 ---" << std::endl;
-    printPlayer(outStream, player2);    
+    outStream << "# --- Player 2 ---" << "\n" << std::endl;
+    printPlayer(outStream, player2);
 
     outStream << "# ---SAVE ENDS---" << std::endl;
 }
@@ -70,22 +74,31 @@ void printCenter(std::ostream& outStream, Vector* centerOfTable) {
 }
 
 void printPlayer(std::ostream& outStream, Player* player) {
+
     std::string name = player->getName();
-    int point = player->getPoints();
-    outStream << name << "\n" << point << std::endl;
+    int score = player->getPoints();
+
+    outStream << "# Name" << "\n" << name << "\n" << std::endl;
+    outStream << "# Score" << "\n" << score << "\n" << std::endl;
+    
     printBoard(outStream, player->getBoard());
 }
 
 void printBoard(std::ostream& outStream, Board* board) {    
+    
     outStream << "# Pattern Lines" << std::endl;
     printPatternLines(outStream, board->getPatternLines());
-    outStream << "# Wall" << std::endl;
+
+    outStream << "\n" << "# Wall" << std::endl;
     printWall(outStream, board->getWall());
-    outStream << "# Floor Line" << std::endl;
+
+    outStream << "\n" << "# Floor Line" << std::endl;
     printFloorLine(outStream, board->getFloorLine(), board->getLength());
+
 }
 
 void printPatternLines(std::ostream& outStream, Tile** patternLines) {
+    
     for(int i = 0; i != PATTERN_LINES_SIZE; i++) {
         for(int j = 0; j != (i+1); j++) {
             outStream << patternLines[i][j];
@@ -98,7 +111,11 @@ void printPatternLines(std::ostream& outStream, Tile** patternLines) {
 void printWall(std::ostream& outStream, Wall& wall) {
     for(int i = 0; i < WALL_DIM; i++) {
         for(int j = 0; j < WALL_DIM; j++) {
-            outStream << wall[i][j];
+            if(wall[i][j] >= 'a' && wall[i][j] <= 'z') {
+                outStream << NO_TILE;
+            } else {
+                outStream << wall[i][j];
+            }
         }
         outStream << std::endl;
     }
@@ -114,7 +131,7 @@ void printFloorLine(std::ostream& outStream, std::array<Tile, FLOOR_LINE_SIZE>& 
             } 
         }
     }
-    outStream << std::endl;
+    outStream << "\n" << std::endl;
 }
 
 void readGame(std::istream& inStream, Table* table, int* currentPlayerID, Player* player1, Player* player2) {
@@ -160,10 +177,25 @@ void readLinkedList(LinkedList* list, std::string line) {
 }
 
 void readFactory(Factory factory, std::string line) {
+    
     int size = line.length();
-    for(int i = 0; i  != size; i++) {
-        factory[i] = line[i];
+
+    // If tile data exists, read it.
+    if(line[0] != EMPTY_COLLECTION) {
+        
+        for(int i = 0; i  != size; i++) {
+            factory[i] = line[i];
+        }
+
+    } else {
+
+        // If no tile data exists, populate factories with NO_TILE char.
+        for (int i = 0; i != FACTORY_SIZE; i++) {
+            factory[i] = NO_TILE;
+        }
+
     }
+    
 }
 
 void readCenter(Vector* centerOfTable, std::string line) {
@@ -189,7 +221,13 @@ void readBoard(std::vector<std::string>& lines, int* i, Board* board) {
     for(int row = 0; row != PATTERN_LINES_SIZE; row++) {
         int size = lines[++index].length();
         for(int col = 0; col != size; col++) {
-            board->addPatternLines(row, col, lines[index][col]);
+
+            if (lines[index][col] != EMPTY_COLLECTION) {
+                board->addPatternLines(row, col, lines[index][col]);
+            } else {
+                board->addPatternLines(row, col, NO_TILE);
+            }
+
         }
     }
 
@@ -197,7 +235,10 @@ void readBoard(std::vector<std::string>& lines, int* i, Board* board) {
     for(int row = 0; row != WALL_DIM; row++) {
         int size = lines[++index].length();
         for(int col = 0; col != size; col++) {
-            board->addWall(row, col, lines[index][col]);
+            char tile = lines[index][col];
+            if(tile >= 'A' && tile <= 'Z') {
+                board->addWall(row, col, tile);
+            }
         }
     }
     
@@ -224,7 +265,12 @@ void printBoard(std::ostream& outStream, Wall& wall, Tile** patternLines, std::a
             if(col == PATTERN_LINES_SIZE - 1) {
                 outStream << " || ";
                 for(int wCol = 0; wCol != WALL_DIM; wCol++) {
-                    outStream << wall[row][wCol];
+                    char tile = wall[row][wCol];
+                    if(tile >= 'a' && tile <= 'z') {
+                        outStream << NO_TILE;
+                    } else {
+                        outStream << tile;
+                    }
                 }
             }
         }
