@@ -57,7 +57,9 @@ class GameManager {
 
     Table* getTable();
 
-    void moveTilesFromPatternLines(Player* player);
+    ScoreCalculator* getCalculator();
+
+    int moveTilesFromPatternLines(Player* player);
 
     void commenceEndOfRound(Player* player);
 

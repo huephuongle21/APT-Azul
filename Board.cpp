@@ -113,7 +113,7 @@ bool Board::findColourInPatternLines(char& colourChoice, int& pos) {
 
 bool Board::isPatternLinesFilled(int& pos) {
     bool isFilled = true;
-    for(int i = 0; i != pos; i++) {
+    for(int i = 0; i != (pos+1); i++) {
         if(patternLines[pos][i] == NO_TILE) {
             isFilled = false;
         }
@@ -129,12 +129,20 @@ Tile Board::removeFromPatternLines(int& pos) {
     return tile;
 }
 
-void Board::addWall(int& pos, Tile value) {
+int Board::addWall(int& pos, Tile value) {
+    int colPos = 0;
     for(int i = 0; i != WALL_DIM; i++) {
         if(wall[pos][i] == tolower(value)) {
             wall[pos][i] = value;
+            colPos = i;
         }
     }
+    return colPos;
+}
+
+void Board::clearFloorLine() {
+    std::fill(floorLine.begin(), floorLine.end(), 0);
+    floorLineLength = 0;
 }
 
 bool Board::isRowFilled() {

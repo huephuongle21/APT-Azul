@@ -7,8 +7,8 @@
 #include <sstream>
 
 GameManager::GameManager() {
-    this->player1 = new Player();
-    this->player2 = new Player();
+    this->player1 = new Player(1);
+    this->player2 = new Player(2);
 
     currentPlayerID = 0;
 
@@ -137,17 +137,22 @@ bool GameManager::commenceRound() {
 }
 
 void GameManager::commenceEndOfRound(Player* player) {
-    moveTilesFromPatternLines(player);
-    int score = calculator->calculateScoreEachRound(player);
+    int addScore = moveTilesFromPatternLines(player);
+    int score = calculator->calculateScoreEachRound(player, addScore);
 
-    printBoard(std::cout, player->getBoard()->getWall(), player->getBoard()->getPatternLines(), 
-        player->getBoard()->getFloorLine(), player->getBoard()->getLength());
+    Board* board = player->getBoard();
+    board->clearFloorLine();
+
+    printBoard(std::cout, board->getWall(), board->getPatternLines(), board->getFloorLine(), board->getLength());
         
     std::cout << player->getName() << " gets " << score << " from round " << roundCount << "." << std::endl;
     std::cout << "Total score for " << player->getName() << ": " << player->getPoints() << std::endl;
 }
 
 void GameManager::printTableAndBoard(Player* player) {
+
+    Board* board = player->getBoard();
+
     std::cout << std::endl;
     std::cout << "TURN FOR PLAYER: " << player->getName() << std::endl;
 
@@ -159,8 +164,7 @@ void GameManager::printTableAndBoard(Player* player) {
     std::cout << std::endl;
 
     std::cout << "Mosaic for " << player->getName() << ":" << std::endl;
-    printBoard(std::cout, player->getBoard()->getWall(), player->getBoard()->getPatternLines(), 
-        player->getBoard()->getFloorLine(), player->getBoard()->getLength());
+    printBoard(std::cout, board->getWall(), board->getPatternLines(), board->getFloorLine(), board->getLength());
 }
 
 bool GameManager::commenceTurn(Player* player) {
@@ -295,17 +299,25 @@ Table* GameManager::getTable() {
     return table;
 }
 
-void GameManager::moveTilesFromPatternLines(Player* player) {
+ScoreCalculator* GameManager::getCalculator() {
+    return calculator;
+}
+
+int GameManager::moveTilesFromPatternLines(Player* player) {
+    int score = 0;
+    Board* board = player->getBoard();
     for(int patternLineIndex = 0; patternLineIndex != PATTERN_LINES_SIZE; patternLineIndex++) {
-        if(player->getBoard()->isPatternLinesFilled(patternLineIndex)) {
-            Tile tile = player->getBoard()->removeFromPatternLines(patternLineIndex);
+        if(board->isPatternLinesFilled(patternLineIndex)) {
+            Tile tile = board->removeFromPatternLines(patternLineIndex);
             for(int tileIndex = 0; tileIndex != (patternLineIndex+1); tileIndex++) {
                 if(tileIndex != patternLineIndex) {
                     table->getBoxLid()->addBack(tile);
                 } else {
-                    player->getBoard()->addWall(patternLineIndex, tile);
+                    int colPos = board->addWall(patternLineIndex, tile);
+                    score += calculator->calculateScoreFromWall(board->getWall(), colPos, patternLineIndex);
                 }
             }
         }
     }
+    return score;
 }

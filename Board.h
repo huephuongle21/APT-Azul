@@ -24,7 +24,7 @@ class Board {
     void addWall(int row, int col, Tile value);
 
     // Add tile to wall during the game
-    void addWall(int& pos, Tile value);
+    int addWall(int& pos, Tile value);
 
     Tile** getPatternLines();
 
@@ -45,6 +45,8 @@ class Board {
     Tile removeFromPatternLines(int& pos);
 
     bool isRowFilled();
+
+    void clearFloorLine();
 
     private:
 

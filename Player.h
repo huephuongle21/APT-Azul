@@ -13,7 +13,7 @@ public:
     Player(std::string playerName, int id);
 
     // Constructor to load game from file
-    Player();
+    Player(int id);
 
     ~Player();
 

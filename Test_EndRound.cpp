@@ -6,48 +6,66 @@
 int main(void) {
     GameManager* gm = new GameManager("Alice","Bob");
     Player* player1 = gm->getPlayer(1);
+    Board* board = player1->getBoard();
+    LinkedList* box = gm->getTable()->getBoxLid();
 
-    player1->getBoard()->addPatternLines(0,0,RED);
-    player1->getBoard()->addPatternLines(1,1,YELLOW);
-    player1->getBoard()->addPatternLines(3,3,BLACK);
-    player1->getBoard()->addPatternLines(3,2,BLACK);
-    player1->getBoard()->addPatternLines(3,1,BLACK);
-    player1->getBoard()->addPatternLines(3,0,BLACK);
-    player1->getBoard()->addPatternLines(2,0,LIGHT_BLUE);
-    player1->getBoard()->addPatternLines(2,1,LIGHT_BLUE);
-    player1->getBoard()->addPatternLines(2,2,LIGHT_BLUE);
-    player1->getBoard()->addPatternLines(4,4,LIGHT_BLUE);
+    board->addPatternLines(0,0,RED);
+    board->addPatternLines(1,1,YELLOW);
+    board->addPatternLines(3,3,BLACK);
+    board->addPatternLines(3,2,BLACK);
+    board->addPatternLines(3,1,BLACK);
+    board->addPatternLines(3,0,BLACK);
+    board->addPatternLines(2,0,LIGHT_BLUE);
+    board->addPatternLines(2,1,LIGHT_BLUE);
+    board->addPatternLines(2,2,LIGHT_BLUE);
+    board->addPatternLines(4,4,LIGHT_BLUE);
+
+    board->addFloorLine(RED);
+    board->addFloorLine(YELLOW);
 
     gm->printTableAndBoard(player1);
-    gm->moveTilesFromPatternLines(gm->getPlayer(1));
+    gm->commenceEndOfRound(player1);
+    std::cout << "Points for " << player1->getName() << " is " << player1->getPoints() << std::endl;
+     
+    // std::cout << gm->moveTilesFromPatternLines(player1) << std::endl;
     gm->printTableAndBoard(player1);
-    for(unsigned int i = 0; i != gm->getTable()->getBoxLid()->size(); i++) {
-        std::cout << gm->getTable()->getBoxLid()->get(i);
+    for(unsigned int i = 0; i != box->size(); i++) {
+        std::cout << box->get(i);
     }
     std::cout << std::endl;
 
-    player1->getBoard()->addPatternLines(1,0,YELLOW);
-    gm->moveTilesFromPatternLines(gm->getPlayer(1));
+    board->addPatternLines(1,0,YELLOW);
+    gm->commenceEndOfRound(player1);
+    std::cout << "Points for " << player1->getName() << " is " << player1->getPoints() << std::endl; 
+
+    // std::cout << gm->moveTilesFromPatternLines(player1) << std::endl;
     gm->printTableAndBoard(player1);
-    for(unsigned int i = 0; i != gm->getTable()->getBoxLid()->size(); i++) {
-        std::cout << gm->getTable()->getBoxLid()->get(i);
+    for(unsigned int i = 0; i != box->size(); i++) {
+        std::cout << box->get(i);
     }
     std::cout << std::endl;
 
-    player1->getBoard()->addPatternLines(4,3,LIGHT_BLUE);
-    player1->getBoard()->addPatternLines(4,2,LIGHT_BLUE);
-    player1->getBoard()->addPatternLines(4,1,LIGHT_BLUE);
+    board->addPatternLines(4,3,LIGHT_BLUE);
+    board->addPatternLines(4,2,LIGHT_BLUE);
+    board->addPatternLines(4,1,LIGHT_BLUE);
 
-    gm->moveTilesFromPatternLines(gm->getPlayer(1));
+    gm->commenceEndOfRound(player1);
     gm->printTableAndBoard(player1);
 
-    player1->getBoard()->addPatternLines(4,0,LIGHT_BLUE);
-    gm->moveTilesFromPatternLines(gm->getPlayer(1));
+    board->addFloorLine(RED);
+    board->addFloorLine(YELLOW);
+    board->addFloorLine(RED);
+    board->addFloorLine(YELLOW);
+
+    board->addPatternLines(4,0,LIGHT_BLUE);
+    gm->commenceEndOfRound(player1);
     gm->printTableAndBoard(player1);
-    for(unsigned int i = 0; i != gm->getTable()->getBoxLid()->size(); i++) {
-        std::cout << gm->getTable()->getBoxLid()->get(i);
+    for(unsigned int i = 0; i != box->size(); i++) {
+        std::cout << box->get(i);
     }
     std::cout << std::endl;
+
+
 
 
 

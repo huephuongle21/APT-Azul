@@ -7,9 +7,9 @@ Player::Player(std::string playerName, int id) {
     this->playerBoard = new Board();
 }
 
-Player::Player() {
+Player::Player(int id) {
     this->playerName = "";
-    this->id = 0;
+    this->id = id;
     this->playerPoints = 0;
     this->playerBoard = new Board();
 }
