@@ -20,7 +20,11 @@ class Board {
 
     void addPatternLines(int row, int col, Tile value);
 
+    // Add tile to wall when load game from file
     void addWall(int row, int col, Tile value);
+
+    // Add tile to wall during the game
+    void addWall(int& pos, Tile value);
 
     Tile** getPatternLines();
 
@@ -36,13 +40,19 @@ class Board {
 
     bool isPatternLinesEmpty(int& pos);
 
+    bool isPatternLinesFilled(int& pos);
+
+    Tile removeFromPatternLines(int& pos);
+
+    bool isRowFilled();
+
     private:
 
     Wall wall;
 
     std::array <Tile, FLOOR_LINE_SIZE> floorLine;
 
-    int length;
+    int floorLineLength;
 
     Tile* patternLines[PATTERN_LINES_SIZE];
 

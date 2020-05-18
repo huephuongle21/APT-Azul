@@ -107,7 +107,6 @@ void printPatternLines(std::ostream& outStream, Tile** patternLines) {
     }
 }
 
-// Need to update for lowercase and uppercase
 void printWall(std::ostream& outStream, Wall& wall) {
     for(int i = 0; i < WALL_DIM; i++) {
         for(int j = 0; j < WALL_DIM; j++) {
@@ -121,7 +120,9 @@ void printWall(std::ostream& outStream, Wall& wall) {
     }
 }
 
-void printFloorLine(std::ostream& outStream, std::array<Tile, FLOOR_LINE_SIZE>& floorLine, int length) {
+void printFloorLine(std::ostream& outStream, 
+        std::array<Tile, FLOOR_LINE_SIZE>& floorLine, int length) {
+
     if(length == 0) {        
         outStream << EMPTY_COLLECTION;
     } else {
@@ -134,7 +135,8 @@ void printFloorLine(std::ostream& outStream, std::array<Tile, FLOOR_LINE_SIZE>& 
     outStream << "\n" << std::endl;
 }
 
-void readGame(std::istream& inStream, Table* table, int* currentPlayerID, Player* player1, Player* player2) {
+void readGame(std::istream& inStream, Table* table, int* currentPlayerID, 
+        Player* player1, Player* player2) {
 
     std::string line;  
     std::vector<std::string> lines;                             
@@ -231,7 +233,6 @@ void readBoard(std::vector<std::string>& lines, int* i, Board* board) {
         }
     }
 
-    //upper and lower
     for(int row = 0; row != WALL_DIM; row++) {
         int size = lines[++index].length();
         for(int col = 0; col != size; col++) {
@@ -252,7 +253,9 @@ void readBoard(std::vector<std::string>& lines, int* i, Board* board) {
     *i = index;
 }
 
-void printBoard(std::ostream& outStream, Wall& wall, Tile** patternLines, std::array<Tile, FLOOR_LINE_SIZE>& floorLine, int length) {
+void printBoard(std::ostream& outStream, Wall& wall, Tile** patternLines, 
+        std::array<Tile, FLOOR_LINE_SIZE>& floorLine, int length) {
+
     for(int row = 0; row != PATTERN_LINES_SIZE; row++) {
         for(int col = 0; col != PATTERN_LINES_SIZE; col++) {
             if((col + 1) >= (PATTERN_LINES_SIZE - row)) {
@@ -261,7 +264,6 @@ void printBoard(std::ostream& outStream, Wall& wall, Tile** patternLines, std::a
                 outStream << " ";
             }
 
-            // uppercase and lowercase
             if(col == PATTERN_LINES_SIZE - 1) {
                 outStream << " || ";
                 for(int wCol = 0; wCol != WALL_DIM; wCol++) {
@@ -276,6 +278,7 @@ void printBoard(std::ostream& outStream, Wall& wall, Tile** patternLines, std::a
         }
         outStream << "\n";
     }
+
     outStream << "broken: ";
     printFloorLine(outStream, floorLine, length);
 }

@@ -38,6 +38,8 @@ public:
 
     void setupGame();
 
+    void refillTable();
+
 private:
 
     LinkedList* tileBag;
