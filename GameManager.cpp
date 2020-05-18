@@ -225,6 +225,21 @@ bool GameManager::playerTurn(Player* player, std::string input) {
 
     if(isTurnValid) {
         takeTiles(factoryChoice, colourChoice);
+        int tilesPlaced = 0;
+
+        for(int i = 0; i != FACTORY_SIZE; ++i) {
+            if(table->getChosenFactory()[i] == colourChoice &&
+               tilesPlaced < patternLineChoice) {
+
+                player->getBoard()->addPatternLines(patternLineChoice, tilesPlaced, colourChoice);
+                ++tilesPlaced;
+            } else {
+                table->getCenter()->addTile(table->getChosenFactory()[i]);
+            }
+        }
+
+        table->clearChosenFactory();
+
     } 
 
     return isTurnValid;
@@ -265,6 +280,8 @@ bool GameManager::promptForPatternLineChoice(Player* player, int& patternLineCho
 }
 
 void GameManager::takeTiles(int& factoryChoice, char& colour) {
+    table->populateChosenFactory(factoryChoice);
+    table->removeFactory(factoryChoice);
 }
 
 void GameManager::swapCurrentPlayer() {
@@ -308,4 +325,7 @@ void GameManager::moveTilesFromPatternLines(Player* player) {
             }
         }
     }
+}
+
+void GameManager::moveTilesToPatternLines(Player* player) {
 }
