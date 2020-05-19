@@ -1,8 +1,6 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-#include <vector>
-
 #define STUDENT_CREDITS_LENGTH  3
 #define FACTORY_SIZE            4
 #define NUM_PLAYABLE_COLOURS    5
@@ -18,6 +16,10 @@
 
 #define COMMAND_TURN            "turn"
 #define COMMAND_SAVE            "save"
+
+#define POINT_HORIZONTAL        2
+#define POINT_VERTICAL          7
+#define POINT_1_COLOUR         10
 
 #define NO_TILE       '.'
 #define RED           'R'

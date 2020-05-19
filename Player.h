@@ -28,6 +28,9 @@ public:
     Board* getBoard();
 
     void setName(std::string name);
+    
+    // Print player name with points and number of completed rows at the end of game
+    void toString();
 
 private:
 

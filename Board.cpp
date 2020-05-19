@@ -25,6 +25,8 @@ Board::Board() {
             wall[i][j] = defaultWall[i][j];
         }
     }
+
+    numberOfRowsCompleted = 0;
 }
 
 
@@ -79,6 +81,7 @@ bool Board::isPatternLinesEmpty(int& pos) {
 
 bool Board::findColourInBoard(char& colourChoice, int& pos) {
     bool isFound = false;
+    // Ensure that colourChoice is not filled in wall yet
     if(findColourInWall(colourChoice, pos)) {
         isFound = true;
     } else if(!findColourInPatternLines(colourChoice, pos)) {
@@ -155,6 +158,22 @@ void Board::clearFloorLine() {
     floorLineLength = 0;
 }
 
-bool Board::isRowFilled() {
-    return false;
+void Board::completeRows() {
+    bool rowFilled = true;
+    for(int row = 0; row != WALL_DIM; row++) {
+        for(int col = 0; col != WALL_DIM; col++) {
+            Tile tile = wall[row][col];
+            if(tile >= 'a' && tile <= 'z') {
+                rowFilled = false;
+            }
+        }
+        if(rowFilled) {
+            numberOfRowsCompleted++;
+        }
+        rowFilled = true;
+    }
+}
+
+unsigned int Board::getNumberOfRowsCompleted() {
+    return numberOfRowsCompleted;
 }

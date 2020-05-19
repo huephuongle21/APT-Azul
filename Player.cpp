@@ -41,3 +41,8 @@ void Player::addPoints(int points) {
 Board* Player::getBoard() {
     return this->playerBoard;
 }
+
+void Player::toString() {
+    std::cout << playerName << ": " << playerPoints << " points and " 
+        << playerBoard->getNumberOfRowsCompleted() << " completed rows." << std::endl;  
+}

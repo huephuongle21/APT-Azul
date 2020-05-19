@@ -8,9 +8,6 @@ Node::Node(Tile value, Node* next) {
     this->next = next;
 }
 
-Node::~Node() {
-}
-
 LinkedList::LinkedList() {
    this->head = nullptr;
    this->length = 0;

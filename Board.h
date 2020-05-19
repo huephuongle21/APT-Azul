@@ -36,6 +36,7 @@ class Board {
 
     bool findColourInBoard(char& colourChoice, int& pos);
 
+    // True if patternLine is empty OR patternLine is not full and has that colourChoice
     bool findColourInPatternLines(char& colourChoice, int& pos);
 
     bool isPatternLinesEmpty(int& pos);
@@ -46,9 +47,13 @@ class Board {
 
     Tile removeFromPatternLines(int& pos);
 
-    bool isRowFilled();
+    // Check for any rows completed and set number of rows completed
+    void completeRows();
 
+    // Clear floor line after each round
     void clearFloorLine();
+
+    unsigned int getNumberOfRowsCompleted();
 
     private:
 
@@ -59,6 +64,8 @@ class Board {
     int floorLineLength;
 
     Tile* patternLines[PATTERN_LINES_SIZE];
+
+    unsigned int numberOfRowsCompleted;
 
 };
 

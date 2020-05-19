@@ -9,27 +9,18 @@
 GameManager::GameManager() {
     this->player1 = new Player(1);
     this->player2 = new Player(2);
-
     currentPlayerID = 0;
-
     this->table = new Table();
-
     this->calculator = new ScoreCalculator();
-
     this->roundCount = 1;
-
 }
 
 GameManager::GameManager(std::string player1Name, std::string player2Name) {
     this->player1 = new Player(player1Name, 1);
     this->player2 = new Player(player2Name, 2);
-
     currentPlayerID = player1->getID();
-
     this->table = new Table();
-
     this->calculator = new ScoreCalculator();
-
     this->roundCount = 1;
 }
 
@@ -46,7 +37,7 @@ void GameManager::startGame(bool isNewGame) {
     }
 
     std::cout << "Let's Play!" << "\n" << std::endl;
-    
+   
     bool gameOver = false;
     bool isEOF = false;
 
@@ -55,7 +46,7 @@ void GameManager::startGame(bool isNewGame) {
         if(isEOF) {
             gameOver = isEOF;
         } else if(!isEOF) {
-            bool endGame = isEndGame(player1, player2);
+            bool endGame = isEndGame();
             if(!endGame) {
                 table->refillTable();
                 roundCount++;
@@ -63,6 +54,17 @@ void GameManager::startGame(bool isNewGame) {
             gameOver = endGame;
         }
     }
+    if(!isEOF) {
+        commenceEndOfGame();
+    }
+}
+
+void GameManager::commenceEndOfGame() {
+    calculator->calculateScoreEndOfGame(player1);
+    calculator->calculateScoreEndOfGame(player2);
+
+    std::cout << "=== GAME OVER ===" << std::endl;
+    showWinner();
 }
 
 bool GameManager::loadGame(std::string filename) {
@@ -81,27 +83,27 @@ bool GameManager::loadGame(std::string filename) {
     return isLoaded;
 }
 
-bool GameManager::saveGame(std::string savePath) {
-
+bool GameManager::saveGame(std::string input) {
+    std::stringstream saveGame(input);
+    std::string command;
+    std::string savePath;
     bool saved = false;
+    if(saveGame >> command >> savePath) {
+        std::ofstream os;
+        os.open(savePath);
 
-    std::ofstream os;
-    os.open(savePath);
+        if(os.fail()) {
+            std::cout << "Could not create save." << std::endl;
+        } else {
+            printGame(os, table, currentPlayerID, player1, player2);
+            os.close();
 
-    if (os.fail()) {
-        std::cout << "Could not create save." << std::endl;
-    } else {
-        
-        printGame(os, table, currentPlayerID, player1, player2);
-        os.close();
-        
-        std::cout << "Save successful!" << std::endl;
-        std::cout << "Game saved as: '" << savePath << "'" << std::endl;
-        saved = true;
-    }
-
-    return saved;
-
+            std::cout << "Save successful!" << std::endl;
+            std::cout << "Game saved as: '" << savePath << "'" << std::endl;
+            saved = true;
+        }   
+    }     
+    return saved; 
 }
 
 bool GameManager::commenceRound() {
@@ -198,8 +200,17 @@ bool GameManager::commenceTurn(Player* player) {
     return isEOF;    
 }
 
-bool GameManager::isEndGame(Player* player1, Player* player2) {
-    return false;
+bool GameManager::isEndGame() {
+    bool endGame = false;
+    Board* board1 = player1->getBoard();
+    Board* board2 = player2->getBoard();
+    board1->completeRows();
+    board2->completeRows();
+
+    if(board1->getNumberOfRowsCompleted() > 0 || board2->getNumberOfRowsCompleted() > 0) {
+        endGame = true;
+    }
+    return endGame;
 }
 
 bool GameManager::isEndRound() {
@@ -222,10 +233,14 @@ bool GameManager::playerTurn(Player* player, std::string input) {
     int factoryChoice;
     char colourChoice;
     int patternLineChoice;
-    playerTurn >> command >> factoryChoice >> colourChoice >> patternLineChoice;
+    bool isTurnValid = true;
 
-    bool isTurnValid = promptForFactoryChoice(factoryChoice, colourChoice) 
-        && promptForPatternLineChoice(player, patternLineChoice, colourChoice);
+    if(!(playerTurn >> command >> factoryChoice >> colourChoice >> patternLineChoice)) {
+        isTurnValid = false;
+    } else {
+        isTurnValid = promptForFactoryChoice(factoryChoice, colourChoice) 
+            && promptForPatternLineChoice(player, patternLineChoice, colourChoice);
+    }
 
     if(isTurnValid) {
         takeTiles(factoryChoice, colourChoice);
@@ -235,7 +250,7 @@ bool GameManager::playerTurn(Player* player, std::string input) {
             if(table->getChosenFactory()[i] == colourChoice &&
                tilesPlaced < patternLineChoice) {
 
-                player->getBoard()->addPatternLines(patternLineChoice, tilesPlaced, colourChoice);
+                player->getBoard()->addPatternLines(patternLineChoice-1, tilesPlaced, colourChoice);
                 ++tilesPlaced;
             } else {
                 table->getCenter()->addTile(table->getChosenFactory()[i]);
@@ -340,4 +355,25 @@ int GameManager::moveTilesFromPatternLines(Player* player) {
 }
 
 void GameManager::moveTilesToPatternLines(Player* player) {
+}
+
+void GameManager::showWinner() {
+    Player* winner = nullptr;
+    int player1Points = player1->getPoints();
+    int player2Points = player2->getPoints();
+    int player1NumberOfRows = player1->getBoard()->getNumberOfRowsCompleted();
+    int player2NumberOfRows = player2->getBoard()->getNumberOfRowsCompleted();
+
+    if(player1Points > player2Points || 
+            (player1Points == player2Points && player1NumberOfRows > player2NumberOfRows)) {
+        winner = player1;
+    } else if(player1Points < player2Points ||
+            (player1Points == player2Points && player2NumberOfRows > player1NumberOfRows)) {
+        winner = player2;
+    } 
+    if(winner != nullptr) {
+        std::cout << "Player " << winner->getName() << " wins!" << std::endl;
+    } else {
+        std::cout << "Victory is shared for " << player1->getName() << " and " << player2->getName() << "!" << std::endl;
+    }
 }
