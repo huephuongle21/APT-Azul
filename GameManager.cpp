@@ -243,25 +243,52 @@ bool GameManager::playerTurn(Player* player, std::string input) {
     }
 
     if(isTurnValid) {
-        takeTiles(factoryChoice, colourChoice);
         int tilesPlaced = 0;
 
-        for(int i = 0; i != FACTORY_SIZE; ++i) {
-            if(table->getChosenFactory()[i] == colourChoice &&
-               tilesPlaced < patternLineChoice) {
+        if(factoryChoice > 0 && factoryChoice < 6) {    
+            takeTiles(factoryChoice, colourChoice);
 
-                player->getBoard()->addPatternLines(patternLineChoice-1, tilesPlaced, colourChoice);
-                ++tilesPlaced;
-            } else {
-                table->getCenter()->addTile(table->getChosenFactory()[i]);
+            for(int i = 0; i != FACTORY_SIZE; ++i) {
+                if(table->getChosenFactory()[i] == colourChoice && tilesPlaced < patternLineChoice) {
+                    if(player->getBoard()->getPatternLines()[patternLineChoice - 1][i] != NO_TILE) {
+                        while(player->getBoard()->getPatternLines()[patternLineChoice - 1][tilesPlaced] != NO_TILE) {
+                            ++tilesPlaced;
+                        }
+                        player->getBoard()->addPatternLines(patternLineChoice - 1, tilesPlaced, colourChoice);
+                        ++tilesPlaced;
+                    } else {
+                        player->getBoard()->addPatternLines(patternLineChoice - 1, tilesPlaced, colourChoice);
+                        ++tilesPlaced;
+                    }
+                
+                } else {
+                    table->getCenter()->addTile(table->getChosenFactory()[i]);
+                    moveTilesFromPatternLines(player);
+                }
             }
-        }
+        } else if(factoryChoice == 0) {
+            for(int i = 0; i != table->getCenter()->size(); ++i) {
+                if(table->getCenter()->get(i) == colourChoice) {
+                    player->getBoard()->addPatternLines(patternLineChoice - 1, tilesPlaced, colourChoice);
+                    ++tilesPlaced;
+                }
+            }
+            for(int i = table->getCenter()->size(); i >= 0; --i) {
+                if(table->getCenter()->get(i) == colourChoice) {
+                    table->getCenter()->removeTile(i);
+                }
+            }
 
-        table->clearChosenFactory();
+        }
+            table->clearChosenFactory();
 
     } 
 
     return isTurnValid;
+}
+
+void GameManager::takeFromCentre(Player* player) {
+
 }
 
 bool GameManager::promptForFactoryChoice(int& factoryChoice, char& colourChoice) {

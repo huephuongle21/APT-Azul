@@ -63,6 +63,8 @@ class GameManager {
 
     void takeTiles(int& factoryChoice, char& colour);
 
+    void takeFromCentre(Player* player);
+
     void printTableAndBoard(Player* player);
 
     Table* getTable();
