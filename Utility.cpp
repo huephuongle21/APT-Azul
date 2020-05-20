@@ -259,7 +259,7 @@ void printBoard(std::ostream& outStream, Wall& wall, Tile** patternLines,
     for(int row = 0; row != PATTERN_LINES_SIZE; row++) {
         for(int col = 0; col != PATTERN_LINES_SIZE; col++) {
             if((col + 1) >= (PATTERN_LINES_SIZE - row)) {
-                outStream << patternLines[row][col-(PATTERN_LINES_SIZE-row-1)];               
+                outStream << patternLines[row][PATTERN_LINES_SIZE - col - 1];               
             } else {
                 outStream << " ";
             }

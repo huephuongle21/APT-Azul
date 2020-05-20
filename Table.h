@@ -40,6 +40,14 @@ public:
 
     void refillTable();
 
+    void populateChosenFactory(int& pos);
+
+    void clearChosenFactory();
+
+    Tile* getChosenFactory();
+
+    void removeFactory(int& pos);
+
 private:
 
     LinkedList* tileBag;
@@ -47,6 +55,8 @@ private:
     LinkedList* boxLid;
 
     Factory factories[NUMBER_OF_FACTORY];
+
+    Tile chosenFactory[FACTORY_SIZE];
 
     Vector* centerOfTable;
     

@@ -24,7 +24,7 @@ class Board {
     void addWall(int row, int col, Tile value);
 
     // Add tile to wall during the game
-    void addWall(int& pos, Tile value);
+    int addWall(int& pos, Tile value);
 
     Tile** getPatternLines();
 
@@ -36,15 +36,24 @@ class Board {
 
     bool findColourInBoard(char& colourChoice, int& pos);
 
+    // True if patternLine is empty OR patternLine is not full and has that colourChoice
     bool findColourInPatternLines(char& colourChoice, int& pos);
 
     bool isPatternLinesEmpty(int& pos);
 
     bool isPatternLinesFilled(int& pos);
 
+    bool hasPatternLineColour(int& pos);
+
     Tile removeFromPatternLines(int& pos);
 
-    bool isRowFilled();
+    // Check for any rows completed and set number of rows completed
+    void completeRows();
+
+    // Clear floor line after each round
+    void clearFloorLine();
+
+    unsigned int getNumberOfRowsCompleted();
 
     private:
 
@@ -55,6 +64,8 @@ class Board {
     int floorLineLength;
 
     Tile* patternLines[PATTERN_LINES_SIZE];
+
+    unsigned int numberOfRowsCompleted;
 
 };
 

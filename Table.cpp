@@ -12,6 +12,11 @@ Table::Table() {
         }
     }
 
+    for(int i = 0; i < NUMBER_OF_FACTORY; i++) {
+        chosenFactory[i] = NO_TILE;
+    }
+ 
+
     centerOfTable = new Vector();
 
     sm = new SetupManager(seedNumber);
@@ -95,4 +100,26 @@ void Table::setupGame() {
 
 void Table::refillTable() {
     sm->populateFactories(tileBag, factories, boxLid);
+}
+
+void Table::populateChosenFactory(int& pos) {
+    for(int i = 0; i != FACTORY_SIZE; i++) {
+        chosenFactory[i] = factories[pos-1][i];
+    }
+}
+
+Tile* Table::getChosenFactory() {
+    return chosenFactory;
+}
+
+void Table::removeFactory(int& pos) {
+    for(int i = 0; i != FACTORY_SIZE; i++) {
+        factories[pos-1][i] = NO_TILE;
+    }
+}
+
+void Table::clearChosenFactory() {
+    for(int i = 0; i != FACTORY_SIZE; i++) {
+       chosenFactory[i] = NO_TILE;
+    }
 }

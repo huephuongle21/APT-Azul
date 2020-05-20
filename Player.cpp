@@ -7,9 +7,9 @@ Player::Player(std::string playerName, int id) {
     this->playerBoard = new Board();
 }
 
-Player::Player() {
+Player::Player(int id) {
     this->playerName = "";
-    this->id = 0;
+    this->id = id;
     this->playerPoints = 0;
     this->playerBoard = new Board();
 }
@@ -40,4 +40,9 @@ void Player::addPoints(int points) {
 
 Board* Player::getBoard() {
     return this->playerBoard;
+}
+
+void Player::toString() {
+    std::cout << playerName << ": " << playerPoints << " points and " 
+        << playerBoard->getNumberOfRowsCompleted() << " completed rows." << std::endl;  
 }

@@ -11,9 +11,11 @@ public:
 
     ~ScoreCalculator();
 
-    int calculateScoreEachRound(Player* player);
+    int calculateScoreEachRound(Player* player, int& addScore);
 
     void calculateScoreEndOfGame(Player* player);
+
+    int calculateScoreFromWall(Wall& wall, int& colPos, int& rowPos);
 
 private:
 
