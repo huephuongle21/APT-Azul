@@ -20,8 +20,6 @@ int main(int argc, char** argv) {
     int seed;
     processSeed(argc, argv, &seed);
 
-    std::cout << seed << std::endl;
-
     StudentCredit* studentArr = new StudentCredit();
     
     printMenu();
