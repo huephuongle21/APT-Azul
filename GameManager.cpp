@@ -284,8 +284,16 @@ bool GameManager::playerTurn(Player* player, std::string input) {
 
             for(int i = 0; i != FACTORY_SIZE; ++i) {
 
+                // If player chooses to add to floorline instead of pattern line
+                if(table->getChosenFactory()[i] == colourChoice && patternLineChoice == 6) {
+                    if(player->getBoard()->getFloorLineLength() < 7) {
+                        player->getBoard()->addFloorLine(colourChoice);
+                    } else {
+                        table->getBoxLid()->addFront(colourChoice);
+                    }
+
                 // If there's already placed tiles in the pattern line, keep moving to the next index.
-                if(table->getChosenFactory()[i] == colourChoice && tilesPlaced < patternLineChoice) {
+                } else if(table->getChosenFactory()[i] == colourChoice && tilesPlaced < patternLineChoice) {
                     if(player->getBoard()->getPatternLines()[patternLineChoice - 1][i] != NO_TILE) {
                         while(player->getBoard()->getPatternLines()[patternLineChoice - 1][tilesPlaced] != NO_TILE) {
                             ++tilesPlaced;
@@ -307,15 +315,33 @@ bool GameManager::playerTurn(Player* player, std::string input) {
 
                 // If the pattern line is full, move the remaining tiles of that colour to the floor line.
                 } else if(table->getChosenFactory()[i] == colourChoice && tilesPlaced >= patternLineChoice) {
-                    player->getBoard()->addFloorLine(colourChoice);
+                    if(player->getBoard()->getFloorLineLength() < 7) {
+                        player->getBoard()->addFloorLine(colourChoice);
+                    } else {
+                        table->getBoxLid()->addFront(colourChoice);
+                    }
                 }
             }
 
         } else if(factoryChoice == 0) {
+
             for(int i = 0; i != table->getCenter()->size(); ++i) {
 
+                // Gives the first player tile to whoever takes from the centre of the board first
+                if(table->getCenter()->get(i) == FIRST_PLAYER) {
+                    player->getBoard()->addFloorLine(FIRST_PLAYER); 
+                }
+
+                // If player chooses to place tiles in floor line.
+                if(table->getCenter()->get(i) == colourChoice && patternLineChoice == 6) {
+                    if(player->getBoard()->getFloorLineLength() < 7) {
+                        player->getBoard()->addFloorLine(colourChoice);
+                    } else {
+                        table->getBoxLid()->addFront(colourChoice);
+                    }
+
                 // Same as above, move along if there's already tiles in the pattern line.
-                if(table->getCenter()->get(i) == colourChoice && tilesPlaced < patternLineChoice) {
+                } else if(table->getCenter()->get(i) == colourChoice && tilesPlaced < patternLineChoice) {
                     if(player->getBoard()->getPatternLines()[patternLineChoice - 1][i] != NO_TILE) {
                         while(player->getBoard()->getPatternLines()[patternLineChoice - 1][tilesPlaced] != NO_TILE) {
                             ++tilesPlaced;
@@ -332,17 +358,26 @@ bool GameManager::playerTurn(Player* player, std::string input) {
 
                 // If the pattern line is full, move the remaining tiles of that colour to the floor line.
                 } else if(table->getCenter()->get(i) == colourChoice && tilesPlaced >= patternLineChoice) {
-                    player->getBoard()->addFloorLine(colourChoice);
+                    if(player->getBoard()->getFloorLineLength() < 7) {
+                        player->getBoard()->addFloorLine(colourChoice);
+                    } else {
+
+                        // If the floor line is full, add to the box
+                        table->getBoxLid()->addFront(colourChoice);
+                    }
                 }
             }
             for(int i = table->getCenter()->size(); i >= 0; --i) {
                 if(table->getCenter()->get(i) == colourChoice) {
                     table->getCenter()->removeTile(i);
                 }
+
+                if(table->getCenter()->get(i) == FIRST_PLAYER) {
+                    table->getCenter()->removeTile(i);
+                }
             }
 
         }
-            // moveTilesFromPatternLines(player);
             table->clearChosenFactory();
 
     } 
@@ -381,8 +416,11 @@ bool GameManager::promptForColourChoice(char& colourChoice) {
 
 bool GameManager::promptForPatternLineChoice(Player* player, int& patternLineChoice, char& colourChoice) {
     bool isValid = true;
-    if(player->getBoard()->findColourInBoard(colourChoice, patternLineChoice) 
-            && patternLineChoice != FLOORLINE_POSITION) {
+
+    if(patternLineChoice == 6) {
+        isValid = true;
+    } else if(player->getBoard()->findColourInBoard(colourChoice, patternLineChoice) 
+        && patternLineChoice != FLOORLINE_POSITION) {
         std::cout << "Invalid choice of pattern lines" << std::endl;
         isValid = false;
     }
