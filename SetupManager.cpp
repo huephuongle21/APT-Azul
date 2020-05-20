@@ -1,6 +1,12 @@
 #include "SetupManager.h"
 #include "Types.h"
 
+#include <time.h>
+
+SetupManager::SetupManager() {
+    std::srand(time(NULL));
+}
+
 SetupManager::SetupManager(int seed) {
     std::srand(seed);
 }
@@ -106,5 +112,9 @@ void SetupManager::populateFactories(LinkedList* tileBag, Factory factories[NUMB
         }
     }
 
+}
+
+void SetupManager::addFirstPlayerTileToCenter(Vector* center) {
+    center->addTile(FIRST_PLAYER);
 }
 

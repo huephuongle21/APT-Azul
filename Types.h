@@ -13,6 +13,7 @@
 
 #define USER_PROMPT             '>'
 #define EMPTY_COLLECTION        '_'
+#define NO_SEED_CHOICE          "?"
 
 #define COMMAND_TURN            "turn"
 #define COMMAND_SAVE            "save"

@@ -1,10 +1,10 @@
 #include "Table.h"
 
-Table::Table() {
+Table::Table(int seed) {
     this->tileBag = new LinkedList();
     this->boxLid = new LinkedList();
 
-    seedNumber = 10;
+    this->seedNumber = seed;
 
     for(int i = 0; i < NUMBER_OF_FACTORY; i++) {
         for(int j = 0; j < FACTORY_SIZE; j++) {
@@ -96,6 +96,7 @@ bool Table::findColourInCenter(char& colourChoice) {
 void Table::setupGame() {
     sm->populateTileBag(tileBag);
     sm->populateFactories(tileBag, factories, boxLid);
+    sm->addFirstPlayerTileToCenter(centerOfTable);
 }
 
 void Table::refillTable() {
