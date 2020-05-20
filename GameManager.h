@@ -74,8 +74,6 @@ class GameManager {
     // Move tiles from patternLines to Wall and Box Lid, and calculate points for that corresponding tile. 
     int moveTilesFromPatternLines(Player* player);
 
-    void moveTilesToPatternLines(Player* player);
-
     void commenceEndOfRound(Player* player);
 
     // Calculate score end of game and show the winner

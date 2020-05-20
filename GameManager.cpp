@@ -249,28 +249,57 @@ bool GameManager::playerTurn(Player* player, std::string input) {
             takeTiles(factoryChoice, colourChoice);
 
             for(int i = 0; i != FACTORY_SIZE; ++i) {
+
+                // If there's already placed tiles in the pattern line, keep moving to the next index.
                 if(table->getChosenFactory()[i] == colourChoice && tilesPlaced < patternLineChoice) {
                     if(player->getBoard()->getPatternLines()[patternLineChoice - 1][i] != NO_TILE) {
                         while(player->getBoard()->getPatternLines()[patternLineChoice - 1][tilesPlaced] != NO_TILE) {
                             ++tilesPlaced;
                         }
+
+                        // When the first empty slot has been found place the tile
                         player->getBoard()->addPatternLines(patternLineChoice - 1, tilesPlaced, colourChoice);
                         ++tilesPlaced;
+
+                    // Otherwise just place the tile in the first spot of the pattern line
                     } else {
                         player->getBoard()->addPatternLines(patternLineChoice - 1, tilesPlaced, colourChoice);
                         ++tilesPlaced;
                     }
                 
-                } else {
+                // If it's not the picked colour, move the tiles to the centre
+                } else if(table->getChosenFactory()[i] != colourChoice){
                     table->getCenter()->addTile(table->getChosenFactory()[i]);
                     moveTilesFromPatternLines(player);
+
+                // If the pattern line is full, move the remaining tiles of that colour to the floor line.
+                } else if(table->getChosenFactory()[i] == colourChoice && tilesPlaced >= patternLineChoice) {
+                    player->getBoard()->addFloorLine(colourChoice);
                 }
             }
+
         } else if(factoryChoice == 0) {
             for(int i = 0; i != table->getCenter()->size(); ++i) {
-                if(table->getCenter()->get(i) == colourChoice) {
-                    player->getBoard()->addPatternLines(patternLineChoice - 1, tilesPlaced, colourChoice);
-                    ++tilesPlaced;
+
+                // Same as above, move along if there's already tiles in the pattern line.
+                if(table->getCenter()->get(i) == colourChoice && tilesPlaced < patternLineChoice) {
+                    if(player->getBoard()->getPatternLines()[patternLineChoice - 1][i] != NO_TILE) {
+                        while(player->getBoard()->getPatternLines()[patternLineChoice - 1][tilesPlaced] != NO_TILE) {
+                            ++tilesPlaced;
+                        }
+
+                        player->getBoard()->addPatternLines(patternLineChoice - 1, tilesPlaced, colourChoice);
+                        ++tilesPlaced;
+
+                    // Otherwise just place the tile in the first spot of the pattern line
+                    } else {
+                        player->getBoard()->addPatternLines(patternLineChoice - 1, tilesPlaced, colourChoice);
+                        ++tilesPlaced;
+                    }
+
+                // If the pattern line is full, move the remaining tiles of that colour to the floor line.
+                } else if(table->getCenter()->get(i) == colourChoice && tilesPlaced >= patternLineChoice) {
+                    player->getBoard()->addFloorLine(colourChoice);
                 }
             }
             for(int i = table->getCenter()->size(); i >= 0; --i) {
@@ -379,9 +408,6 @@ int GameManager::moveTilesFromPatternLines(Player* player) {
         }
     }
     return score;
-}
-
-void GameManager::moveTilesToPatternLines(Player* player) {
 }
 
 void GameManager::showWinner() {
