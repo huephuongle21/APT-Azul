@@ -17,7 +17,7 @@ class GameManager {
     GameManager();
 
     // Constructor to start new game
-    GameManager(std::string player1Name, std::string player2Name);
+    GameManager(std::string player1Name, std::string player2Name, int seed);
 
     ~GameManager();
 

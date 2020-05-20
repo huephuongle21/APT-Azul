@@ -10,7 +10,7 @@ class Table {
 
 public:
 
-    Table();
+    Table(int seed);
 
     ~Table();
 

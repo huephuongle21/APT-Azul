@@ -10,16 +10,16 @@ GameManager::GameManager() {
     this->player1 = new Player(1);
     this->player2 = new Player(2);
     currentPlayerID = 0;
-    this->table = new Table();
+    this->table = new Table(0);
     this->calculator = new ScoreCalculator();
     this->roundCount = 1;
 }
 
-GameManager::GameManager(std::string player1Name, std::string player2Name) {
+GameManager::GameManager(std::string player1Name, std::string player2Name, int seed) {
     this->player1 = new Player(player1Name, 1);
     this->player2 = new Player(player2Name, 2);
     currentPlayerID = player1->getID();
-    this->table = new Table();
+    this->table = new Table(seed);
     this->calculator = new ScoreCalculator();
     this->roundCount = 1;
 }
@@ -159,14 +159,15 @@ void GameManager::commenceEndOfRound(Player* player) {
     Board* board = player->getBoard();
     unsigned int floorLineLength = board->getFloorLineLength();
     LinkedList* boxLid = table->getBoxLid();
-    LinkedList* tileBag = table->getTileBag();
+    Vector* center = table->getCenter();
     std::array<Tile, FLOOR_LINE_SIZE>& floorLine = board->getFloorLine();
 
     // Clear floor line after each round
     for(unsigned int index = 0; index != floorLineLength; index++) {
         Tile tile = floorLine[index];
         if(tile == FIRST_PLAYER) {
-            tileBag->addFront(tile);
+            center->addTile(tile);
+            setCurrentPlayerID(player->getID());
         } else if(tile != FIRST_PLAYER && tile != NO_TILE) {
             boxLid->addBack(tile);
         }
