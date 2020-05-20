@@ -43,17 +43,21 @@ void GameManager::startGame(bool isNewGame) {
 
     while(!gameOver) {
         isEOF = commenceRound();
+        
+        // If player enters EOF, end the game. Otherwise, check for end of game condition
         if(isEOF) {
             gameOver = isEOF;
         } else if(!isEOF) {
             bool endGame = isEndGame();
             if(!endGame) {
+                // refill table if game doesn't end and start new round
                 table->refillTable();
                 roundCount++;
             }
             gameOver = endGame;
         }
     }
+    // if game ends not because of EOF, commence end of game
     if(!isEOF) {
         commenceEndOfGame();
     }
@@ -64,6 +68,8 @@ void GameManager::commenceEndOfGame() {
     calculator->calculateScoreEndOfGame(player2);
 
     std::cout << "=== GAME OVER ===" << std::endl;
+    player1->toString();
+    player2->toString();
     showWinner();
 }
 
@@ -102,6 +108,8 @@ bool GameManager::saveGame(std::string input) {
             std::cout << "Game saved as: '" << savePath << "'" << std::endl;
             saved = true;
         }   
+    } else {
+        std::cout << "Invalid save command" << std::endl;
     }     
     return saved; 
 }
@@ -119,7 +127,7 @@ bool GameManager::commenceRound() {
             printTableAndBoard(player2);
             isEOF = commenceTurn(player2);
         }
-
+        // Check for EOF. If false, check for end of round and swap players. Otherwise, end the round
         if(!isEOF) {
             endRound = isEndRound(); 
             swapCurrentPlayer();
@@ -128,7 +136,9 @@ bool GameManager::commenceRound() {
         } 
     }
 
+    // If the round ends not because of EOF, commence end of round
     if(!isEOF) {
+        std::cout << "=== END OF ROUND ===" << std::endl;
         commenceEndOfRound(player1);
         commenceEndOfRound(player2);
         endRound = isEOF;
@@ -139,13 +149,31 @@ bool GameManager::commenceRound() {
 }
 
 void GameManager::commenceEndOfRound(Player* player) {
+    // Move tiles from patternLines to Wall and Box Lid
     int addScore = moveTilesFromPatternLines(player);
+
+    // Calculate score and of round
     int score = calculator->calculateScoreEachRound(player, addScore);
 
     Board* board = player->getBoard();
+    unsigned int floorLineLength = board->getFloorLineLength();
+    LinkedList* boxLid = table->getBoxLid();
+    LinkedList* tileBag = table->getTileBag();
+    std::array<Tile, FLOOR_LINE_SIZE>& floorLine = board->getFloorLine();
+
+    // Clear floor line after each round
+    for(unsigned int index = 0; index != floorLineLength; index++) {
+        Tile tile = floorLine[index];
+        if(tile == FIRST_PLAYER) {
+            tileBag->addFront(tile);
+        } else if(tile != FIRST_PLAYER && tile != NO_TILE) {
+            boxLid->addBack(tile);
+        }
+    }
     board->clearFloorLine();
 
-    printBoard(std::cout, board->getWall(), board->getPatternLines(), board->getFloorLine(), board->getLength());
+    // Print player's board and their updating points
+    printBoard(std::cout, board->getWall(), board->getPatternLines(), board->getFloorLine(), board->getFloorLineLength());
         
     std::cout << player->getName() << " gets " << score << " from round " << roundCount << "." << std::endl;
     std::cout << "Total score for " << player->getName() << ": " << player->getPoints() << std::endl;
@@ -166,7 +194,7 @@ void GameManager::printTableAndBoard(Player* player) {
     std::cout << std::endl;
 
     std::cout << "Mosaic for " << player->getName() << ":" << std::endl;
-    printBoard(std::cout, board->getWall(), board->getPatternLines(), board->getFloorLine(), board->getLength());
+    printBoard(std::cout, board->getWall(), board->getPatternLines(), board->getFloorLine(), board->getFloorLineLength());
 }
 
 bool GameManager::commenceTurn(Player* player) {
@@ -185,7 +213,7 @@ bool GameManager::commenceTurn(Player* player) {
             isTurnFinished = true;
         } else if(typeOfCommand == COMMAND_SAVE && saveGame(input)) {
             std::cout << "Please continue your turn" << std::endl;
-        } else {
+        } else if(typeOfCommand != COMMAND_TURN && typeOfCommand != COMMAND_SAVE) {
             std::cout << "Invalid Input." << "\n";
         }
         if(!isTurnFinished && !std::cin.eof()) {
@@ -236,6 +264,7 @@ bool GameManager::playerTurn(Player* player, std::string input) {
     bool isTurnValid = true;
 
     if(!(playerTurn >> command >> factoryChoice >> colourChoice >> patternLineChoice)) {
+        std::cout << "Invalid turn command" << std::endl;
         isTurnValid = false;
     } else {
         isTurnValid = promptForFactoryChoice(factoryChoice, colourChoice) 

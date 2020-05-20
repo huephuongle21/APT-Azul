@@ -20,7 +20,7 @@ void printPlayer(std::ostream& outStream, Player* player);
 void printBoard(std::ostream& outStream, Board* board);
 
 void printFloorLine(std::ostream& outStream, 
-        std::array<Tile, FLOOR_LINE_SIZE>& floorLine, int length);
+        std::array<Tile, FLOOR_LINE_SIZE>& floorLine, unsigned int length);
 
 void printWall(std::ostream& outStream, Wall& wall);
 

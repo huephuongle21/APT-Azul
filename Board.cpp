@@ -53,7 +53,7 @@ void Board::addFloorLine(Tile value) {
     floorLineLength++;
 }
 
-int Board::getLength() {
+unsigned int Board::getFloorLineLength() {
     return floorLineLength;
 }
 
