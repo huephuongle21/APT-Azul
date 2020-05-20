@@ -30,7 +30,7 @@ class Board {
 
     std::array<Tile, FLOOR_LINE_SIZE>& getFloorLine();
 
-    int getLength();
+    unsigned int getFloorLineLength();
 
     bool findColourInWall(char& colourChoice, int& pos);
 
@@ -61,7 +61,7 @@ class Board {
 
     std::array <Tile, FLOOR_LINE_SIZE> floorLine;
 
-    int floorLineLength;
+    unsigned int floorLineLength;
 
     Tile* patternLines[PATTERN_LINES_SIZE];
 

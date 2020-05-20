@@ -93,7 +93,7 @@ void printBoard(std::ostream& outStream, Board* board) {
     printWall(outStream, board->getWall());
 
     outStream << "\n" << "# Floor Line" << std::endl;
-    printFloorLine(outStream, board->getFloorLine(), board->getLength());
+    printFloorLine(outStream, board->getFloorLine(), board->getFloorLineLength());
 
 }
 
@@ -121,12 +121,12 @@ void printWall(std::ostream& outStream, Wall& wall) {
 }
 
 void printFloorLine(std::ostream& outStream, 
-        std::array<Tile, FLOOR_LINE_SIZE>& floorLine, int length) {
+        std::array<Tile, FLOOR_LINE_SIZE>& floorLine, unsigned int length) {
 
     if(length == 0) {        
         outStream << EMPTY_COLLECTION;
     } else {
-        for(int i = 0; i != length; i++) {
+        for(unsigned int i = 0; i != length; i++) {
             if(floorLine[i] != NO_TILE) {
                 outStream << floorLine[i];
             } 

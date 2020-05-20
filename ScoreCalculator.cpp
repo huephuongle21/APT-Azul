@@ -9,8 +9,8 @@ ScoreCalculator::~ScoreCalculator() {
 }
 
 int ScoreCalculator::calculateScoreEachRound(Player* player, int& addScore) {
-    int floorLineLength = player->getBoard()->getLength();
-    int i = 0;
+    unsigned int floorLineLength = player->getBoard()->getFloorLineLength();
+    unsigned int i = 0;
     int score = 0;
     // Subtract for broken tiles
     if(floorLineLength != 0) {
