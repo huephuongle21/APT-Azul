@@ -13,8 +13,8 @@ void processSeed(int argc, char** argv, int* seed);
 void printMenu();
 Option resolveInput(std::string input);
 
-void startNewGame(int seed);
-void loadGameFromFile();
+bool startNewGame(int seed);
+bool loadGameFromFile();
 
 int main(int argc, char** argv) {
 
