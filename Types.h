@@ -23,7 +23,7 @@
 #define POINT_VERTICAL          7
 #define POINT_1_COLOUR         10
 
-#define FLOORLINE_POSITION      7
+#define FLOORLINE_POSITION      6
 
 #define NO_TILE       '.'
 #define RED           'R'
