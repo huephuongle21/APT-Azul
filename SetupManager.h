@@ -2,12 +2,14 @@
 #define SETUPMANAGER_H
 
 #include "LinkedList.h"
+#include "Vector.h"
 #include <array>
 
 class SetupManager {
 
 public:
 
+    SetupManager();
     SetupManager(int seed);
 
     Tile intToChar(unsigned int number);
@@ -23,6 +25,8 @@ public:
 
     // Factory Methods
     void populateFactories(LinkedList* tileBag, Factory factories[NUMBER_OF_FACTORY], LinkedList* boxLid);
+
+    void addFirstPlayerTileToCenter(Vector* center);
 
 private:
 
