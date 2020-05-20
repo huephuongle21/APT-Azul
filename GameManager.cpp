@@ -270,7 +270,6 @@ bool GameManager::playerTurn(Player* player, std::string input) {
                 // If it's not the picked colour, move the tiles to the centre
                 } else if(table->getChosenFactory()[i] != colourChoice){
                     table->getCenter()->addTile(table->getChosenFactory()[i]);
-                    moveTilesFromPatternLines(player);
 
                 // If the pattern line is full, move the remaining tiles of that colour to the floor line.
                 } else if(table->getChosenFactory()[i] == colourChoice && tilesPlaced >= patternLineChoice) {
@@ -309,6 +308,7 @@ bool GameManager::playerTurn(Player* player, std::string input) {
             }
 
         }
+            moveTilesFromPatternLines(player);
             table->clearChosenFactory();
 
     } 
