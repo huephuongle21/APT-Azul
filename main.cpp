@@ -130,6 +130,7 @@ bool startNewGame(int seed) {
         std::cout << "Please enter name" << "\n" << USER_PROMPT << " ";
         getline(std::cin, player1Name);
     }
+  
     if(!std::cin.eof()) {
         std::cout << "Enter a name for player 2" << "\n" << USER_PROMPT << " ";
         std::string player2Name;
