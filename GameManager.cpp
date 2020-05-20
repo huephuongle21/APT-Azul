@@ -31,7 +31,7 @@ GameManager::~GameManager() {
     delete calculator;
 }
 
-void GameManager::startGame(bool isNewGame) {
+bool GameManager::startGame(bool isNewGame) {
     if(isNewGame) {
         table->setupGame();
     }
@@ -61,6 +61,7 @@ void GameManager::startGame(bool isNewGame) {
     if(!isEOF) {
         commenceEndOfGame();
     }
+    return isEOF;
 }
 
 void GameManager::commenceEndOfGame() {
@@ -337,7 +338,7 @@ bool GameManager::playerTurn(Player* player, std::string input) {
             }
 
         }
-            moveTilesFromPatternLines(player);
+            // moveTilesFromPatternLines(player);
             table->clearChosenFactory();
 
     } 
