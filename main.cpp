@@ -12,6 +12,7 @@ void processSeed(int argc, char** argv, int* seed);
 
 void printMenu();
 Option resolveInput(std::string input);
+
 void startNewGame(int seed);
 void loadGameFromFile();
 
@@ -21,6 +22,9 @@ int main(int argc, char** argv) {
     processSeed(argc, argv, &seed);
 
     StudentCredit* studentArr = new StudentCredit();
+
+    std::cout << "Welcome to Azul!" << std::endl;
+    std::cout << "-------------------" << std::endl;
     
     printMenu();
     std::cout << USER_PROMPT << " ";
@@ -30,17 +34,28 @@ int main(int argc, char** argv) {
     while(!isQuit && getline(std::cin, input)) {
         Option option = resolveInput(input);
         if(option == newGame) {
-            startNewGame(seed);
+
+            if(!startNewGame(seed)) {
+                printMenu();
+            } else {
+                isQuit = true;
+            }
+
         } else if(option == loadGame) {
-            loadGameFromFile();
+            if(!loadGameFromFile()) {
+                printMenu();
+            } else {
+                isQuit = true;
+            }
         } else if(option == displayCredits) {
             studentArr->printDetails();
+            printMenu();
         } else if(option == quit) {
             isQuit = true;
         } else {
             std::cout << "Invalid Input" << std::endl;
         }
-        if(option != quit && !std::cin.eof()) {
+        if(!isQuit && !std::cin.eof()) {
             std::cout << USER_PROMPT << " ";
         }
     }
@@ -84,8 +99,6 @@ void processSeed(int argc, char** argv, int* seed) {
 }
 
 void printMenu() {
-    std::cout << "Welcome to Azul!" << std::endl;
-    std::cout << "-------------------" << std::endl;
     std::cout << std::endl;
     std::cout << "Menu" << std::endl;
     std::cout << "----" << std::endl;
@@ -109,47 +122,53 @@ Option resolveInput(std::string input) {
     return option;
 }
 
-void startNewGame(int seed) {
+bool startNewGame(int seed) {
+    bool isEOF = true;
+
     std::cout << "Starting a New Game" << "\n" << std::endl;
 
     std::cout << "Enter a name for player 1" << "\n" << USER_PROMPT << " ";    
     std::string player1Name;
     getline(std::cin, player1Name);
-    while(player1Name.empty()) {
+    while(player1Name.empty() && !std::cin.eof()) {
         std::cout << "Please enter name" << "\n" << USER_PROMPT << " ";
         getline(std::cin, player1Name);
     }
-
-    std::cout << "Enter a name for player 2" << "\n" << USER_PROMPT << " ";
-    std::string player2Name;
-    getline(std::cin, player2Name);
-    
-    while(player2Name.empty()) {
-        std::cout << "Please enter name" << "\n" << USER_PROMPT << " ";
+  
+    if(!std::cin.eof()) {
+        std::cout << "Enter a name for player 2" << "\n" << USER_PROMPT << " ";
+        std::string player2Name;
         getline(std::cin, player2Name);
-    }
-
-    std::cout << std::endl;
-
-    GameManager* gm = new GameManager(player1Name, player2Name, seed);
-    gm->startGame(true);
-
-    delete gm;
-
+        while(player2Name.empty() && !std::cin.eof()) {
+            std::cout << "Please enter name" << "\n" << USER_PROMPT << " ";
+            getline(std::cin, player2Name);
+        }
+        if(!std::cin.eof()) {
+            std::cout << std::endl;        
+            GameManager* gm = new GameManager(player1Name, player2Name, seed);
+            isEOF = gm->startGame(true);
+            delete gm;
+        }
+    }  
+    return isEOF;
 }
 
-void loadGameFromFile() {
+bool loadGameFromFile() {
+    bool isEOF = true;
     GameManager* gm = new GameManager();
     std::cout << "Enter the filename from which load a game" << "\n" << USER_PROMPT << " ";
     std::string filename;
     getline(std::cin, filename);
-    while(!gm->loadGame(filename)) {
+    while(!gm->loadGame(filename) && !std::cin.eof()) {
         std::cout << "File does not exist. Please enter again" << "\n" << USER_PROMPT << " ";
         getline(std::cin, filename);
     }
-    gm->startGame(false);
+    if(!std::cin.eof()) {
+        isEOF = gm->startGame(false);
+    }
             
     delete gm;
 
+    return isEOF;
 }
 

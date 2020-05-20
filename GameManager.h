@@ -22,7 +22,7 @@ class GameManager {
     ~GameManager();
 
     // Set up table if isNewGame is true, otherwise, continue the current state loaded from file
-    void startGame(bool isNewGame);
+    bool startGame(bool isNewGame);
     
     // Load game from a file when player inputs option loadGame from Menu
     bool loadGame(std::string filename);
