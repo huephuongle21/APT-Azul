@@ -16,10 +16,13 @@
 
 #define COMMAND_TURN            "turn"
 #define COMMAND_SAVE            "save"
+#define COMMAND_EXIST           "quit"
 
 #define POINT_HORIZONTAL        2
 #define POINT_VERTICAL          7
 #define POINT_1_COLOUR         10
+
+#define FLOORLINE_POSITION      6
 
 #define NO_TILE       '.'
 #define RED           'R'

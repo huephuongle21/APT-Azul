@@ -212,9 +212,12 @@ bool GameManager::commenceTurn(Player* player) {
         if(typeOfCommand == COMMAND_TURN && playerTurn(player, input)) {
             std::cout << "Turn successful." << std::endl;
             isTurnFinished = true;
-        } else if(typeOfCommand == COMMAND_SAVE && saveGame(input)) {
+        } else if(typeOfCommand == COMMAND_EXIST) {
+            isTurnFinished = true;
+            isEOF = true;
+        }  else if(typeOfCommand == COMMAND_SAVE && saveGame(input)) {
             std::cout << "Please continue your turn" << std::endl;
-        } else if(typeOfCommand != COMMAND_TURN && typeOfCommand != COMMAND_SAVE) {
+        } else if(typeOfCommand != COMMAND_TURN && typeOfCommand != COMMAND_SAVE && typeOfCommand != COMMAND_EXIST) {
             std::cout << "Invalid Input." << "\n";
         }
         if(!isTurnFinished && !std::cin.eof()) {
@@ -377,7 +380,8 @@ bool GameManager::promptForColourChoice(char& colourChoice) {
 
 bool GameManager::promptForPatternLineChoice(Player* player, int& patternLineChoice, char& colourChoice) {
     bool isValid = true;
-    if(player->getBoard()->findColourInBoard(colourChoice, patternLineChoice)) {
+    if(player->getBoard()->findColourInBoard(colourChoice, patternLineChoice) 
+            && patternLineChoice != FLOORLINE_POSITION) {
         std::cout << "Invalid choice of pattern lines" << std::endl;
         isValid = false;
     }

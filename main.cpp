@@ -30,10 +30,14 @@ int main(int argc, char** argv) {
         if(option == newGame) {
             if(!startNewGame()) {
                 printMenu();
+            } else {
+                isQuit = true;
             }
         } else if(option == loadGame) {
             if(!loadGameFromFile()) {
                 printMenu();
+            } else {
+                isQuit = true;
             }
         } else if(option == displayCredits) {
             studentArr->printDetails();
@@ -43,7 +47,7 @@ int main(int argc, char** argv) {
         } else {
             std::cout << "Invalid Input" << std::endl;
         }
-        if(option != quit && !std::cin.eof()) {
+        if(!isQuit && !std::cin.eof()) {
             std::cout << USER_PROMPT << " ";
         }
     }
