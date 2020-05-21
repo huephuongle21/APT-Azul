@@ -81,11 +81,16 @@ bool GameManager::loadGame(std::string loadPath) {
     inFile.open(loadPath);
 
     if(inFile.fail()) {
+        std::cout << "File does not exist!" << std::endl;
         isLoaded = false;
     } else {
-        readGame(inFile, table, &currentPlayerID, player1, player2);
-        inFile.close();
-        std::cout << "Azul game successfully loaded" << "\n" << std::endl;
+        if(readGame(inFile, table, &currentPlayerID, player1, player2)) {
+            inFile.close();
+            std::cout << "Azul game successfully loaded" << "\n" << std::endl;
+        } else {
+            std::cout << "File does not contain a valid game!" << std::endl;
+            isLoaded = false;
+        }
     }
     return isLoaded;
 }

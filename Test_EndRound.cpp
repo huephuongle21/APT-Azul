@@ -4,7 +4,7 @@
 
 
 int main(void) {
-    GameManager* gm = new GameManager("Alice","Bob");
+    GameManager* gm = new GameManager("Alice","Bob", 1590043364);
     Player* player1 = gm->getPlayer(1);
     Board* board = player1->getBoard();
     LinkedList* box = gm->getTable()->getBoxLid();

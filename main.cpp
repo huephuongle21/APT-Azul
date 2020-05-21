@@ -149,7 +149,7 @@ bool loadGameFromFile() {
         if(filename.empty()) {
             std::cout << "Please enter file name" << "\n" << USER_PROMPT << " ";
         } else {
-            std::cout << "File does not exist. Please enter again" << "\n" << USER_PROMPT << " ";
+            std::cout << "Please enter again" << "\n" << USER_PROMPT << " ";
         }
         getline(std::cin, filename);
     }

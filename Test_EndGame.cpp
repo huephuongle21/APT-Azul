@@ -3,7 +3,7 @@
 #include "GameManager.h"
 
 int main(void) {
-    GameManager* gm = new GameManager("Alice", "Bob");
+    GameManager* gm = new GameManager("Alice", "Bob",1590043364);
     Player* player1 = gm->getPlayer(1);
     Player* player2 = gm->getPlayer(2);
     Board* board1 = player1->getBoard();

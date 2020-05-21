@@ -16,6 +16,10 @@
 #define NO_SEED_CHOICE          "?"
 #define BREAK_LINE              "-------------------"
 
+/* The file must contain that number of lines 
+so that the game can be considered valid */
+#define NUM_LINES               36
+
 #define COMMAND_TURN            "turn"
 #define COMMAND_SAVE            "save"
 #define COMMAND_EXIST           "quit"

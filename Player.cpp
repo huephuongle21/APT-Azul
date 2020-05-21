@@ -51,7 +51,16 @@ void Player::toStringEndOfGame() {
 }
 
 void Player::toStringEndOfRound(int& addScore, unsigned int& roundCount) {
-    std::cout << playerName << " gets " << addScore << " points from round " 
-        << roundCount << "." << std::endl;
+    if(addScore == 0) {
+        std::cout << playerName << " remains the same points in round " 
+            << roundCount << "." << std::endl;
+    } else if(addScore < 0) {
+        unsigned int subtractScore = -(addScore);
+        std::cout << playerName << " loses " << subtractScore << " points from round " 
+            << roundCount << "." << std::endl;
+    } else {
+        std::cout << playerName << " gets " << addScore << " points from round " 
+            << roundCount << "." << std::endl;
+    }
     std::cout << "Total points for " << playerName << ": " << playerPoints << "\n" << std::endl;
 }
