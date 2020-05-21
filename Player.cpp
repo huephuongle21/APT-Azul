@@ -36,13 +36,22 @@ void Player::setName(std::string name) {
 
 void Player::addPoints(int points) {
     this->playerPoints += points;
+    if(playerPoints < 0) {
+        playerPoints = 0;
+    }
 }
 
 Board* Player::getBoard() {
     return this->playerBoard;
 }
 
-void Player::toString() {
+void Player::toStringEndOfGame() {
     std::cout << playerName << ": " << playerPoints << " points and " 
         << playerBoard->getNumberOfRowsCompleted() << " completed rows." << std::endl;  
+}
+
+void Player::toStringEndOfRound(int& addScore, unsigned int& roundCount) {
+    std::cout << playerName << " gets " << addScore << " points from round " 
+        << roundCount << "." << std::endl;
+    std::cout << "Total points for " << playerName << ": " << playerPoints << "\n" << std::endl;
 }

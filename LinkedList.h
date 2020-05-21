@@ -7,7 +7,7 @@
 class Node {
 public:
    Node(Tile value, Node* next);
-   
+   ~Node();
    Tile value;
    Node* next;
 };

@@ -17,8 +17,6 @@ public:
 
     int calculateScoreFromWall(Wall& wall, int& colPos, int& rowPos);
 
-private:
-
 };
 
 #endif // SCORECALCULATOR_H

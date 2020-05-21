@@ -8,6 +8,10 @@ Node::Node(Tile value, Node* next) {
     this->next = next;
 }
 
+Node::~Node() {
+
+}
+
 LinkedList::LinkedList() {
    this->head = nullptr;
    this->length = 0;
@@ -33,15 +37,12 @@ Tile LinkedList::get(const unsigned int index) const {
    Node* current = head;
    Tile returnValue = NO_TILE;
    
-   if (index < size()) {
-      
+   if (index < size()) {     
       while(count < index) {
         ++count;
         current = current->next;
       }
-
-      returnValue = current->value;
-      
+      returnValue = current->value;      
       } else {
         throw std::out_of_range("Linked List get - index out of range");
    }
@@ -50,37 +51,28 @@ Tile LinkedList::get(const unsigned int index) const {
 
 // Version of get that returns error "code" when index is out of range.
 bool LinkedList::get(const unsigned int index, Tile returnValue) const {
-   
    bool error = true;
    unsigned int count = 0;
    Node* current = head;
-   
-   if (index >= 0 && index < size()) {
-      
+   if (index >= 0 && index < size()) {     
       while(count < index) {
         ++count;
         current = current->next;
       }
-
       returnValue = current->value;
       error = false;
-   }
-   
+   }  
    return error;
 }
 
 void LinkedList::addFront(Tile tile) {
-
-    Node* toAdd = new Node(tile, head);
-    head = toAdd;
-    ++length;
-
+   Node* toAdd = new Node(tile, head);
+   head = toAdd;
+   ++length;
 }
 
-void LinkedList::addBack(Tile tile) {
-   
+void LinkedList::addBack(Tile tile) {   
    Node* toAdd = new Node(tile, nullptr);
-
    if (head == nullptr) {
         head = toAdd;
    } else {
@@ -94,23 +86,17 @@ void LinkedList::addBack(Tile tile) {
 }
 
 void LinkedList::removeBack() {
-
     if (length > 0) {
-
         Node* current = head;
-
         while (current->next != nullptr) {
             current = current->next;
          }
-
         delete current;
         --length;
-
     }
 }
 
-void LinkedList::removeFront() {
-   
+void LinkedList::removeFront() {   
    if (length > 0) {
          Node* newHead = head->next;
          delete head;
@@ -120,10 +106,7 @@ void LinkedList::removeFront() {
 }
 
 void LinkedList::clear() {
-
    while (length > 0) {
       removeFront();
-      --length;
    }
-
 }

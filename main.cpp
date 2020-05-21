@@ -9,7 +9,6 @@
 
 // Process command line args for seed.
 void processSeed(int argc, char** argv, int* seed);
-
 void printMenu();
 Option resolveInput(std::string input);
 bool startNewGame(int seed);
@@ -23,7 +22,7 @@ int main(int argc, char** argv) {
     StudentCredit* studentArr = new StudentCredit();
 
     std::cout << "Welcome to Azul!" << std::endl;
-    std::cout << "-------------------" << std::endl;
+    std::cout << BREAK_LINE << std::endl;
     
     printMenu();
     std::cout << USER_PROMPT << " ";
@@ -60,23 +59,16 @@ int main(int argc, char** argv) {
     std::cout << "Goodbye" << std::endl;
 
     delete studentArr;
-
 }
 
 void processSeed(int argc, char** argv, int* seed) {
-
-    if (argc == 3) {
-      
+    if (argc == 3) {      
         std::string modeInput(argv[1]);
         std::string seedInput(argv[2]);
-
         if (modeInput != "-s") {
-
             std::cout << "Mode invalid. Proceeding with random seed." << std::endl;
             *seed = static_cast<int> (time(NULL));
-
         } else {
-
             try { 
                 *seed = std::stoi(seedInput);
             } catch (std::invalid_argument const &e) {
@@ -87,9 +79,8 @@ void processSeed(int argc, char** argv, int* seed) {
                 *seed = static_cast<int> (time(NULL));
             }
         }
-
-   } else {
-       std::cout << "No seed provided. Proceeding with random seed." << std::endl;
+    } else {
+       std::cout << "No seed provided. Proceeding with random seed." << "\n" << std::endl;
        *seed = static_cast<int> (time(NULL));
    }
 
@@ -122,15 +113,13 @@ Option resolveInput(std::string input) {
 bool startNewGame(int seed) {
     bool isEOF = true;
     std::cout << "Starting a New Game" << "\n" << std::endl;
-
     std::cout << "Enter a name for player 1" << "\n" << USER_PROMPT << " ";    
     std::string player1Name;
     getline(std::cin, player1Name);
     while(player1Name.empty() && !std::cin.eof()) {
         std::cout << "Please enter name" << "\n" << USER_PROMPT << " ";
         getline(std::cin, player1Name);
-    }
-  
+    }  
     if(!std::cin.eof()) {
         std::cout << "Enter a name for player 2" << "\n" << USER_PROMPT << " ";
         std::string player2Name;
@@ -155,16 +144,19 @@ bool loadGameFromFile() {
     std::cout << "Enter the filename from which load a game" << "\n" << USER_PROMPT << " ";
     std::string filename;
     getline(std::cin, filename);
+    
     while(!gm->loadGame(filename) && !std::cin.eof()) {
-        std::cout << "File does not exist. Please enter again" << "\n" << USER_PROMPT << " ";
+        if(filename.empty()) {
+            std::cout << "Please enter file name" << "\n" << USER_PROMPT << " ";
+        } else {
+            std::cout << "File does not exist. Please enter again" << "\n" << USER_PROMPT << " ";
+        }
         getline(std::cin, filename);
     }
     if(!std::cin.eof()) {
         isEOF = gm->startGame(false);
-    }
-            
+    }         
     delete gm;
-
     return isEOF;
 }
 

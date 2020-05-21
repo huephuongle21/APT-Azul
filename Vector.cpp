@@ -1,6 +1,4 @@
 #include <iostream>
-
-
 #include "Vector.h"
 
 Vector::Vector() :
@@ -28,7 +26,6 @@ Tile Vector::get(unsigned int index) {
    if (index >=0 && index < tileVector.size()) {
       tile = tileVector.at(index);
    }
-
    return tile;
 }
 
@@ -37,12 +34,10 @@ void Vector::addTile(Tile tile) {
 }
 
 void Vector::removeTile(unsigned int index) {
-   if (tileVector.size() > 0 &&
-       index >= 0 && index < tileVector.size()) {
+   if (tileVector.size() > 0 && index >= 0 && index < tileVector.size()) {
       for (unsigned int i = index; i < tileVector.size() - 1; ++i) {
          tileVector[i] = tileVector[i + 1];
       }
-
       tileVector.pop_back();
    }
 }

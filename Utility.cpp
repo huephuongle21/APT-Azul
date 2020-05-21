@@ -14,10 +14,11 @@ void printGame(std::ostream& outStream, Table* table, int currentPlayerID,
     outStream << "\n" << "# Box Lid" << std::endl;
     printLinkedList(outStream, table->getBoxLid());
     
-
+    Factory* factory = table->getFactories();
     outStream << "\n" << "# Factories" << std::endl;
-    printFactory(outStream, table->getFactories());
-    
+    for(int i = 0; i != NUMBER_OF_FACTORY; i++) {
+        printFactory(outStream, factory[i]);
+    }    
 
     outStream << "\n" << "# Centre of Table" << std::endl;
     printCenter(outStream, table->getCenter());
@@ -50,13 +51,11 @@ void printLinkedList(std::ostream& outStream, LinkedList* list) {
     outStream << std::endl;
 }
 
-void printFactory(std::ostream& outStream, Factory factories[]) {
-    for(int i = 0; i != NUMBER_OF_FACTORY; i++) {
-        for(int j = 0; j != FACTORY_SIZE; j++) {
-            outStream << factories[i][j];
-        } 
-        outStream << std::endl;
-    }   
+void printFactory(std::ostream& outStream, Tile factory[]) {
+    for(int i = 0; i != FACTORY_SIZE; i++) {
+        outStream << factory[i];
+    }
+    outStream << std::endl;
 }
 
 void printCenter(std::ostream& outStream, Vector* centerOfTable) {
@@ -257,6 +256,7 @@ void printBoard(std::ostream& outStream, Wall& wall, Tile** patternLines,
         std::array<Tile, FLOOR_LINE_SIZE>& floorLine, int length) {
 
     for(int row = 0; row != PATTERN_LINES_SIZE; row++) {
+        std::cout << (row+1) << ": ";
         for(int col = 0; col != PATTERN_LINES_SIZE; col++) {
             if((col + 1) >= (PATTERN_LINES_SIZE - row)) {
                 outStream << patternLines[row][PATTERN_LINES_SIZE - col - 1];               
@@ -279,6 +279,6 @@ void printBoard(std::ostream& outStream, Wall& wall, Tile** patternLines,
         outStream << "\n";
     }
 
-    outStream << "broken: ";
+    outStream << "6: broken: ";
     printFloorLine(outStream, floorLine, length);
 }

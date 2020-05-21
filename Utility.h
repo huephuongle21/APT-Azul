@@ -1,4 +1,3 @@
-
 #ifndef UTILITY_H
 #define UTILITY_H
 
@@ -11,13 +10,11 @@
 void printGame(std::ostream& outStream, Table* table, int currentPlayerID, 
         Player* player1, Player* player2);
 
-void printFactory(std::ostream& outStream, Factory factories[]);
+void printFactory(std::ostream& outStream, Tile factory[]);
 
 void printCenter(std::ostream& outStream, Vector* vector);
 
 void printPlayer(std::ostream& outStream, Player* player);
-
-void printBoard(std::ostream& outStream, Board* board);
 
 void printFloorLine(std::ostream& outStream, 
         std::array<Tile, FLOOR_LINE_SIZE>& floorLine, unsigned int length);
@@ -27,6 +24,9 @@ void printWall(std::ostream& outStream, Wall& wall);
 void printPatternLines(std::ostream& outStream, Tile** patternLines);
 
 void printLinkedList(std::ostream& outStream, LinkedList* list);
+
+// Print board to the file
+void printBoard(std::ostream& outStream, Board* board);
 
 // Print board during the game
 void printBoard(std::ostream& outStream, Wall& wall, Tile** patternLines, 

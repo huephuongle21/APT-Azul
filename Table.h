@@ -26,8 +26,6 @@ public:
 
     void setSeedNumber(int seedNumber);
 
-    void addFactory(int row, int col, Tile value);
-
     bool isFactoryEmpty(int& pos);
 
     bool isCenterEmpty();

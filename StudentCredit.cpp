@@ -28,9 +28,9 @@ StudentCredit::~StudentCredit() {
 }
 
 void StudentCredit::printDetails() {
-    std::cout << "---------------------------------" << std::endl;
+    std::cout << BREAK_LINE << std::endl;
     for(int i = 0; i < STUDENT_CREDITS_LENGTH; i++) {
         std::cout << *studentArr[i] << std::endl;
     }
-    std::cout << "---------------------------------" << std::endl;
+    std::cout << BREAK_LINE << std::endl;
 }
