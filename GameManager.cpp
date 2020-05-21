@@ -369,7 +369,11 @@ void GameManager::moveTilesFromCenter(LinkedList* boxLid, Tile** patternLines, V
         Tile tile = center->get(i);
         // Gives the first player tile to whoever takes from the centre of the board first
         if(tile == FIRST_PLAYER) {
-            board->addFloorLine(tile); 
+            if(board->getFloorLineLength() == FLOOR_LINE_SIZE) {
+                board->getFloorLine()[0] = tile;
+            } else {
+                board->addFloorLine(tile); 
+            }
         }
         // If player chooses to place tiles in floor line.
         if(tile == colourChoice && patternLineChoice == FLOORLINE_POSITION) {
