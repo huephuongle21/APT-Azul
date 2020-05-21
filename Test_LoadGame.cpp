@@ -33,8 +33,8 @@ int main(void) {
     readGame(outFile, game->getTable(), &currentID, player1, player2);
     outFile.close();
 
-    printBoard(std::cout, player1->getBoard()->getWall(), player1->getBoard()->getPatternLines(), player1->getBoard()->getFloorLine(), player1->getBoard()->getLength());
-    printBoard(std::cout, player2->getBoard()->getWall(), player2->getBoard()->getPatternLines(), player2->getBoard()->getFloorLine(), player2->getBoard()->getLength());
+    printBoard(std::cout, player1->getBoard()->getWall(), player1->getBoard()->getPatternLines(), player1->getBoard()->getFloorLine(), player1->getBoard()->getFloorLineLength());
+    printBoard(std::cout, player2->getBoard()->getWall(), player2->getBoard()->getPatternLines(), player2->getBoard()->getFloorLine(), player2->getBoard()->getFloorLineLength());
 
     player2->getBoard()->addPatternLines(1,0,RED);
     player2->getBoard()->addPatternLines(4,2, BLACK);
@@ -84,8 +84,8 @@ int main(void) {
     inFile.close();
 
     printGame(std::cout, game->getTable(), game->getCurrentPlayerID(), player1, player2);
-    printBoard(std::cout, player1->getBoard()->getWall(), player1->getBoard()->getPatternLines(), player1->getBoard()->getFloorLine(), player1->getBoard()->getLength());
-    printBoard(std::cout, player2->getBoard()->getWall(), player2->getBoard()->getPatternLines(), player2->getBoard()->getFloorLine(), player2->getBoard()->getLength());
+    printBoard(std::cout, player1->getBoard()->getWall(), player1->getBoard()->getPatternLines(), player1->getBoard()->getFloorLine(), player1->getBoard()->getFloorLineLength());
+    printBoard(std::cout, player2->getBoard()->getWall(), player2->getBoard()->getPatternLines(), player2->getBoard()->getFloorLine(), player2->getBoard()->getFloorLineLength());
 
     delete game;
 

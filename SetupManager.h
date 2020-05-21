@@ -24,11 +24,10 @@ public:
     void refillTileBagFromBoxLid(LinkedList* tileBag, LinkedList* boxLid);
 
     // Factory Methods
-    void populateFactories(LinkedList* tileBag, Factory factories[NUMBER_OF_FACTORY], LinkedList* boxLid);
+    void populateFactories(LinkedList* tileBag, 
+        Factory factories[NUMBER_OF_FACTORY], LinkedList* boxLid);
 
     void addFirstPlayerTileToCenter(Vector* center);
-
-private:
 
 };
 

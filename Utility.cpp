@@ -14,10 +14,11 @@ void printGame(std::ostream& outStream, Table* table, int currentPlayerID,
     outStream << "\n" << "# Box Lid" << std::endl;
     printLinkedList(outStream, table->getBoxLid());
     
-
+    Factory* factory = table->getFactories();
     outStream << "\n" << "# Factories" << std::endl;
-    printFactory(outStream, table->getFactories());
-    
+    for(int i = 0; i != NUMBER_OF_FACTORY; i++) {
+        printFactory(outStream, factory[i]);
+    }    
 
     outStream << "\n" << "# Centre of Table" << std::endl;
     printCenter(outStream, table->getCenter());
@@ -50,13 +51,11 @@ void printLinkedList(std::ostream& outStream, LinkedList* list) {
     outStream << std::endl;
 }
 
-void printFactory(std::ostream& outStream, Factory factories[]) {
-    for(int i = 0; i != NUMBER_OF_FACTORY; i++) {
-        for(int j = 0; j != FACTORY_SIZE; j++) {
-            outStream << factories[i][j];
-        } 
-        outStream << std::endl;
-    }   
+void printFactory(std::ostream& outStream, Tile factory[]) {
+    for(int i = 0; i != FACTORY_SIZE; i++) {
+        outStream << factory[i];
+    }
+    outStream << std::endl;
 }
 
 void printCenter(std::ostream& outStream, Vector* centerOfTable) {
@@ -135,9 +134,9 @@ void printFloorLine(std::ostream& outStream,
     outStream << "\n" << std::endl;
 }
 
-void readGame(std::istream& inStream, Table* table, int* currentPlayerID, 
+bool readGame(std::istream& inStream, Table* table, int* currentPlayerID, 
         Player* player1, Player* player2) {
-
+    bool read = true;
     std::string line;  
     std::vector<std::string> lines;                             
     while (!inStream.eof() && std::getline(inStream, line))                          
@@ -149,24 +148,55 @@ void readGame(std::istream& inStream, Table* table, int* currentPlayerID,
 
     int index = 0;
     int size = lines.size();
-    while(index != size) {
-        readLinkedList(table->getTileBag(), lines[index]);
-        readLinkedList(table->getBoxLid(), lines[++index]);
+    if(size != NUM_LINES) {
+        read = false;
+    } else {
+        while(index != size && read) {
+            LinkedList* tileBag = table->getTileBag();
+            readLinkedList(tileBag, lines[index]);
+            if(tileBag->size() == 0) {
+                read = false;
+            }
+            if(read) {
+                readLinkedList(table->getBoxLid(), lines[++index]);
 
-        for(int i = 0; i != NUMBER_OF_FACTORY; i++) {
-            readFactory(table->getFactories()[i], lines[++index]);
+                Factory* factory = table->getFactories();
+                for(int i = 0; i != NUMBER_OF_FACTORY; i++) {
+                    readFactory(factory[i], lines[++index]);
+                }
+
+                readCenter(table->getCenter(), lines[++index]);
+
+                try {
+                    table->setSeedNumber(std::stoi(lines[++index]));
+                } catch (const std::invalid_argument&) {
+                    read = false;
+                } catch (const std::out_of_range&) {
+                    read = false;
+                }
+                if(read) {
+                    try {
+                        *currentPlayerID = std::stoi(lines[++index]);
+                        if(*currentPlayerID != 1 && *currentPlayerID != 2) {
+                            read = false;
+                        }
+                    } catch (const std::invalid_argument&) {
+                        read = false;
+                    } catch (const std::out_of_range&) {
+                        read = false;
+                    }   
+                    if(read) {
+                        read = readPlayer(player1, lines, &index);
+                        if(read) {
+                            read = readPlayer(player2, lines, &index);
+                            index++;
+                        }
+                    }
+                }
+            }
         }
-
-        readCenter(table->getCenter(), lines[++index]);
-
-        table->setSeedNumber(std::stoi(lines[++index]));
-        *currentPlayerID = std::stoi(lines[++index]);
-
-        readPlayer(player1, lines, &index);
-        readPlayer(player2, lines, &index);
-
-        index++;
     }
+    return read;
 }
 
 void readLinkedList(LinkedList* list, std::string line) {
@@ -209,11 +239,20 @@ void readCenter(Vector* centerOfTable, std::string line) {
     }
 }
 
-void readPlayer(Player* player, std::vector<std::string>& lines, int* i) {
+bool readPlayer(Player* player, std::vector<std::string>& lines, int* i) {
+    bool read = true;
     player->setName(lines[++(*i)]);
-    player->addPoints(std::stoi(lines[++(*i)]));  
-
-    readBoard(lines, i, player->getBoard());
+    try {
+        player->addPoints(std::stoi(lines[++(*i)]));  
+    } catch (const std::invalid_argument&) {
+        read = false;
+    } catch (const std::out_of_range&) {
+        read = false;
+    }
+    if(read) {
+        readBoard(lines, i, player->getBoard());
+    }
+    return read;
 }
 
 void readBoard(std::vector<std::string>& lines, int* i, Board* board) {
@@ -257,6 +296,7 @@ void printBoard(std::ostream& outStream, Wall& wall, Tile** patternLines,
         std::array<Tile, FLOOR_LINE_SIZE>& floorLine, int length) {
 
     for(int row = 0; row != PATTERN_LINES_SIZE; row++) {
+        std::cout << (row+1) << ": ";
         for(int col = 0; col != PATTERN_LINES_SIZE; col++) {
             if((col + 1) >= (PATTERN_LINES_SIZE - row)) {
                 outStream << patternLines[row][PATTERN_LINES_SIZE - col - 1];               
@@ -279,6 +319,6 @@ void printBoard(std::ostream& outStream, Wall& wall, Tile** patternLines,
         outStream << "\n";
     }
 
-    outStream << "broken: ";
+    outStream << "6: broken: ";
     printFloorLine(outStream, floorLine, length);
 }

@@ -30,7 +30,10 @@ public:
     void setName(std::string name);
     
     // Print player name with points and number of completed rows at the end of game
-    void toString();
+    void toStringEndOfGame();
+
+    // Print player name with updating points each round
+    void toStringEndOfRound(int& addScore, unsigned int& roundCount);
 
 private:
 

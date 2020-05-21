@@ -6,7 +6,7 @@
 
 int main(void) {
 
-    GameManager* gm = new GameManager("Alice","Bob");
+    GameManager* gm = new GameManager("Alice","Bob",1590043364);
     Table* table = gm->getTable();
 
     table->setupGame();

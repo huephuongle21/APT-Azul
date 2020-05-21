@@ -29,10 +29,9 @@ Board::Board() {
     numberOfRowsCompleted = 0;
 }
 
-
 Board::~Board() {
     
-    floorLineLength = 0;
+    clearFloorLine();
 
     for(int i = 0; i != PATTERN_LINES_SIZE; i++) {
         delete[] patternLines[i];
@@ -81,7 +80,6 @@ bool Board::isPatternLinesEmpty(int& pos) {
 
 bool Board::findColourInBoard(char& colourChoice, int& pos) {
     bool isFound = false;
-    // Ensure that colourChoice is not filled in wall yet
     if(findColourInWall(colourChoice, pos)) {
         isFound = true;
     } else if(!findColourInPatternLines(colourChoice, pos)) {
@@ -105,10 +103,16 @@ bool Board::findColourInPatternLines(char& colourChoice, int& pos) {
     if(isPatternLinesEmpty(pos)) {
         isFound = true;
     } else {
+        int count = 0;
         for(int i = 0; i != pos; i++) {
-            if(patternLines[pos-1][i] == colourChoice && i != (pos-1)) {
-                isFound = true;
+            if(patternLines[pos-1][i] == colourChoice) {
+                count++;
             }
+        }
+        if(count == pos) {
+            isFound = false;
+        } else if(count < pos && count > 0) {
+            isFound = true;
         }
     }
     return isFound;
@@ -122,16 +126,6 @@ bool Board::isPatternLinesFilled(int& pos) {
         }
     }
     return isFilled;
-}
-
-bool Board::hasPatternLineColour(int& pos) {
-    bool retVal = false;
-    for(int i = 0; i != pos; i++) {
-        if(patternLines[pos][i] != NO_TILE) {
-            retVal = true;
-        }
-    }
-    return retVal;
 }
 
 Tile Board::removeFromPatternLines(int& pos) {

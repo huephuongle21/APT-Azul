@@ -14,10 +14,17 @@
 #define USER_PROMPT             '>'
 #define EMPTY_COLLECTION        '_'
 #define NO_SEED_CHOICE          "?"
+#define BREAK_LINE              "-------------------"
+
+/* The file must contain that number of lines 
+so that the game can be considered valid */
+#define NUM_LINES               36
 
 #define COMMAND_TURN            "turn"
 #define COMMAND_SAVE            "save"
 #define COMMAND_EXIST           "quit"
+#define COMMAND_TURN_LENGTH     10
+#define COMMAND_SAVE_LENGTH     2
 
 #define POINT_HORIZONTAL        2
 #define POINT_VERTICAL          7

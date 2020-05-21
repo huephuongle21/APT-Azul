@@ -15,7 +15,6 @@ Table::Table(int seed) {
     for(int i = 0; i < NUMBER_OF_FACTORY; i++) {
         chosenFactory[i] = NO_TILE;
     }
- 
 
     centerOfTable = new Vector();
 
@@ -51,10 +50,6 @@ int Table::getSeedNumber() {
 
 void Table::setSeedNumber(int seedNumber) {
     this->seedNumber = seedNumber;
-}
-
-void Table::addFactory(int row, int col, Tile value) {
-    factories[row][col] = value;
 }
 
 bool Table::isFactoryEmpty(int& pos) {

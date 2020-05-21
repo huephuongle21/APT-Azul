@@ -93,7 +93,8 @@ void SetupManager::refillTileBagFromBoxLid(LinkedList* tileBag, LinkedList* boxL
     boxLid->clear();
 }
 
-void SetupManager::populateFactories(LinkedList* tileBag, Factory factories[NUMBER_OF_FACTORY], LinkedList* boxLid) {
+void SetupManager::populateFactories(LinkedList* tileBag, 
+        Factory factories[NUMBER_OF_FACTORY], LinkedList* boxLid) {
 
     // Iterate through factories
     for (int factoryIndex = 0; factoryIndex != NUMBER_OF_FACTORY; ++factoryIndex) {

@@ -12,7 +12,7 @@ int main(void) {
     std::string p1 = "Alice";
     std::string p2 = "Bob";
     
-    GameManager* gm = new GameManager(p1, p2);
+    GameManager* gm = new GameManager(p1, p2, 1590043364);
 
     // Generate tiles and fill factories.
     gm->getTable()->setupGame();

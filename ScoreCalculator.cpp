@@ -36,29 +36,22 @@ int ScoreCalculator::calculateScoreFromWall(Wall& wall, int& colPos, int& rowPos
     int score = 0;
     int countRow = 0;
     int countCol = 0;
-
     for(int row = 0; row != WALL_DIM; row++) {
-        for(int col = 0; col != WALL_DIM; col++) {
-            if(row == rowPos) {
-                Tile tile = wall[row][col];
-                if(tile >= 'A' && tile <= 'Z') {
-                    score++;
-                    countRow++;
-                }              
-            } else {
-                if(col == colPos) {
-                    Tile tile = wall[row][col];
-                    if(tile >= 'A' && tile <= 'Z') {
-                        score++;
-                        countCol++;
-                    }
-                }
-            }
+        Tile tile = wall[row][colPos];
+        if(tile >= 'A' && tile <= 'Z') {
+            score++;
+            countCol++;
         }
     }
-    // Check whether tile is a part of both row and column
-    if(countRow >= 2 && countCol >= 2) {
-        score++;
+    for(int col = 0; col != WALL_DIM; col++) {
+        Tile tile = wall[rowPos][col];
+        if(tile >= 'A' && tile <= 'Z') {
+            score++;
+            countRow++;
+        }
+    }
+    if(countRow == 1 || countCol == 1) {
+        score--;
     }
     return score;
 }

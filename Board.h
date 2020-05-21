@@ -36,14 +36,11 @@ class Board {
 
     bool findColourInBoard(char& colourChoice, int& pos);
 
-    // True if patternLine is empty OR patternLine is not full and has that colourChoice
     bool findColourInPatternLines(char& colourChoice, int& pos);
 
     bool isPatternLinesEmpty(int& pos);
 
     bool isPatternLinesFilled(int& pos);
-
-    bool hasPatternLineColour(int& pos);
 
     Tile removeFromPatternLines(int& pos);
 
