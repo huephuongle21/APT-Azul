@@ -171,6 +171,8 @@ bool readGame(std::istream& inStream, Table* table, int* currentPlayerID,
                     table->setSeedNumber(std::stoi(lines[++index]));
                 } catch (const std::invalid_argument&) {
                     read = false;
+                } catch (const std::out_of_range&) {
+                    read = false;
                 }
                 if(read) {
                     try {
@@ -180,7 +182,9 @@ bool readGame(std::istream& inStream, Table* table, int* currentPlayerID,
                         }
                     } catch (const std::invalid_argument&) {
                         read = false;
-                    }
+                    } catch (const std::out_of_range&) {
+                        read = false;
+                    }   
                     if(read) {
                         read = readPlayer(player1, lines, &index);
                         if(read) {
@@ -241,6 +245,8 @@ bool readPlayer(Player* player, std::vector<std::string>& lines, int* i) {
     try {
         player->addPoints(std::stoi(lines[++(*i)]));  
     } catch (const std::invalid_argument&) {
+        read = false;
+    } catch (const std::out_of_range&) {
         read = false;
     }
     if(read) {
