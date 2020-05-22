@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <time.h>
 
@@ -9,8 +10,12 @@
 
 // Process command line args for seed.
 void processSeed(int argc, char** argv, int* seed);
+
+void printInstructions();
 void printMenu();
+
 Option resolveInput(std::string input);
+
 bool startNewGame(int seed);
 bool loadGameFromFile();
 
@@ -21,8 +26,11 @@ int main(int argc, char** argv) {
 
     StudentCredit* studentArr = new StudentCredit();
 
+    std::cout << BREAK_LINE << std::endl;
     std::cout << "Welcome to Azul!" << std::endl;
     std::cout << BREAK_LINE << std::endl;
+    printInstructions();
+    std::cout << '\n' <<BREAK_LINE << std::endl;
     
     printMenu();
     std::cout << USER_PROMPT << " ";
@@ -160,3 +168,15 @@ bool loadGameFromFile() {
     return isEOF;
 }
 
+void printInstructions() {
+
+    std::string instructionsPath = "azul_guide.txt";
+
+    std::ifstream ifs(instructionsPath);
+    std::string line;
+    
+    while(getline(ifs, line))
+        std::cout << line << '\n';
+
+
+}
