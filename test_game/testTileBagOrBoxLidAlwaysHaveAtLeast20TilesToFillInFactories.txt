@@ -1,23 +1,23 @@
 # ---SAVE BEGINS---
 
 # Tile Bag
-LYBLYBBUYBURLYBLBLYUURLUUUURRYLYBLLBLRRR
+B
 
 # Box Lid
-RRRBBBYBBLLLUURYLLYYYRRB
+UURRRRLRUURRRYYBLLLR
 
 # Factories
-....
-....
-....
-....
-....
+YYBB
+BBLL
+LLLL
+RLUU
+YYYY
 
 # Centre of Table
-Y
+F
 
 # Seed for Program
-1520
+1590116005
 
 # Current Player's ID
 1
@@ -32,17 +32,17 @@ Alice
 
 # Pattern Lines
 .
-..
-YY.
-LLL.
-YYY..
+Y.
+BB.
+BBB.
+UUUU.
 
 # Wall
-.Y...
-LB...
-..B.R
-....Y
-.....
+BYR.L
+LB.RU
+UL.YR
+RUL.Y
+YR.LB
 
 # Floor Line
 _
@@ -53,23 +53,23 @@ _
 Bob
 
 # Score
-4
+31
 
 # Pattern Lines
 .
-B.
-...
-UUUU
+..
+BB.
+YYY.
 UUUU.
 
 # Wall
-.Y.U.
-....U
-..B..
-R....
-.....
+BYRU.
+LBYR.
+UL.YR
+RULB.
+YR.LB
 
 # Floor Line
-FRRRRR
+_
 
 # ---SAVE ENDS---

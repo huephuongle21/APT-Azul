@@ -370,7 +370,7 @@ void GameManager::moveTilesFromCenter(LinkedList* boxLid, Tile** patternLines, V
         // Gives the first player tile to whoever takes from the centre of the board first
         if(tile == FIRST_PLAYER) {
             if(board->getFloorLineLength() == FLOOR_LINE_SIZE) {
-                table->getBoxLid()->addFront(board->getFloorLine()[0]);
+                boxLid->addFront(board->getFloorLine()[0]);
                 board->getFloorLine()[0] = tile;
             } else {
                 board->addFloorLine(tile); 

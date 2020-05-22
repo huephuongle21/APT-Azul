@@ -1,0 +1,8 @@
+2
+test_game/testOneRound/testOneRound.in
+turn 0 R 3
+turn 0 L 3
+turn 0 Y 4
+turn 0 U 4
+turn 0 B 6
+save test_game/testOneRound/testOneRound.out
