@@ -3,9 +3,13 @@
 #include <exception>
 #include <iostream>
 
-Node::Node(int value, Node* next) {
+Node::Node(Tile value, Node* next) {
     this->value = value;
     this->next = next;
+}
+
+Node::~Node() {
+
 }
 
 LinkedList::LinkedList() {
@@ -28,21 +32,17 @@ unsigned int LinkedList::size() const {
 }
 
 // Version of get that throws an exception when index is out of range.
-int LinkedList::get(const unsigned int index) const {
-   
+Tile LinkedList::get(const unsigned int index) const {
    unsigned int count = 0;
    Node* current = head;
-   int returnValue = 0;
+   Tile returnValue = NO_TILE;
    
-   if (index < size()) {
-      
+   if (index < size()) {     
       while(count < index) {
         ++count;
         current = current->next;
       }
-
-      returnValue = current->value;
-      
+      returnValue = current->value;      
       } else {
         throw std::out_of_range("Linked List get - index out of range");
    }
@@ -50,38 +50,29 @@ int LinkedList::get(const unsigned int index) const {
 }
 
 // Version of get that returns error "code" when index is out of range.
-bool LinkedList::get(const unsigned int index, int& returnValue) const {
-   
+bool LinkedList::get(const unsigned int index, Tile returnValue) const {
    bool error = true;
    unsigned int count = 0;
    Node* current = head;
-   
-   if (index >= 0 && index < size()) {
-      
+   if (index >= 0 && index < size()) {     
       while(count < index) {
         ++count;
         current = current->next;
       }
-
       returnValue = current->value;
       error = false;
-   }
-   
+   }  
    return error;
 }
 
-void LinkedList::addFront(int value) {
-
-    Node* toAdd = new Node(value, head);
-    head = toAdd;
-    ++length;
-
+void LinkedList::addFront(Tile tile) {
+   Node* toAdd = new Node(tile, head);
+   head = toAdd;
+   ++length;
 }
 
-void LinkedList::addBack(int value) {
-   
-   Node* toAdd = new Node(value, nullptr);
-
+void LinkedList::addBack(Tile tile) {   
+   Node* toAdd = new Node(tile, nullptr);
    if (head == nullptr) {
         head = toAdd;
    } else {
@@ -90,41 +81,32 @@ void LinkedList::addBack(int value) {
             current = current->next;
       }
       current->next = toAdd;
-      ++length;
    }
+   ++length;
 }
 
 void LinkedList::removeBack() {
-
     if (length > 0) {
-
         Node* current = head;
-
         while (current->next != nullptr) {
             current = current->next;
-        }
-
+         }
         delete current;
         --length;
-
     }
 }
 
-void LinkedList::removeFront() {
-   
-    if (length > 0) {
-        Node* newHead = head->next;
-        delete head;
-        head = newHead;
-        --length;
+void LinkedList::removeFront() {   
+   if (length > 0) {
+         Node* newHead = head->next;
+         delete head;
+         head = newHead;
+         --length;
    }
 }
 
 void LinkedList::clear() {
-
-    while (length > 0) {
-        removeFront();
-        --length;
-    }
-
+   while (length > 0) {
+      removeFront();
+   }
 }

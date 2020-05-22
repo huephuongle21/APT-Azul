@@ -1,0 +1,83 @@
+# Game when there is only one colour (U) in center factory and
+# player Bob cannot take this tile and place to pattern line,
+# his floor line is also full with 7 tiles
+# Turn to finish: Bob turn 0 U 6
+# These 2 U Tiles will be auto placed to Box Lid
+# Box Lid becomes LLRRLLUYYLBBBBYYYLL UU YYYUURRRRRRULYYYYRRRUULYYYYUUUUURRR
+# (2 U and those tiles from end of round)
+
+# ---SAVE BEGINS---
+
+# Tile Bag
+BLLRRRBBBLBULLLBYUBB
+
+# Box Lid
+YYYUURRRRRRULYYYYRRRUULYYYYUUUUURRR
+
+# Factories
+....
+....
+....
+....
+....
+
+# Centre of Table
+UU
+
+# Seed for Program
+1590116005
+
+# Current Player's ID
+2
+
+# --- Player 1 ---
+
+# Name
+Alice
+
+# Score
+14
+
+# Pattern Lines
+.
+U.
+LLL
+YYYY
+BBBBB
+
+# Wall
+B....
+L..R.
+U....
+R....
+YR...
+
+# Floor Line
+LFYY
+
+# --- Player 2 ---
+
+# Name
+Bob
+
+# Score
+0
+
+# Pattern Lines
+.
+B.
+UU.
+LLL.
+BBBB.
+
+# Wall
+B..U.
+.....
+...Y.
+.....
+.....
+
+# Floor Line
+ULLRRLL
+
+# ---SAVE ENDS---

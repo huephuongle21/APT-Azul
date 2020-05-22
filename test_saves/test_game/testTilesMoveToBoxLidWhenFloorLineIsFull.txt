@@ -1,0 +1,80 @@
+# Game when floor line for player Alice is already full with 7 tiles inside
+# Turn to finish Alice: turn 0 R 2
+# Center of table now has 4 RED Tiles, 2 R will move to pattern line 2 and
+# Box Lid will become RR
+
+# ---SAVE BEGINS---
+
+# Tile Bag
+UYLYBRUYRLBRUURBULYYBRYYLRLYYYBRRRUURRLUURRBLBYBLULBBLLYLYYUBLLRRRBBBLBULLLBYUBB
+
+# Box Lid
+_
+
+# Factories
+....
+....
+....
+....
+....
+
+# Centre of Table
+LRRRRLUB
+
+# Seed for Program
+1590116005
+
+# Current Player's ID
+1
+
+# --- Player 1 ---
+
+# Name
+Alice
+
+# Score
+0
+
+# Pattern Lines
+.
+..
+...
+....
+.....
+
+# Wall
+.....
+.....
+.....
+.....
+.....
+
+# Floor Line
+UUUUUYY
+
+# --- Player 2 ---
+
+# Name
+Bob
+
+# Score
+0
+
+# Pattern Lines
+U
+B.
+YYY
+....
+.....
+
+# Wall
+.....
+.....
+.....
+.....
+.....
+
+# Floor Line
+F
+
+# ---SAVE ENDS---

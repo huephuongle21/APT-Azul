@@ -1,0 +1,81 @@
+# Game is one turn away from finish one round
+# Turn to finish Bob: turn 0 Y 4
+# Current points of Alice is 1 and they will be subtracted by 6 after this round.
+# (get 2 points from horizontal line but lose 8 from floor line)
+# However, points cannot fall below 0 so her points become 0.
+
+# ---SAVE BEGINS---
+
+# Tile Bag
+BUYYBLRRYRLYYYRULUBUULULRLYLBYRYBULRYURRLRLLLYUBLBLRBUBYRYUU
+
+# Box Lid
+RLRRRLLBYYYB
+
+# Factories
+....
+....
+....
+....
+....
+
+# Centre of Table
+YY
+
+# Seed for Program
+1590069381
+
+# Current Player's ID
+2
+
+# --- Player 1 ---
+
+# Name
+Alice
+
+# Score
+1
+
+# Pattern Lines
+.
+UU
+...
+UU..
+UU...
+
+# Wall
+..R..
+.B...
+...Y.
+.....
+.....
+
+# Floor Line
+ULLRR
+
+# --- Player 2 ---
+
+# Name
+Bob
+
+# Score
+2
+
+# Pattern Lines
+.
+..
+BBB
+Y...
+U....
+
+# Wall
+.....
+.B...
+.L...
+R....
+.....
+
+# Floor Line
+FBBBB
+
+# ---SAVE ENDS---

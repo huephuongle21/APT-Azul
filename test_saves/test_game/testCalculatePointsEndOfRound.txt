@@ -1,0 +1,82 @@
+# Game is one turn away to finish a round
+# Turn to finish Alice: 0 B 3
+# Alice gets 7 points from this round(gets 9 points from the wall but 
+# lose 2 points from floorline). Her points are updated from 0 to 7.
+# Bob gets 10 points from this round (get 14 points from the wall but
+# lose 4 points from floor line). His points are updated from 0 to 10.
+
+# ---SAVE BEGINS---
+
+# Tile Bag
+ULULRLYLBYRYBULRYURRLRLLLYUBLBLRBUBYRYUU
+
+# Box Lid
+BBBBBBRRLLUURLRRRLLBYYYB
+
+# Factories
+....
+....
+....
+....
+....
+
+# Centre of Table
+B
+
+# Seed for Program
+1590069381
+
+# Current Player's ID
+1
+
+# --- Player 1 ---
+
+# Name
+Alice
+
+# Score
+0
+
+# Pattern Lines
+Y
+YY
+B..
+UU..
+UUUU.
+
+# Wall
+..R..
+.B..U
+...Y.
+.....
+.....
+
+# Floor Line
+FY
+
+# --- Player 2 ---
+
+# Name
+Bob
+
+# Score
+0
+
+# Pattern Lines
+B
+LL
+RRR
+YYYY
+UUU..
+
+# Wall
+.....
+.B...
+.LB..
+R....
+.....
+
+# Floor Line
+YRL
+
+# ---SAVE ENDS---
