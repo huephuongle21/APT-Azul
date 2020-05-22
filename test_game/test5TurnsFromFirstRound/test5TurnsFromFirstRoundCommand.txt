@@ -1,0 +1,8 @@
+2
+test_game/test5TurnsFromFirstRound/test5TurnsFromFirstRound.in
+turn 2 Y 1
+turn 3 Y 2
+turn 4 L 5
+turn 1 L 5
+turn 5 L 5
+save test_game/test5TurnsFromFirstRound/test5TurnsFromFirstRound.out

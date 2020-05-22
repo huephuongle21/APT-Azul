@@ -1,10 +1,14 @@
+# Game is one turn away from finishing round 1
+# Turn to finish Bob: turn 0 R 4
+# Box Lid should then become: RLRRRLLBYYYB
+
 # ---SAVE BEGINS---
 
 # Tile Bag
-LYBLYBBUYBURLYBLBLYUURLUUUURRYLYBLLBLRRR
+ULRYBUBBUBBUYRLBYBUUBUYYBLRRYRLYYYRULUBUULULRLYLBYRYBULRYURRLRLLLYUBLBLRBUBYRYUU
 
 # Box Lid
-RRRBBBYBBLLLUURYLLYYYRRB
+_
 
 # Factories
 ....
@@ -14,13 +18,13 @@ RRRBBBYBBLLLUURYLLYYYRRB
 ....
 
 # Centre of Table
-Y
+RR
 
 # Seed for Program
-1520
+1590069381
 
 # Current Player's ID
-1
+2
 
 # --- Player 1 ---
 
@@ -28,24 +32,24 @@ Y
 Alice
 
 # Score
-2
+0
 
 # Pattern Lines
-.
-..
-YY.
-LLL.
-YYY..
+R
+BB
+YYY
+UU..
+.....
 
 # Wall
-.Y...
-LB...
-..B.R
-....Y
+.....
+.....
+.....
+.....
 .....
 
 # Floor Line
-_
+FY
 
 # --- Player 2 ---
 
@@ -53,23 +57,23 @@ _
 Bob
 
 # Score
-4
+0
 
 # Pattern Lines
 .
-B.
-...
-UUUU
-UUUU.
+BB
+LLL
+RRR.
+.....
 
 # Wall
-.Y.U.
-....U
-..B..
-R....
+.....
+.....
+.....
+.....
 .....
 
 # Floor Line
-FRRRRR
+L
 
 # ---SAVE ENDS---
