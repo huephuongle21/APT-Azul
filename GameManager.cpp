@@ -67,7 +67,7 @@ bool GameManager::startGame(bool isNewGame) {
 void GameManager::commenceEndOfGame() {
     calculator->calculateScoreEndOfGame(player1);
     calculator->calculateScoreEndOfGame(player2);
-    std::cout << "=== GAME OVER ===" << "\n" << std::endl;
+    std::cout << C_BROWN << "=== GAME OVER ===" << C_RESET << "\n" << std::endl;
     player1->toStringEndOfGame();
     player2->toStringEndOfGame();
     std::cout << std::endl;
@@ -122,12 +122,13 @@ bool GameManager::saveGame(std::string input) {
         }   
     } else {
         std::cout << "Invalid save command" << std::endl;
+        std::cout << C_RED << "save [save path]" << C_RESET << "\n" << std::endl;
     }     
     return saved; 
 }
 
 bool GameManager::commenceRound() {
-    std::cout << "=== Start Round " << roundCount << " ===" << std::endl;
+    std::cout << C_BROWN << "=== Start Round " << roundCount << " ===" << C_RESET << std::endl;
     bool endRound = false;
     bool isEOF = false;
 
@@ -139,7 +140,6 @@ bool GameManager::commenceRound() {
             printTableAndBoard(player2);
             isEOF = commenceTurn(player2);
         }
-        // Check for EOF. If false, check for end of round and swap players. Otherwise, end the round
         if(!isEOF) {
             endRound = isEndRound(); 
             swapCurrentPlayer();
@@ -148,9 +148,8 @@ bool GameManager::commenceRound() {
         } 
     }
 
-    // If the round ends not because of EOF, commence end of round
     if(!isEOF) {
-        std::cout << "=== END OF ROUND " << roundCount << " ===" << "\n" << std::endl;
+        std::cout << C_BROWN << "=== END OF ROUND " << roundCount << " ===" << C_RESET << "\n" << std::endl;
         commenceEndOfRound(player1);
         commenceEndOfRound(player2);
         endRound = isEOF;
@@ -179,13 +178,13 @@ void GameManager::commenceEndOfRound(Player* player) {
         board->getFloorLine(), board->getFloorLineLength());
         
     player->toStringEndOfRound(score, roundCount);
-    std::cout << BREAK_LINE << std::endl;
+    std::cout << C_GREEN << BREAK_LINE << C_RESET << std::endl;
 
     // Clear floor line after each round
     for(unsigned int index = 0; index != floorLineLength; index++) {
         Tile tile = floorLine[index];
         if(tile == FIRST_PLAYER) {
-            center->addTile(tile);
+            center->add(tile);
             setCurrentPlayerID(player->getID());
         } else if(tile != FIRST_PLAYER && tile != NO_TILE) {
             boxLid->addFront(tile);
@@ -219,7 +218,7 @@ void GameManager::printTableAndBoard(Player* player) {
 
 bool GameManager::commenceTurn(Player* player) {
 
-    std::cout << USER_PROMPT << " ";
+    std::cout << C_PINK << USER_PROMPT << C_RESET << " ";
     std::string input;
     bool isTurnFinished = false;
     bool isEOF = false;
@@ -234,14 +233,18 @@ bool GameManager::commenceTurn(Player* player) {
         } else if(input == COMMAND_EXIST) {
             isTurnFinished = true;
             isEOF = true;
-        }  else if(typeOfCommand == COMMAND_SAVE && saveGame(input)) {
+        } else if(input == COMMAND_HELP) {
+            printInstructions();
+            std::cout << std::endl;
+            std::cout << "Please continue your turn" << std::endl;
+        } else if(typeOfCommand == COMMAND_SAVE && saveGame(input)) {
             std::cout << "Please continue your turn" << std::endl;
         } else if(typeOfCommand != COMMAND_TURN && typeOfCommand != COMMAND_SAVE 
                 && input != COMMAND_EXIST) {
             std::cout << "Invalid Input." << "\n";
         }
         if(!isTurnFinished && !std::cin.eof()) {
-            std::cout << USER_PROMPT << " ";
+            std::cout << C_PINK << USER_PROMPT << C_RESET << " ";
         } 
     }
 
@@ -291,6 +294,8 @@ bool GameManager::playerTurn(Player* player, std::string input) {
             || !(playerTurn >> command >> factoryChoice >> colourChoice >> patternLineChoice)
             || command != COMMAND_TURN) {
         std::cout << "Invalid turn command" << std::endl;
+        std::cout << C_RED << "turn [factory choice] [colour choice] [pattern line choice]" 
+            << C_RESET << "\n" << std::endl;
         isTurnValid = false;
     } else {
         isTurnValid = promptForFactoryChoice(factoryChoice, colourChoice) 
@@ -350,7 +355,7 @@ void GameManager::moveTilesFromFactory(int& factoryChoice, char& colourChoice, i
             }       
         // If it's not the picked colour, move the tiles to the centre
         } else if(tile != colourChoice){
-            center->addTile(tile);
+            center->add(tile);
         // If the pattern line is full, move the remaining tiles of that colour to the floor line.
         } else if(tile == colourChoice && tilesPlaced >= patternLineChoice) {
             if(board->getFloorLineLength() < FLOOR_LINE_SIZE) {
@@ -409,7 +414,7 @@ void GameManager::moveTilesFromCenter(LinkedList* boxLid, Tile** patternLines, V
     for(int i = center->size(); i >= 0; --i) {
         Tile tile = center->get(i);
         if(tile == colourChoice || tile == FIRST_PLAYER) {
-            center->removeTile(i);
+            center->remove(i);
         }
     }
 }
@@ -527,10 +532,10 @@ void GameManager::showWinner() {
         winner = player2;
     } 
     if(winner != nullptr) {
-        std::cout << "Player " << winner->getName() << " wins!" << std::endl;
+        std::cout << C_REDORANGE << "Player " << winner->getName() << " wins!" << C_RESET << std::endl;
     } else {
-        std::cout << "Victory is shared for " << player1->getName() << " and " 
-            << player2->getName() << "!" << std::endl;
+        std::cout << C_REDORANGE << "Victory is shared for " << player1->getName() << " and " 
+            << player2->getName() << "!" << C_RESET << std::endl;
     }
-    std::cout << BREAK_LINE << std::endl;
+    std::cout << C_GREEN << BREAK_LINE << C_RESET << std::endl;
 }

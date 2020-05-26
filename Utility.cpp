@@ -14,14 +14,11 @@ void printGame(std::ostream& outStream, Table* table, int currentPlayerID,
     outStream << "\n" << "# Box Lid" << std::endl;
     printLinkedList(outStream, table->getBoxLid());
     
-    Factory* factory = table->getFactories();
     outStream << "\n" << "# Factories" << std::endl;
-    for(int i = 0; i != NUMBER_OF_FACTORY; i++) {
-        printFactory(outStream, factory[i]);
-    }    
+    printFactoryToFile(outStream, table->getFactories());   
 
     outStream << "\n" << "# Centre of Table" << std::endl;
-    printCenter(outStream, table->getCenter());
+    printCenterToFile(outStream, table->getCenter());
     
 
     outStream << "\n" << "# Seed for Program" << "\n" << table->getSeedNumber() << "\n" << std::endl;
@@ -53,12 +50,22 @@ void printLinkedList(std::ostream& outStream, LinkedList* list) {
 
 void printFactory(std::ostream& outStream, Tile factory[]) {
     for(int i = 0; i != FACTORY_SIZE; i++) {
-        outStream << factory[i];
+        Tile tile = factory[i];
+        outStream << colour(tile) << tile << C_RESET;
     }
     outStream << std::endl;
 }
 
-void printCenter(std::ostream& outStream, Vector* centerOfTable) {
+void printFactoryToFile(std::ostream& outStream, Factory* factories) {
+    for(int i = 0; i != NUMBER_OF_FACTORY; i++) {
+        for(int j = 0; j != FACTORY_SIZE; j++) {
+            outStream << factories[i][j];
+        }
+        outStream << std::endl;
+    }
+}
+
+void printCenterToFile(std::ostream& outStream, Vector* centerOfTable) {
     int size = centerOfTable->size();
     if (size == 0) {
         outStream << EMPTY_COLLECTION;
@@ -66,6 +73,19 @@ void printCenter(std::ostream& outStream, Vector* centerOfTable) {
         for(int i = 0; i != size; i++) {
             if(centerOfTable->get(i) != NO_TILE) {
                 outStream << centerOfTable->get(i);
+            }
+        }
+    }
+    outStream << std::endl;
+}
+
+void printCenter(std::ostream& outStream, Vector* centerOfTable) {
+    int size = centerOfTable->size();
+    if(size != 0) {
+        for(int i = 0; i != size; i++) {
+            if(centerOfTable->get(i) != NO_TILE) {
+                Tile tile = centerOfTable->get(i);
+                outStream << colour(tile) << tile << C_RESET;
             }
         }
     }
@@ -127,7 +147,8 @@ void printFloorLine(std::ostream& outStream,
     } else {
         for(unsigned int i = 0; i != length; i++) {
             if(floorLine[i] != NO_TILE) {
-                outStream << floorLine[i];
+                Tile tile = floorLine[i];
+                outStream << colour(tile) << tile << C_RESET;
             } 
         }
     }
@@ -234,10 +255,12 @@ void readCenter(Vector* centerOfTable, std::string line) {
     int size = line.length();
     if(line[0] != EMPTY_COLLECTION) {
         for(int i = 0; i != size; i++) {
-            centerOfTable->addTile(line[i]);  
+            centerOfTable->add(line[i]);  
         }
     }
 }
+
+
 
 bool readPlayer(Player* player, std::vector<std::string>& lines, int* i) {
     bool read = true;
@@ -299,19 +322,20 @@ void printBoard(std::ostream& outStream, Wall& wall, Tile** patternLines,
         std::cout << (row+1) << ": ";
         for(int col = 0; col != PATTERN_LINES_SIZE; col++) {
             if((col + 1) >= (PATTERN_LINES_SIZE - row)) {
-                outStream << patternLines[row][PATTERN_LINES_SIZE - col - 1];               
+                Tile tile = patternLines[row][PATTERN_LINES_SIZE - col - 1];
+                outStream << colour(tile) << tile << C_RESET;               
             } else {
                 outStream << " ";
             }
 
             if(col == PATTERN_LINES_SIZE - 1) {
-                outStream << " || ";
+                outStream << C_MAGENTA << " || " << C_RESET;
                 for(int wCol = 0; wCol != WALL_DIM; wCol++) {
                     char tile = wall[row][wCol];
                     if(tile >= 'a' && tile <= 'z') {
-                        outStream << NO_TILE;
+                        outStream << colour(toupper(tile)) << NO_TILE << C_RESET;
                     } else {
-                        outStream << tile;
+                        outStream << colour(tile) << tile << C_RESET;
                     }
                 }
             }
@@ -321,4 +345,36 @@ void printBoard(std::ostream& outStream, Wall& wall, Tile** patternLines,
 
     outStream << "6: broken: ";
     printFloorLine(outStream, floorLine, length);
+}
+
+std::string colour(char tile) {
+    std::string colour = C_WHITE;
+    if(tile == RED) {
+        colour = C_RED;
+    } else if(tile == YELLOW) {
+        colour = C_YELLOW;
+    } else if(tile == BLACK) {
+        colour = C_BLACK;
+    } else if(tile == LIGHT_BLUE) {
+        colour = C_CYAN;
+    } else if(tile == DARK_BLUE) {
+        colour = C_BLUE;
+    } 
+    return colour;
+}
+
+void printInstructions() {
+
+    std::string instructionsPath = "azul_guide.txt";
+
+    std::ifstream ifs(instructionsPath);
+    std::string line;
+    
+    while(getline(ifs, line)) {
+        if(line[0] == '=') {
+            std::cout << C_LIGHTYELLOW << line << C_RESET << '\n';
+        } else {
+            std::cout << line << '\n';
+        }
+    }
 }

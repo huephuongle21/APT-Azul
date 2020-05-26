@@ -23,6 +23,7 @@ so that the game can be considered valid */
 #define COMMAND_TURN            "turn"
 #define COMMAND_SAVE            "save"
 #define COMMAND_EXIST           "quit"
+#define COMMAND_HELP            "help"
 #define COMMAND_TURN_LENGTH     10
 #define COMMAND_SAVE_LENGTH     2
 
@@ -31,6 +32,32 @@ so that the game can be considered valid */
 #define POINT_1_COLOUR         10
 
 #define FLOORLINE_POSITION      6
+
+#define C_RESET   "\033[0m"
+#define C_BLACK   "\033[30m"                /* Black */
+#define C_RED     "\033[31m"                /* Red */
+#define C_GREEN   "\033[32m"                /* Green */
+#define C_YELLOW  "\033[33m"                /* Yellow */
+#define C_BLUE    "\033[34m"                /* Blue */
+#define C_MAGENTA "\033[35m"                /* Magenta */
+#define C_CYAN    "\033[36m"                /* Cyan */
+#define C_WHITE   "\033[37m"                /* White */
+#define C_PINK    "\u001b[38;5;198m"        /* Pink */
+#define C_ORANGE  "\u001b[38;5;215m"        /* Orange */
+#define C_LIGHTYELLOW  "\u001b[38;5;229m"
+#define C_BROWN        "\u001b[38;5;130m"   /* Brown */
+#define C_REDORANGE    "\u001b[38;5;9m"     /* Red orange */
+#define C_ERRORMESSAGE "\u001b[38;5;161m"   /* Colour for error message */
+
+#define C_BOLDCYAN    "\033[1m\033[36m"      /* Bold Cyan */
+#define C_BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
+#define C_BOLDBLACK   "\033[1m\033[30m"      /* Bold Black */
+#define C_BOLDRED     "\033[1m\033[31m"      /* Bold Red */
+#define C_BOLDGREEN   "\033[1m\033[32m"      /* Bold Green */
+#define C_BOLDYELLOW  "\033[1m\033[33m"      /* Bold Yellow */
+#define C_BOLDBLUE    "\033[1m\033[34m"      /* Bold Blue */
+#define C_BOLDMAGENTA "\033[1m\033[35m"      /* Bold Magenta */
+#define C_BRIGHTCYAN  "\u001b[36;1m"         /* Bright Cyan */
 
 #define NO_TILE       '.'
 #define RED           'R'

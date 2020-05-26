@@ -7,11 +7,11 @@
 #include "GameManager.h"
 #include "Types.h"
 #include "Player.h"
+#include "Utility.h"
 
 // Process command line args for seed.
 void processSeed(int argc, char** argv, int* seed);
 
-void printInstructions();
 void printMenu();
 
 Option resolveInput(std::string input);
@@ -26,14 +26,14 @@ int main(int argc, char** argv) {
 
     StudentCredit* studentArr = new StudentCredit();
 
-    std::cout << BREAK_LINE << std::endl;
-    std::cout << "Welcome to Azul!" << std::endl;
-    std::cout << BREAK_LINE << std::endl;
+    std::cout << C_GREEN << BREAK_LINE << C_RESET << std::endl;
+    std::cout << C_BOLDBLUE << "Welcome to Azul!" << C_RESET << std::endl;
+    std::cout << C_GREEN << BREAK_LINE << C_RESET << std::endl;
     printInstructions();
-    std::cout << '\n' <<BREAK_LINE << std::endl;
+    std::cout << '\n' <<C_GREEN << BREAK_LINE << C_RESET << std::endl;
     
     printMenu();
-    std::cout << USER_PROMPT << " ";
+    std::cout << C_PINK << USER_PROMPT << C_RESET " ";
     bool isQuit = false;
     std::string input;
     
@@ -60,7 +60,7 @@ int main(int argc, char** argv) {
             std::cout << "Invalid Input" << std::endl;
         }
         if(!isQuit && !std::cin.eof()) {
-            std::cout << USER_PROMPT << " ";
+            std::cout << C_PINK << USER_PROMPT << C_RESET " ";
         }
     }
     std::cout << std::endl;
@@ -97,7 +97,7 @@ void processSeed(int argc, char** argv, int* seed) {
 void printMenu() {
     std::cout << std::endl;
     std::cout << "Menu" << std::endl;
-    std::cout << "----" << std::endl;
+    std::cout << C_GREEN << "----" << C_RESET << std::endl;
     std::cout << "1. New Game" << std::endl;
     std::cout << "2. Load Game" << std::endl;
     std::cout << "3. Display Credits" << std::endl;
@@ -121,19 +121,19 @@ Option resolveInput(std::string input) {
 bool startNewGame(int seed) {
     bool isEOF = true;
     std::cout << "Starting a New Game" << "\n" << std::endl;
-    std::cout << "Enter a name for player 1" << "\n" << USER_PROMPT << " ";    
+    std::cout << "Enter a name for player 1" << "\n" << C_PINK << USER_PROMPT << C_RESET " ";    
     std::string player1Name;
     getline(std::cin, player1Name);
     while(player1Name.empty() && !std::cin.eof()) {
-        std::cout << "Please enter name" << "\n" << USER_PROMPT << " ";
+        std::cout << "Please enter name" << "\n" << C_PINK << USER_PROMPT << C_RESET " ";
         getline(std::cin, player1Name);
     }  
     if(!std::cin.eof()) {
-        std::cout << "Enter a name for player 2" << "\n" << USER_PROMPT << " ";
+        std::cout << "Enter a name for player 2" << "\n" << C_PINK << USER_PROMPT << C_RESET " ";
         std::string player2Name;
         getline(std::cin, player2Name);
         while(player2Name.empty() && !std::cin.eof()) {
-            std::cout << "Please enter name" << "\n" << USER_PROMPT << " ";
+            std::cout << "Please enter name" << "\n" << C_PINK << USER_PROMPT << C_RESET " ";
             getline(std::cin, player2Name);
         }
         if(!std::cin.eof()) {
@@ -149,15 +149,15 @@ bool startNewGame(int seed) {
 bool loadGameFromFile() {
     bool isEOF = true;
     GameManager* gm = new GameManager();
-    std::cout << "Enter the filename from which load a game" << "\n" << USER_PROMPT << " ";
+    std::cout << "Enter the filename from which load a game" << "\n" << C_PINK << USER_PROMPT << C_RESET " ";
     std::string filename;
     getline(std::cin, filename);
     
     while(!gm->loadGame(filename) && !std::cin.eof()) {
         if(filename.empty()) {
-            std::cout << "Please enter file name" << "\n" << USER_PROMPT << " ";
+            std::cout << "Please enter file name" << "\n" << C_PINK << USER_PROMPT << C_RESET " ";
         } else {
-            std::cout << "Please enter again" << "\n" << USER_PROMPT << " ";
+            std::cout << "Please enter again" << "\n" << C_PINK << USER_PROMPT << C_RESET " ";
         }
         getline(std::cin, filename);
     }
@@ -166,17 +166,4 @@ bool loadGameFromFile() {
     }         
     delete gm;
     return isEOF;
-}
-
-void printInstructions() {
-
-    std::string instructionsPath = "azul_guide.txt";
-
-    std::ifstream ifs(instructionsPath);
-    std::string line;
-    
-    while(getline(ifs, line))
-        std::cout << line << '\n';
-
-
 }

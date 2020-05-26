@@ -116,6 +116,6 @@ void SetupManager::populateFactories(LinkedList* tileBag,
 }
 
 void SetupManager::addFirstPlayerTileToCenter(Vector* center) {
-    center->addTile(FIRST_PLAYER);
+    center->add(FIRST_PLAYER);
 }
 

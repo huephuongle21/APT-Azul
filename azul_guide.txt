@@ -1,6 +1,6 @@
-===AZUL GUIDE===
+=== AZUL GUIDE ===
 
-=SEED CHOICE=
+= SEED CHOICE =
 When launching AZUL, if you wish to provide a seed, specify it in the command line arguments.
 
 For example, you could use the command: './main -s 10' to specify a seed of 10.
@@ -9,13 +9,13 @@ If no seed is provided, a random seed will be generated for use in new games.
 
 When loading games, the seed specified in the load file will be used.
 
-=LOADING GAMES=
+= LOADING GAMES =
 
 To load a game, launch AZUL, choose option '2', and specify the path of the save file you wish to load.
 
 Our save format is templated in manually_generated_saves/save_template_empty.txt
 
-=PLAYING AZUL=
+= PLAYING AZUL =
 
 To take a turn, use the following command structure:
 'turn [factory choice] [colour choice] [pattern line choice]'
@@ -23,7 +23,7 @@ To take a turn, use the following command structure:
 For example, to take all red tiles from factory 1, and place them in pattern line 3, type:
 'turn 1 R 3'
 
-=SAVE GAME=
+= SAVE GAME =
 
 To save the current state of the game, use the following command structure:
 `save [save path]`
@@ -31,5 +31,10 @@ To save the current state of the game, use the following command structure:
 For example, to save the game as 'my_save.txt', type:
 `save my_save.txt`
 
-=EXITING GAME=
+= EXITING GAME =
+
 To end the game without saving, either type 'quit', or hold `ctrl+D`.
+
+= HELPING =
+
+To query what command to use, enter 'help'.

@@ -12,6 +12,10 @@ void printGame(std::ostream& outStream, Table* table, int currentPlayerID,
 
 void printFactory(std::ostream& outStream, Tile factory[]);
 
+void printFactoryToFile(std::ostream& outStream, Factory* factories);
+
+void printCenterToFile(std::ostream& outStream, Vector* vector);
+
 void printCenter(std::ostream& outStream, Vector* vector);
 
 void printPlayer(std::ostream& outStream, Player* player);
@@ -44,5 +48,9 @@ bool readPlayer(Player* player, std::vector<std::string>& lines, int* index);
 void readFactory(Factory factory, std::string line);
 
 void readBoard(std::vector<std::string>& lines, int* index, Board* board);
+
+std::string colour(char tile);
+
+void printInstructions();
 
 #endif // UTILITY_H

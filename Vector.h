@@ -15,9 +15,11 @@ public:
 
    Tile get(unsigned int index);
 
-   void addTile(Tile tile);
+   void add(Tile tile);
 
-   void removeTile(unsigned int index);
+   void remove(unsigned int index);
+
+   void removeByName(Tile tile);
 
    void clear();
 
