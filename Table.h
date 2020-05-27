@@ -10,7 +10,7 @@ class Table {
 
 public:
 
-    Table(int seed);
+    Table(int seed, int boardId);
 
     ~Table();
 
@@ -27,6 +27,8 @@ public:
     void setSeedNumber(int seedNumber);
 
     bool isFactoryEmpty(int& pos);
+
+    bool isAllFactoriesEmpty();
 
     bool isCenterEmpty();
 

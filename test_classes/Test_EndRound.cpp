@@ -4,9 +4,9 @@
 
 
 int main(void) {
-    GameManager* gm = new GameManager("Alice","Bob", 1590043364);
+    GameManager* gm = new GameManager("Alice","Bob", 1590043364, 1);
     Player* player1 = gm->getPlayer(1);
-    Board* board = player1->getBoard();
+    AbstractBoard* board = player1->getBoard();
     LinkedList* box = gm->getTable()->getBoxLid();
 
     board->addPatternLines(0,0,RED);
@@ -29,7 +29,7 @@ int main(void) {
      
     // std::cout << gm->moveTilesFromPatternLines(player1) << std::endl;
     gm->printTableAndBoard(player1);
-    for(unsigned int i = 0; i != box->size(); i++) {
+    for(int i = 0; i != box->size(); i++) {
         std::cout << box->get(i);
     }
     std::cout << std::endl;
@@ -40,7 +40,7 @@ int main(void) {
 
     // std::cout << gm->moveTilesFromPatternLines(player1) << std::endl;
     gm->printTableAndBoard(player1);
-    for(unsigned int i = 0; i != box->size(); i++) {
+    for(int i = 0; i != box->size(); i++) {
         std::cout << box->get(i);
     }
     std::cout << std::endl;
@@ -60,7 +60,7 @@ int main(void) {
     board->addPatternLines(4,0,LIGHT_BLUE);
     gm->commenceEndOfRound(player1);
     gm->printTableAndBoard(player1);
-    for(unsigned int i = 0; i != box->size(); i++) {
+    for(int i = 0; i != box->size(); i++) {
         std::cout << box->get(i);
     }
     std::cout << std::endl;

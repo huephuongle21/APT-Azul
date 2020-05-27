@@ -7,10 +7,11 @@ void printGame(std::ostream& outStream, Table* table, int currentPlayerID,
 
     outStream << "# ---SAVE BEGINS---" << "\n" << std::endl;
 
+    outStream << "# Board Id" << "\n" << player1->getBoard()->getBoardId() << "\n" << std::endl;
+
     outStream << "# Tile Bag" << std::endl;
     printLinkedList(outStream, table->getTileBag());
     
-
     outStream << "\n" << "# Box Lid" << std::endl;
     printLinkedList(outStream, table->getBoxLid());
     
@@ -20,7 +21,6 @@ void printGame(std::ostream& outStream, Table* table, int currentPlayerID,
     outStream << "\n" << "# Centre of Table" << std::endl;
     printCenterToFile(outStream, table->getCenter());
     
-
     outStream << "\n" << "# Seed for Program" << "\n" << table->getSeedNumber() << "\n" << std::endl;
 
     outStream << "# Current Player's ID" << "\n" << currentPlayerID << "\n" << std::endl;
@@ -103,22 +103,22 @@ void printPlayer(std::ostream& outStream, Player* player) {
     printBoard(outStream, player->getBoard());
 }
 
-void printBoard(std::ostream& outStream, Board* board) {    
-    
+void printBoard(std::ostream& outStream, AbstractBoard* board) {    
+    int size = board->getBoardSize();
     outStream << "# Pattern Lines" << std::endl;
-    printPatternLines(outStream, board->getPatternLines());
+    printPatternLines(outStream, board->getPatternLines(), size);
 
     outStream << "\n" << "# Wall" << std::endl;
-    printWall(outStream, board->getWall());
+    printWall(outStream, board->getWall(), size);
 
     outStream << "\n" << "# Floor Line" << std::endl;
     printFloorLine(outStream, board->getFloorLine(), board->getFloorLineLength());
 
 }
 
-void printPatternLines(std::ostream& outStream, Tile** patternLines) {
+void printPatternLines(std::ostream& outStream, Tile** patternLines, int boardSize) {
     
-    for(int i = 0; i != PATTERN_LINES_SIZE; i++) {
+    for(int i = 0; i != boardSize; i++) {
         for(int j = 0; j != (i+1); j++) {
             outStream << patternLines[i][j];
         }
@@ -126,10 +126,11 @@ void printPatternLines(std::ostream& outStream, Tile** patternLines) {
     }
 }
 
-void printWall(std::ostream& outStream, Wall& wall) {
-    for(int i = 0; i < WALL_DIM; i++) {
-        for(int j = 0; j < WALL_DIM; j++) {
-            if(wall[i][j] >= 'a' && wall[i][j] <= 'z') {
+void printWall(std::ostream& outStream, Wall wall, int boardSize) {
+    for(int i = 0; i < boardSize; i++) {
+        for(int j = 0; j < boardSize; j++) {
+            Tile tile = wall[i][j];
+            if((tile >= 'a' && tile <= 'z') || tile == NO_TILE) {
                 outStream << NO_TILE;
             } else {
                 outStream << wall[i][j];
@@ -139,16 +140,15 @@ void printWall(std::ostream& outStream, Wall& wall) {
     }
 }
 
-void printFloorLine(std::ostream& outStream, 
-        std::array<Tile, FLOOR_LINE_SIZE>& floorLine, unsigned int length) {
+void printFloorLine(std::ostream& outStream, Tile* floorLine, int length) {
 
     if(length == 0) {        
         outStream << EMPTY_COLLECTION;
     } else {
-        for(unsigned int i = 0; i != length; i++) {
+        for(int i = 0; i != length; i++) {
             if(floorLine[i] != NO_TILE) {
                 Tile tile = floorLine[i];
-                outStream << colour(tile) << tile << C_RESET;
+                outStream << tile;
             } 
         }
     }
@@ -157,6 +157,9 @@ void printFloorLine(std::ostream& outStream,
 
 bool readGame(std::istream& inStream, Table* table, int* currentPlayerID, 
         Player* player1, Player* player2) {
+
+    // Modify save game to have boardId
+    int boardId = 0; //setboardId later and pass to readPlayer
     bool read = true;
     std::string line;  
     std::vector<std::string> lines;                             
@@ -169,48 +172,61 @@ bool readGame(std::istream& inStream, Table* table, int* currentPlayerID,
 
     int index = 0;
     int size = lines.size();
-    if(size != NUM_LINES) {
+    try {
+        boardId = std::stoi(lines[index]);
+    } catch (const std::invalid_argument&) {
         read = false;
-    } else {
-        while(index != size && read) {
-            LinkedList* tileBag = table->getTileBag();
-            readLinkedList(tileBag, lines[index]);
-            if(tileBag->size() == 0) {
-                read = false;
-            }
-            if(read) {
-                readLinkedList(table->getBoxLid(), lines[++index]);
-
-                Factory* factory = table->getFactories();
-                for(int i = 0; i != NUMBER_OF_FACTORY; i++) {
-                    readFactory(factory[i], lines[++index]);
-                }
-
-                readCenter(table->getCenter(), lines[++index]);
-
-                try {
-                    table->setSeedNumber(std::stoi(lines[++index]));
-                } catch (const std::invalid_argument&) {
-                    read = false;
-                } catch (const std::out_of_range&) {
+    } catch (const std::out_of_range&) {
+        read = false;
+    }
+    if(read) {
+        if(boardId != REGULAR_BOARD && boardId != GREY_BOARD && boardId != ADVANCED_6TILE_BOARD) {
+            read = false;
+        } else if(boardId == ADVANCED_6TILE_BOARD && size != 39) {
+            read = false;
+        } else if((boardId == REGULAR_BOARD || boardId == GREY_BOARD) && size != 37) {
+            read = false;
+        } else {
+            while(index != size && read) {
+                LinkedList* tileBag = table->getTileBag();
+                readLinkedList(tileBag, lines[++index]);
+                if(tileBag->size() == 0) {
                     read = false;
                 }
                 if(read) {
+                    readLinkedList(table->getBoxLid(), lines[++index]);
+
+                    Factory* factory = table->getFactories();
+                    for(int i = 0; i != NUMBER_OF_FACTORY; i++) {
+                        readFactory(factory[i], lines[++index]);
+                    }
+
+                    readCenter(table->getCenter(), lines[++index]);
+
                     try {
-                        *currentPlayerID = std::stoi(lines[++index]);
-                        if(*currentPlayerID != 1 && *currentPlayerID != 2) {
-                            read = false;
-                        }
+                        table->setSeedNumber(std::stoi(lines[++index]));
                     } catch (const std::invalid_argument&) {
                         read = false;
                     } catch (const std::out_of_range&) {
                         read = false;
-                    }   
+                    }
                     if(read) {
-                        read = readPlayer(player1, lines, &index);
+                        try {
+                            *currentPlayerID = std::stoi(lines[++index]);
+                            if(*currentPlayerID != 1 && *currentPlayerID != 2) {
+                                read = false;
+                            }
+                        } catch (const std::invalid_argument&) {
+                            read = false;
+                        } catch (const std::out_of_range&) {
+                            read = false;
+                        }   
                         if(read) {
-                            read = readPlayer(player2, lines, &index);
-                            index++;
+                            read = readPlayer(player1, lines, &index, boardId);
+                            if(read) {
+                                read = readPlayer(player2, lines, &index, boardId);
+                                index++;
+                            }
                         }
                     }
                 }
@@ -229,26 +245,19 @@ void readLinkedList(LinkedList* list, std::string line) {
     }
 }
 
-void readFactory(Factory factory, std::string line) {
-    
+void readFactory(Factory factory, std::string line) {    
     int size = line.length();
-
     // If tile data exists, read it.
-    if(line[0] != EMPTY_COLLECTION) {
-        
+    if(line[0] != EMPTY_COLLECTION) {        
         for(int i = 0; i  != size; i++) {
             factory[i] = line[i];
         }
-
     } else {
-
         // If no tile data exists, populate factories with NO_TILE char.
         for (int i = 0; i != FACTORY_SIZE; i++) {
             factory[i] = NO_TILE;
         }
-
-    }
-    
+    }   
 }
 
 void readCenter(Vector* centerOfTable, std::string line) {
@@ -260,9 +269,7 @@ void readCenter(Vector* centerOfTable, std::string line) {
     }
 }
 
-
-
-bool readPlayer(Player* player, std::vector<std::string>& lines, int* i) {
+bool readPlayer(Player* player, std::vector<std::string>& lines, int* i, int boardId) {
     bool read = true;
     player->setName(lines[++(*i)]);
     try {
@@ -273,16 +280,19 @@ bool readPlayer(Player* player, std::vector<std::string>& lines, int* i) {
         read = false;
     }
     if(read) {
+        player->createBoard(boardId);
         readBoard(lines, i, player->getBoard());
     }
     return read;
 }
 
-void readBoard(std::vector<std::string>& lines, int* i, Board* board) {
+void readBoard(std::vector<std::string>& lines, int* i, AbstractBoard* board) {
+
+    int boardSize = board->getBoardSize();
 
     int index = *i;
 
-    for(int row = 0; row != PATTERN_LINES_SIZE; row++) {
+    for(int row = 0; row != boardSize; row++) {
         int size = lines[++index].length();
         for(int col = 0; col != size; col++) {
 
@@ -295,7 +305,7 @@ void readBoard(std::vector<std::string>& lines, int* i, Board* board) {
         }
     }
 
-    for(int row = 0; row != WALL_DIM; row++) {
+    for(int row = 0; row != boardSize; row++) {
         int size = lines[++index].length();
         for(int col = 0; col != size; col++) {
             char tile = lines[index][col];
@@ -315,25 +325,26 @@ void readBoard(std::vector<std::string>& lines, int* i, Board* board) {
     *i = index;
 }
 
-void printBoard(std::ostream& outStream, Wall& wall, Tile** patternLines, 
-        std::array<Tile, FLOOR_LINE_SIZE>& floorLine, int length) {
-
-    for(int row = 0; row != PATTERN_LINES_SIZE; row++) {
+void printBoard(std::ostream& outStream, std::string playerName, Wall wall, Tile** patternLines, Tile* floorLine, int length, int boardSize) {
+    std::cout << "Mosaic for " << playerName << ":" << "\n" << std::endl;
+    for(int row = 0; row != boardSize; row++) {
         std::cout << (row+1) << ": ";
-        for(int col = 0; col != PATTERN_LINES_SIZE; col++) {
-            if((col + 1) >= (PATTERN_LINES_SIZE - row)) {
-                Tile tile = patternLines[row][PATTERN_LINES_SIZE - col - 1];
+        for(int col = 0; col != boardSize; col++) {
+            if((col + 1) >= (boardSize - row)) {
+                Tile tile = patternLines[row][boardSize - col - 1];
                 outStream << colour(tile) << tile << C_RESET;               
             } else {
                 outStream << " ";
             }
 
-            if(col == PATTERN_LINES_SIZE - 1) {
+            if(col == boardSize - 1) {
                 outStream << C_MAGENTA << " || " << C_RESET;
-                for(int wCol = 0; wCol != WALL_DIM; wCol++) {
+                for(int wCol = 0; wCol != boardSize; wCol++) {
                     char tile = wall[row][wCol];
                     if(tile >= 'a' && tile <= 'z') {
                         outStream << colour(toupper(tile)) << NO_TILE << C_RESET;
+                    } else if(tile == NO_TILE) {
+                        outStream << C_GREY << NO_TILE << C_RESET;
                     } else {
                         outStream << colour(tile) << tile << C_RESET;
                     }
@@ -343,8 +354,14 @@ void printBoard(std::ostream& outStream, Wall& wall, Tile** patternLines,
         outStream << "\n";
     }
 
-    outStream << "6: broken: ";
-    printFloorLine(outStream, floorLine, length);
+    outStream << (boardSize+1) << ": broken: ";
+    for(int i = 0; i != length; i++) {
+        if(floorLine[i] != NO_TILE) {
+            Tile tile = floorLine[i];
+            outStream << colour(tile) << tile << C_RESET;
+        } 
+    }
+    std::cout << std::endl;
 }
 
 std::string colour(char tile) {
@@ -359,7 +376,9 @@ std::string colour(char tile) {
         colour = C_CYAN;
     } else if(tile == DARK_BLUE) {
         colour = C_BLUE;
-    } 
+    } else if(tile == ORANGE) {
+        colour = C_ORANGE;
+    }
     return colour;
 }
 

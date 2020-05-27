@@ -13,8 +13,10 @@
 void processSeed(int argc, char** argv, int* seed);
 
 void printMenu();
+void printBoardOption();
 
 Option resolveInput(std::string input);
+BoardOption resolveBoardInput(std::string input);
 
 bool startNewGame(int seed);
 bool loadGameFromFile();
@@ -104,6 +106,15 @@ void printMenu() {
     std::cout << "4. Quit" << std::endl;    
 }
 
+void printBoardOption() {
+    std::cout << std::endl;
+    std::cout << "Choose one type of board which you want to play" << std::endl;
+    std::cout << C_GREEN << BREAK_LINE << C_RESET << std::endl;
+    std::cout << "1. Regular Board" << std::endl;
+    std::cout << "2. Advanced Grey Board" << std::endl;
+    std::cout << "3. Advanced 6-tile Modes" << std::endl; 
+}
+
 Option resolveInput(std::string input) {
     Option option = OptionInvalid;
     if(input == "1") {
@@ -118,9 +129,47 @@ Option resolveInput(std::string input) {
     return option;
 }
 
+BoardOption resolveBoardInput(std::string input) {
+    BoardOption option = invalidBoard;
+    if(input == "1") {
+        option = regular;
+    } else if (input == "2") {
+        option = grey;
+    } else if (input == "3") {
+        option = advanced6Tile;
+    } 
+    return option;
+}
+
 bool startNewGame(int seed) {
+    int boardId = 0;
     bool isEOF = true;
     std::cout << "Starting a New Game" << "\n" << std::endl;
+
+    printBoardOption();
+    std::cout << C_PINK << USER_PROMPT << C_RESET " ";
+    bool isQuit = false;
+    std::string input;
+    
+    while(!isQuit && getline(std::cin, input)) {
+        BoardOption option = resolveBoardInput(input);
+        if(option == regular) {
+            boardId = REGULAR_BOARD;
+            isQuit = true;
+        } else if(option == grey) {
+            boardId = GREY_BOARD;
+            isQuit = true;
+        } else if(option == advanced6Tile) {
+            boardId = ADVANCED_6TILE_BOARD;
+            isQuit = true;
+        } else {
+            std::cout << "Invalid Input" << std::endl;
+        }
+        if(!isQuit && !std::cin.eof()) {
+            std::cout << C_PINK << USER_PROMPT << C_RESET " ";
+        }
+    }
+
     std::cout << "Enter a name for player 1" << "\n" << C_PINK << USER_PROMPT << C_RESET " ";    
     std::string player1Name;
     getline(std::cin, player1Name);
@@ -138,7 +187,7 @@ bool startNewGame(int seed) {
         }
         if(!std::cin.eof()) {
             std::cout << std::endl;        
-            GameManager* gm = new GameManager(player1Name, player2Name, seed);
+            GameManager* gm = new GameManager(player1Name, player2Name, seed, boardId);
             isEOF = gm->startGame(true);
             delete gm;
         }

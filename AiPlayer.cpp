@@ -1,21 +1,21 @@
-#include "AIPlayer.h"
+#include "AiPlayer.h"
 
-AIPlayer::AIPlayer() :
+AiPlayer::AiPlayer() :
     Player("Computer", 3) {
         tilesMove = {};
         tilesMoveLength = 0;
     };
 
 
-void AIPlayer::makeMove(Table* table, Board* playerBoard) {
+void AiPlayer::makeMove(Table* table, Board* playerBoard) {
 
 }
 
-void AIPlayer::makeFactoryChoice(Factory* factories, Vector* center) {
+void AiPlayer::makeFactoryChoice(Factory* factories, Vector* center) {
 
 }
 
-void AIPlayer::makePatternLinesChoice(Board* playerBoard) {
+void AiPlayer::makePatternLinesChoice(Board* playerBoard) {
     Tile** patternLines = playerBoard->getPatternLines();
     for(int i = 0; i != PATTERN_LINES_SIZE; i++) {
         int index = i+1;
@@ -26,7 +26,7 @@ void AIPlayer::makePatternLinesChoice(Board* playerBoard) {
 
 }
 
-void AIPlayer::addPossibleTiles(Tile tile) {
+void AiPlayer::addPossibleTiles(Tile tile) {
     tilesMove[tilesMoveLength] = tile;
     tilesMoveLength++;
 }

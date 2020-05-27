@@ -17,7 +17,7 @@ class GameManager {
     GameManager();
 
     // Constructor to start new game
-    GameManager(std::string player1Name, std::string player2Name, int seed);
+    GameManager(std::string player1Name, std::string player2Name, int seed, int boardId);
 
     ~GameManager();
 
@@ -50,11 +50,11 @@ class GameManager {
     */
     bool playerTurn(Player* player, std::string performTurn);
 
-    bool promptForFactoryChoice(int& factoryChoice, char& colourChoice);
+    bool promptForFactoryChoice(int& factoryChoice, char& colourChoice, int boardId);
     
-    bool promptForColourChoice(char& colourChoice);
+    bool promptForColourChoice(char& colourChoice, int boardId);
 
-    bool promptForPatternLineChoice(Player* player, int& patternLineChoice, char& colourChoice);
+    bool promptForPatternLineChoice(Player* player, int& patternLineChoice, char& colourChoice, int boardSize);
 
     void takeTiles(int& factoryChoice, char& colour);
 
@@ -69,7 +69,7 @@ class GameManager {
 
     void moveTilesFromFactory(Player* player);
 
-    void commenceEndOfRound(Player* player);
+    bool commenceEndOfRound(Player* player);
 
     // Calculate score end of game and show the winner
     void commenceEndOfGame();
@@ -81,10 +81,13 @@ class GameManager {
     void moveTilesToPatternLines(Player* player, int& factoryChoice, int& patternLineChoice, char& colourChoice);
 
     void moveTilesFromCenter(LinkedList* boxLid, Tile** patternLines, Vector* center, 
-        Board* board, char& colourChoice, int& patternLineChoice);
+        AbstractBoard* board, char& colourChoice, int& patternLineChoice, int floorLineMaxSize);
 
     void moveTilesFromFactory(int& factoryChoice, char& colourChoice, int& patternLineChoice, 
-        Board* board, LinkedList* boxLid, Tile* chosenFactory, Tile** patternLines, Vector* center);
+        AbstractBoard* board, LinkedList* boxLid, Tile* chosenFactory, Tile** patternLines, Vector* center,
+        int floorLineMaxSize);
+
+    int userPromptForWall(AbstractBoard* board, int index);
 
     private:
 
@@ -97,7 +100,7 @@ class GameManager {
     
     int currentPlayerID;
 
-    unsigned int roundCount;
+    int roundCount;
 
 };
 

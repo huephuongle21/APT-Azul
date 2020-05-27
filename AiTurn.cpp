@@ -1,28 +1,29 @@
-#include "AITurn.h"
+#include "AiTurn.h"
 
-AITurn::AITurn(int factoryChoice, Tile tileChoice, int patternLinesChoice) {
+AiTurn::AiTurn(int factoryChoice, Tile tileChoice, int patternLinesChoice, bool valid) {
     this->factoryChoice = factoryChoice;
     this->tileChoice = tileChoice;
     this->patternLinesChoice = patternLinesChoice;
+    this->valid = valid;
 }
 
-AITurn::~AITurn() {
+AiTurn::~AiTurn() {
 
 }
 
-int AITurn::getFactoryChoice() const {
+int AiTurn::getFactoryChoice() const {
     return factoryChoice;
 }
 
-Tile AITurn::getTileChoice() const {
+Tile AiTurn::getTileChoice() const {
     return tileChoice;
 }
 
-int AITurn::getPatternLinesChoice() const {
+int AiTurn::getPatternLinesChoice() const {
     return patternLinesChoice;
 }
 
-std::string AITurn::toString() {
+std::string AiTurn::toString() {
     std::string turn;
     turn += "turn ";
     turn += std::to_string(factoryChoice);
@@ -31,5 +32,13 @@ std::string AITurn::toString() {
     turn += " ";
     turn += std::to_string(patternLinesChoice);
     return turn;
+}
+
+void AiTurn::setValid(bool valid) {
+    this->valid = valid;
+}
+
+bool AiTurn::isValid() {
+    return this->valid;
 }
 

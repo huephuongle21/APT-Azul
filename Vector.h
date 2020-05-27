@@ -11,7 +11,7 @@ public:
    Vector(Vector& other);
    ~Vector();
 
-   int size();
+   unsigned int size();
 
    Tile get(unsigned int index);
 

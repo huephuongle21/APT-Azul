@@ -2,22 +2,22 @@
 #define AIPLAYER_H
 
 #include <string>
-#include "Board.h"
+#include "AbstractBoard.h"
 #include <iostream>
 #include "Player.h"
 #include "Table.h"
 
-class AIPlayer : public Player {
+class AiPlayer : public Player {
 
 public:
 
-    AIPlayer();
+    AiPlayer();
 
-    void makeMove(Table* table, Board* playerBoard);
+    void makeMove(Table* table, AbstractBoard* playerBoard);
 
     void makeFactoryChoice(Factory* factories, Vector* center);
 
-    void makePatternLinesChoice(Board* playerBoard);
+    void makePatternLinesChoice(AbstractBoard* playerBoard);
 
     void setFactoryChoice(int& factoryChoice);
 
@@ -38,7 +38,7 @@ private:
 
     std::array<Tile, NUM_PLAYABLE_COLOURS> tilesMove;
 
-    unsigned int tilesMoveLength;
+    int tilesMoveLength;
 
     std::array<int, 6> factoriesMove;
 

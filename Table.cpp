@@ -1,6 +1,6 @@
 #include "Table.h"
 
-Table::Table(int seed) {
+Table::Table(int seed, int boardId) {
     this->tileBag = new LinkedList();
     this->boxLid = new LinkedList();
 
@@ -18,7 +18,7 @@ Table::Table(int seed) {
 
     centerOfTable = new Vector();
 
-    sm = new SetupManager(seedNumber);
+    sm = new SetupManager(seedNumber, boardId);
 }
 
 Table::~Table() {
@@ -62,6 +62,16 @@ bool Table::isFactoryEmpty(int& pos) {
     return isEmpty;
 }
 
+bool Table::isAllFactoriesEmpty() {
+    bool isEmpty = true;
+    for(int i = 0; i != NUMBER_OF_FACTORY; i++) {
+        if(!isFactoryEmpty(i)) {
+            isEmpty = false;
+        }
+    }
+    return isEmpty;
+}
+
 bool Table::isCenterEmpty() {
     return centerOfTable->size() == 0 ? true : false;
 }
@@ -79,7 +89,7 @@ bool Table::findColourInFactory(int& pos, char& colourChoice) {
 bool Table::findColourInCenter(char& colourChoice) {
     bool isFound = false;
     if(!isCenterEmpty()) {
-        for(int i = 0; i != centerOfTable->size(); i++) {
+        for(unsigned int i = 0; i != centerOfTable->size(); i++) {
             if(centerOfTable->get(i) == colourChoice) {
                 isFound = true;
             }

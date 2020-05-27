@@ -1,17 +1,30 @@
 #include "Player.h"
+#include "RegularBoard.h"
+#include "GreyBoard.h"
+#include "Advanced6TileBoard.h"
 
-Player::Player(std::string playerName, int id) {
+Player::Player(std::string playerName, int id, int boardId) {
     this->playerName = playerName;
     this->id = id;
     this->playerPoints = 0;
-    this->playerBoard = new Board();
+    createBoard(boardId);
 }
 
 Player::Player(int id) {
     this->playerName = "";
     this->id = id;
     this->playerPoints = 0;
-    this->playerBoard = new Board();
+    this->playerBoard = nullptr;
+}
+
+void Player::createBoard(int boardId) {
+    if(boardId == REGULAR_BOARD) {
+        this->playerBoard = new RegularBoard();
+    } else if(boardId == GREY_BOARD) {
+        this->playerBoard = new GreyBoard();
+    } else if(boardId == ADVANCED_6TILE_BOARD) {
+        this->playerBoard = new Advanced6TileBoard();
+    }
 }
 
 Player::~Player() {
@@ -41,7 +54,7 @@ void Player::addPoints(int points) {
     }
 }
 
-Board* Player::getBoard() {
+AbstractBoard* Player::getBoard() {
     return this->playerBoard;
 }
 
@@ -50,12 +63,12 @@ void Player::toStringEndOfGame() {
         << playerBoard->getNumberOfRowsCompleted() << " completed rows." << std::endl;  
 }
 
-void Player::toStringEndOfRound(int& addScore, unsigned int& roundCount) {
+void Player::toStringEndOfRound(int& addScore, int& roundCount) {
     if(addScore == 0) {
         std::cout << playerName << " remains the same points in round " 
             << roundCount << "." << std::endl;
     } else if(addScore < 0) {
-        unsigned int subtractScore = -(addScore);
+        int subtractScore = -(addScore);
         std::cout << playerName << " loses " << subtractScore << " points from round " 
             << roundCount << "." << std::endl;
     } else {

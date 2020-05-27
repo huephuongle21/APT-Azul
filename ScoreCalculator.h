@@ -15,7 +15,7 @@ public:
 
     void calculateScoreEndOfGame(Player* player);
 
-    int calculateScoreFromWall(Wall& wall, int& colPos, int& rowPos);
+    int calculateScoreFromWall(Wall wall, int& colPos, int& rowPos);
 
 };
 

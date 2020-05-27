@@ -2,7 +2,7 @@
 #include "Utility.h"
 
 int main(void) {
-    GameManager* gm = new GameManager("Alice","Bob");
+    GameManager* gm = new GameManager("Alice","Bob",5);
     Player* player = gm->getPlayer(1);
     Board* board = player->getBoard();
     ScoreCalculator* cal = gm->getCalculator();

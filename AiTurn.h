@@ -4,13 +4,13 @@
 #include "Types.h"
 #include <string>
 
-class AITurn {
+class AiTurn {
 
 public:
 
-    AITurn(int factoryChoice, Tile tileChoice, int patternLinesChoice);
+    AiTurn(int factoryChoice, Tile tileChoice, int patternLinesChoice, bool valid);
 
-    ~AITurn();
+    ~AiTurn();
 
     int getFactoryChoice() const;
 
@@ -20,12 +20,18 @@ public:
 
     std::string toString();
 
+    void setValid(bool valid);
+
+    bool isValid();
+
 private:
     int factoryChoice;
 
     Tile tileChoice;
 
     int patternLinesChoice;
+
+    bool valid;
 };
 
 #endif // AITURN_H

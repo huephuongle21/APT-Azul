@@ -9,8 +9,8 @@ ScoreCalculator::~ScoreCalculator() {
 }
 
 int ScoreCalculator::calculateScoreEachRound(Player* player, int& addScore) {
-    unsigned int floorLineLength = player->getBoard()->getFloorLineLength();
-    unsigned int i = 0;
+    int floorLineLength = player->getBoard()->getFloorLineLength();
+    int i = 0;
     int score = 0;
     // Subtract for broken tiles
     if(floorLineLength != 0) {
@@ -32,7 +32,7 @@ int ScoreCalculator::calculateScoreEachRound(Player* player, int& addScore) {
     return score;
 }
 
-int ScoreCalculator::calculateScoreFromWall(Wall& wall, int& colPos, int& rowPos) {
+int ScoreCalculator::calculateScoreFromWall(Wall wall, int& colPos, int& rowPos) {
     int score = 0;
     int countRow = 0;
     int countCol = 0;
@@ -58,11 +58,11 @@ int ScoreCalculator::calculateScoreFromWall(Wall& wall, int& colPos, int& rowPos
 
 void ScoreCalculator::calculateScoreEndOfGame(Player* player) {
     int score = 0;
-    Board* board = player->getBoard();
-    Wall& wall = board->getWall();
+    AbstractBoard* board = player->getBoard();
+    Wall wall = board->getWall();
     
     // Check for entire row
-    unsigned int numberOfRowsCompleted = board->getNumberOfRowsCompleted();
+    int numberOfRowsCompleted = board->getNumberOfRowsCompleted();
     score += (numberOfRowsCompleted*POINT_HORIZONTAL);
    
     // Check for any 5 of 1 colour and any entire column

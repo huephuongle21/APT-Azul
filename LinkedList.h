@@ -21,15 +21,15 @@ public:
    /**
     * Return the current size of the Linked List.
     */
-   unsigned int size() const;
+   int size() const;
 
    /**
     * output: Get the value at the given index.
     * input: Index must be >=0 and < size()
     * 
     */
-   Tile get(const unsigned int index) const;
-   bool get(const unsigned int index, Tile returnValue) const;
+   Tile get(const int index) const;
+   bool get(const int index, Tile returnValue) const;
 
    /**
     * Add the value to the back of the Linked List

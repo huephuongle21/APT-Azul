@@ -2,7 +2,7 @@
 #define PLAYER_H
 
 #include <string>
-#include "Board.h"
+#include "AbstractBoard.h"
 #include <iostream>
 
 class Player {
@@ -10,7 +10,7 @@ class Player {
 public:
 
     // Constructor to start a new game
-    Player(std::string playerName, int id);
+    Player(std::string playerName, int id, int boardId);
 
     // Constructor to load game from file
     Player(int id);
@@ -25,7 +25,7 @@ public:
 
     void addPoints(int points);
 
-    Board* getBoard();
+    AbstractBoard* getBoard();
 
     void setName(std::string name);
     
@@ -33,7 +33,9 @@ public:
     void toStringEndOfGame();
 
     // Print player name with updating points each round
-    void toStringEndOfRound(int& addScore, unsigned int& roundCount);
+    void toStringEndOfRound(int& addScore, int& roundCount);
+
+    void createBoard(int boardId);
 
 private:
 
@@ -43,7 +45,7 @@ private:
 
     int playerPoints;
     
-    Board* playerBoard;
+    AbstractBoard* playerBoard;
 
 };
 

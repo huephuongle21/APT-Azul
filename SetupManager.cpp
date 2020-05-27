@@ -7,13 +7,14 @@ SetupManager::SetupManager() {
     std::srand(time(NULL));
 }
 
-SetupManager::SetupManager(int seed) {
+SetupManager::SetupManager(int seed, int boardId) {
+    this->boardId = boardId;
     std::srand(seed);
 }
 
 // input: an integer between 0 and 4 (inclusive)
 // output: the corresponding tile colour (white if input > 4)
-Tile SetupManager::intToChar(unsigned int number) {
+Tile SetupManager::intToChar(int number) {
 
     Tile returnColour = FIRST_PLAYER;
 
@@ -27,6 +28,8 @@ Tile SetupManager::intToChar(unsigned int number) {
         returnColour = LIGHT_BLUE;
     } else if (number == 4) {
         returnColour = BLACK;
+    } else if(number == 5) {
+        returnColour = ORANGE;
     }
     
     return returnColour;
@@ -39,7 +42,7 @@ void SetupManager::swap(Tile &a, Tile &b)  {
     b = tmp;
 }
 
-void SetupManager::shuffle(std::array<Tile, TILE_BAG_MAXIMUM> &tiles, int size) {
+void SetupManager::shuffle(Tile* tiles, int size) {
     
     for (int i = size - 1; i > 0; --i)  {  
         
@@ -53,12 +56,18 @@ void SetupManager::shuffle(std::array<Tile, TILE_BAG_MAXIMUM> &tiles, int size) 
 
 // Tile Bag Methods
 void SetupManager::populateTileBag(LinkedList* tileBag) {
+    int numTiles = TILE_BAG_MAXIMUM;
+    int numColors = NUM_PLAYABLE_COLOURS;
 
-    std::array<Tile, TILE_BAG_MAXIMUM> tiles;
+    if(boardId == ADVANCED_6TILE_BOARD) {
+        numTiles = A_TILE_BAG_MAXIMUM;
+        numColors = A_NUM_PLAYABLE_COLOURS;
+    }
+    Tile tiles[numTiles];
     int index = 0;
 
     // Set up ordered array of tiles.
-    for (int i = 0; i != NUM_PLAYABLE_COLOURS; ++i) {
+    for (int i = 0; i != numColors; ++i) {
 
         // Iterate through all playable tile colours.
         Tile colourToAdd = intToChar(i); 
@@ -73,10 +82,10 @@ void SetupManager::populateTileBag(LinkedList* tileBag) {
     }
 
     // Randomise order of tiles.
-    shuffle(tiles, tiles.size());
+    shuffle(tiles, numTiles);
 
     // Add tiles to tile bag.
-    for (int i = 0; i != tiles.size(); ++i) {
+    for (int i = 0; i != numTiles; ++i) {
         tileBag->addFront(tiles[i]);
     }
 
@@ -86,7 +95,7 @@ void SetupManager::populateTileBag(LinkedList* tileBag) {
 // Currently does not shuffle.
 void SetupManager::refillTileBagFromBoxLid(LinkedList* tileBag, LinkedList* boxLid) {
     
-    for (unsigned int i = 0; i != boxLid->size(); ++i) {
+    for (int i = 0; i != boxLid->size(); ++i) {
         tileBag->addFront(boxLid->get(i));
     }
 

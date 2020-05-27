@@ -17,7 +17,7 @@ Vector::~Vector() {
    clear();
 }
 
- int Vector::size() {
+unsigned int Vector::size() {
    return tileVector.size();
 }
 
@@ -49,7 +49,7 @@ void Vector::clear() {
 void Vector::removeByName(Tile tile) {
    unsigned int size = tileVector.size();
    if(size > 0) {
-         for(unsigned index = 0; index != size; index++) {
+         for(unsigned int index = 0; index != size; index++) {
             if(get(index) == tile) {
                for (unsigned int i = index; i < size - 1; ++i) {
                tileVector[i] = tileVector[i + 1];

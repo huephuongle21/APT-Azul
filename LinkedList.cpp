@@ -27,13 +27,13 @@ LinkedList::~LinkedList() {
    clear();
 }
 
-unsigned int LinkedList::size() const {
+int LinkedList::size() const {
    return length;
 }
 
 // Version of get that throws an exception when index is out of range.
-Tile LinkedList::get(const unsigned int index) const {
-   unsigned int count = 0;
+Tile LinkedList::get(const int index) const {
+   int count = 0;
    Node* current = head;
    Tile returnValue = NO_TILE;
    
@@ -50,9 +50,9 @@ Tile LinkedList::get(const unsigned int index) const {
 }
 
 // Version of get that returns error "code" when index is out of range.
-bool LinkedList::get(const unsigned int index, Tile returnValue) const {
+bool LinkedList::get(const int index, Tile returnValue) const {
    bool error = true;
-   unsigned int count = 0;
+   int count = 0;
    Node* current = head;
    if (index >= 0 && index < size()) {     
       while(count < index) {

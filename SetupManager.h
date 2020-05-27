@@ -3,20 +3,19 @@
 
 #include "LinkedList.h"
 #include "Vector.h"
-#include <array>
 
 class SetupManager {
 
 public:
 
     SetupManager();
-    SetupManager(int seed);
+    SetupManager(int seed, int boardId);
 
-    Tile intToChar(unsigned int number);
+    Tile intToChar(int number);
 
     // Shuffle methods.
     void swap(Tile& a, Tile& b);
-    void shuffle(std::array<Tile, TILE_BAG_MAXIMUM> &tiles, int size);
+    void shuffle(Tile* tiles, int size);
 
     // Tile Bag Methods
     void populateTileBag(LinkedList* tileBag);
@@ -28,6 +27,9 @@ public:
         Factory factories[NUMBER_OF_FACTORY], LinkedList* boxLid);
 
     void addFirstPlayerTileToCenter(Vector* center);
+
+private:
+    int boardId;
 
 };
 
