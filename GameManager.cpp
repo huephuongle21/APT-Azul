@@ -538,7 +538,7 @@ int GameManager::moveTilesFromPatternLines(Player* player) {
                             } else if(boardId == GREY_BOARD) {
                                 board->addWall(index,colPos-1,tile);
                             }
-                            score += calculator->calculateScoreFromWall(board->getWall(), colPos, index);
+                            score += calculator->calculateScoreFromWall(board->getWall(), colPos, index, boardSize);
                         }
                     }
                 } else {
