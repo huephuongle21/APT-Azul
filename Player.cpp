@@ -60,7 +60,7 @@ AbstractBoard* Player::getBoard() {
 
 void Player::toStringEndOfGame() {
     std::cout << playerName << ": " << playerPoints << " points and " 
-        << playerBoard->getNumberOfRowsCompleted() << " completed rows." << std::endl;  
+        << playerBoard->getNumberOfRowsCompleted() << " completed rows." << "\n" << std::endl;  
 }
 
 void Player::toStringEndOfRound(int& addScore, int& roundCount) {

@@ -361,7 +361,7 @@ void printBoard(std::ostream& outStream, std::string playerName, Wall wall, Tile
             outStream << colour(tile) << tile << C_RESET;
         } 
     }
-    std::cout << std::endl;
+    outStream << "\n\n";
 }
 
 std::string colour(char tile) {

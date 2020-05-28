@@ -42,6 +42,7 @@ int ScoreCalculator::calculateScoreFromWall(Wall wall, int& colPos, int& rowPos,
         Tile tile = wall[row][colPos];
         if(tile >= 'A' && tile <= 'Z') {
             score++;
+
             countCol++;
         }
     }

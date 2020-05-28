@@ -83,6 +83,10 @@ bool Table::findColourInFactory(int& pos, char& colourChoice) {
             isFound = true;
         }
     }
+    if(!isFound) {
+        std::cout << "\n" << C_RED << "Factory " << pos << " does not have that colour"
+            << C_RESET << "\n" << std::endl;
+    }
     return isFound;
 }
 
@@ -94,6 +98,13 @@ bool Table::findColourInCenter(char& colourChoice) {
                 isFound = true;
             }
         }
+        if(!isFound) {
+            std::cout << "\n" << C_RED << "Center does not have that colour"
+                << C_RESET << "\n" << std::endl;
+        }
+    } else {
+        std::cout << "\n" << C_RED << "Center of table is empty" << C_RESET
+            << "\n" << std::endl;
     }
     return isFound;
 }

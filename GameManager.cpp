@@ -36,7 +36,7 @@ bool GameManager::startGame(bool isNewGame) {
         table->setupGame();
     }
 
-    std::cout << "Let's Play!" << "\n" << std::endl;
+    std::cout << "\n" << C_BLUE << "Let's Play!" << C_RESET << "\n" << std::endl;
    
     bool gameOver = false;
     bool isEOF = false;
@@ -68,7 +68,7 @@ void GameManager::commenceEndOfGame() {
     // Modify score end of game
     calculator->calculateScoreEndOfGame(player1);
     calculator->calculateScoreEndOfGame(player2);
-    std::cout << C_BROWN << "=== GAME OVER ===" << C_RESET << "\n" << std::endl;
+    std::cout << "\n" << C_BROWN << "=== GAME OVER ===" << C_RESET << "\n" << std::endl;
     player1->toStringEndOfGame();
     player2->toStringEndOfGame();
     std::cout << std::endl;
@@ -82,14 +82,17 @@ bool GameManager::loadGame(std::string loadPath) {
     inFile.open(loadPath);
 
     if(inFile.fail()) {
-        std::cout << "File does not exist!" << std::endl;
+        std::cout << "\n" << C_RED << "File does not exist!" 
+            << C_RESET << "\n" << std::endl;
         isLoaded = false;
     } else {
         if(readGame(inFile, table, &currentPlayerID, player1, player2)) {
             inFile.close();
-            std::cout << "Azul game successfully loaded" << "\n" << std::endl;
+            std::cout << "\n" << C_GREEN << "Azul game successfully loaded" 
+                << C_RESET << "\n" << std::endl;
         } else {
-            std::cout << "File does not contain a valid game!" << std::endl;
+            std::cout << "\n" << C_RED << "File does not contain a valid game!" 
+                << C_RESET << "\n" << std::endl;
             isLoaded = false;
         }
     }
@@ -112,24 +115,27 @@ bool GameManager::saveGame(std::string input) {
         os.open(savePath);
 
         if(os.fail()) {
-            std::cout << "Could not create save." << std::endl;
+            std::cout << "\n" << C_RED << "Could not create save." 
+                << C_RESET << "\n" << std::endl;
         } else {
             printGame(os, table, currentPlayerID, player1, player2);
             os.close();
 
-            std::cout << "Save successful!" << std::endl;
-            std::cout << "Game saved as: '" << savePath << "'" << std::endl;
+            std::cout << "\n" << C_GREEN << "Save successful!" << C_RESET << std::endl;
+            std::cout << "Game saved as: '" << C_GREEN << savePath 
+                << C_RESET << "'" << std::endl;
             saved = true;
         }   
     } else {
-        std::cout << "Invalid save command" << std::endl;
+        std::cout << "\n" << "Invalid save command" << std::endl;
         std::cout << C_RED << "save [save path]" << C_RESET << "\n" << std::endl;
     }     
     return saved; 
 }
 
 bool GameManager::commenceRound() {
-    std::cout << C_BROWN << "=== Start Round " << roundCount << " ===" << C_RESET << std::endl;
+    std::cout << C_BROWN << "=== Start Round " << roundCount << " ===" 
+        << C_RESET << std::endl;
     bool endRound = false;
     bool isEOF = false;
 
@@ -150,7 +156,8 @@ bool GameManager::commenceRound() {
     }
 
     if(!isEOF) {
-        std::cout << C_BROWN << "=== END OF ROUND " << roundCount << " ===" << C_RESET << "\n" << std::endl;
+        std::cout << "\n" << C_BROWN << "=== END OF ROUND " << roundCount << " ===" 
+            << C_RESET << "\n" << std::endl;
         isEOF = commenceEndOfRound(player1);
         if(!isEOF) {
             isEOF = commenceEndOfRound(player2);
@@ -186,7 +193,7 @@ bool GameManager::commenceEndOfRound(Player* player) {
             floorLine, board->getFloorLineLength(), board->getBoardSize());
             
         player->toStringEndOfRound(score, roundCount);
-        std::cout << C_GREEN << BREAK_LINE << C_RESET << std::endl;
+        std::cout << C_GREEN << BREAK_LINE << C_RESET << "\n" << std::endl;
 
         // Clear floor line after each round
         for(int index = 0; index != floorLineLength; index++) {
@@ -230,7 +237,7 @@ void GameManager::printTableAndBoard(Player* player) {
 
 bool GameManager::commenceTurn(Player* player) {
 
-    std::cout << C_PINK << USER_PROMPT << C_RESET << " ";
+    std::cout << C_LIGHTYELLOW << USER_PROMPT << C_RESET << " ";
     std::string input;
     bool isTurnFinished = false;
     bool isEOF = false;
@@ -240,7 +247,7 @@ bool GameManager::commenceTurn(Player* player) {
         std::string typeOfCommand = input.substr(0, 4);
 
         if(typeOfCommand == COMMAND_TURN && playerTurn(player, input)) {
-            std::cout << "Turn successful." << "\n" << std::endl;
+            std::cout << "\n" << C_GREEN << "Turn successful." << C_RESET << "\n" << std::endl;
             isTurnFinished = true;
         } else if(input == COMMAND_EXIST) {
             isTurnFinished = true;
@@ -248,15 +255,15 @@ bool GameManager::commenceTurn(Player* player) {
         } else if(input == COMMAND_HELP) {
             printInstructions();
             std::cout << std::endl;
-            std::cout << "Please continue your turn" << std::endl;
+            std::cout << "\n" << "Please continue your turn" << "\n" << std::endl;
         } else if(typeOfCommand == COMMAND_SAVE && saveGame(input)) {
-            std::cout << "Please continue your turn" << std::endl;
+            std::cout << "\n" << "Please continue your turn" << "\n" << std::endl;
         } else if(typeOfCommand != COMMAND_TURN && typeOfCommand != COMMAND_SAVE 
                 && input != COMMAND_EXIST) {
-            std::cout << "Invalid Input." << "\n";
+            std::cout << "\n" << "Invalid Input." << "\n" << std::endl;
         }
         if(!isTurnFinished && !std::cin.eof()) {
-            std::cout << C_PINK << USER_PROMPT << C_RESET << " ";
+            std::cout << C_LIGHTYELLOW << USER_PROMPT << C_RESET << " ";
         } 
     }
 
@@ -301,7 +308,7 @@ bool GameManager::playerTurn(Player* player, std::string input) {
     if(input.length() != COMMAND_TURN_LENGTH 
             || !(playerTurn >> command >> factoryChoice >> colourChoice >> patternLineChoice)
             || command != COMMAND_TURN) {
-        std::cout << "Invalid turn command" << std::endl;
+        std::cout << "\n" << "Invalid turn command" << "\n" << std::endl;
         std::cout << C_RED << "turn [factory choice] [colour choice] [pattern line choice]" 
             << C_RESET << "\n" << std::endl;
         isTurnValid = false;
@@ -327,17 +334,18 @@ void GameManager::moveTilesToPatternLines(Player* player, int& factoryChoice,
     int floorLineMaxSize = board->getFloorLineMaxSize();
 
     if(factoryChoice == 0) {
-        moveTilesFromCenter(boxLid, patternLines, center, board, colourChoice, patternLineChoice, floorLineMaxSize);
+        moveTilesFromCenter(boxLid, patternLines, center, board, colourChoice, 
+            patternLineChoice, floorLineMaxSize);
     } else {
-        moveTilesFromFactory(factoryChoice, colourChoice, patternLineChoice, board, boxLid, chosenFactory,
-            patternLines, center, floorLineMaxSize);
+        moveTilesFromFactory(factoryChoice, colourChoice, patternLineChoice, board, boxLid, 
+            chosenFactory, patternLines, center, floorLineMaxSize);
     }
     table->clearChosenFactory();
 }
 
-void GameManager::moveTilesFromFactory(int& factoryChoice, char& colourChoice, int& patternLineChoice, 
-        AbstractBoard* board, LinkedList* boxLid, Tile* chosenFactory, Tile** patternLines, Vector* center,
-        int floorLineMaxSize) {
+void GameManager::moveTilesFromFactory(int& factoryChoice, char& colourChoice, 
+        int& patternLineChoice, AbstractBoard* board, LinkedList* boxLid, Tile* chosenFactory, 
+        Tile** patternLines, Vector* center, int floorLineMaxSize) {
     
     int tilesPlaced = 0;
     takeTiles(factoryChoice, colourChoice);
@@ -438,8 +446,9 @@ bool GameManager::promptForFactoryChoice(int& factoryChoice, char& colourChoice,
         } else if (1 <= factoryChoice && factoryChoice <= 5 
                 && table->findColourInFactory(factoryChoice, colourChoice)) {
             isValid = true;  
-        } else {
-            std::cout << "Invalid choice of factory." << std::endl;
+        } else if (factoryChoice < 0 || factoryChoice > 5) {
+            std::cout << "\n" << C_RED << "Factory choice varies from 0 to 5" 
+                << C_RESET << "\n" << std::endl;
         }
     }
     return isValid;
@@ -450,27 +459,32 @@ bool GameManager::promptForColourChoice(char& colourChoice, int boardId) {
     if(colourChoice != RED && colourChoice != YELLOW && colourChoice != DARK_BLUE     
             && colourChoice != LIGHT_BLUE && colourChoice != BLACK) {
         if(boardId == REGULAR_BOARD || boardId == GREY_BOARD) {
-            std::cout << "Invalid choice of colour. Should be 'R', 'Y', 'B', 'L' or 'B'" << std::endl;
+            std::cout << "\n" << C_RED << "Invalid choice of colour. Should be "
+                << "'R', 'Y', 'B', 'L' or 'B'" << C_RESET << "\n" << std::endl;
             isValid = false;
         } else if(boardId == ADVANCED_6TILE_BOARD && colourChoice != ORANGE) {
-            std::cout << "Invalid choice of colour. Should be 'R', 'Y', 'B', 'L', 'B' or 'O'" << std::endl;
+            std::cout << "\n" << C_RED << "Invalid choice of colour. Should be "
+                << "'R', 'Y', 'B', 'L', 'B' or 'O'" << C_RESET << "\n" << std::endl;
             isValid = false;
         }
     }
     return isValid;
 }
 
-bool GameManager::promptForPatternLineChoice(Player* player, int& patternLineChoice, char& colourChoice, int boardSize) {
+bool GameManager::promptForPatternLineChoice(Player* player, int& patternLineChoice, 
+        char& colourChoice, int boardSize) {
     bool isValid = true;
     if(patternLineChoice == (boardSize+1)) {
         isValid = true;
     } else if (0 < patternLineChoice && patternLineChoice <= boardSize) {
         if(player->getBoard()->findColourInBoard(colourChoice, patternLineChoice, boardSize)) {
-            std::cout << "Invalid choice of pattern lines" << std::endl;
+            std::cout << "\n" << C_RED << "Cannot place tiles to that pattern lines" 
+                << C_RESET << "\n" << std::endl;
             isValid = false;
         }
     } else {
-        std::cout << "Pattern lines choice varies from 1 to " << (boardSize+1) << std::endl;
+        std::cout << "\n" << C_RED << "Pattern lines choice varies from 1 to " << (boardSize+1) 
+            << C_RESET << "\n " << std::endl;
         isValid = false;
     }
     return isValid;
@@ -525,7 +539,8 @@ int GameManager::moveTilesFromPatternLines(Player* player) {
         for(int index = 0; index != boardSize; index++) {
             if(board->isPatternLinesFilled(index)) {
                 if(boardId == GREY_BOARD) {
-                    colPos = userPromptForWall(board, index);
+                    Tile tile = board->getPatternLines()[index][0];
+                    colPos = userPromptForWall(board, index, tile)-1;
                 }
                 if(colPos != -1) {
                     Tile tile = board->removeFromPatternLines(index);
@@ -536,9 +551,10 @@ int GameManager::moveTilesFromPatternLines(Player* player) {
                             if(boardId == REGULAR_BOARD || boardId == ADVANCED_6TILE_BOARD) {
                                 colPos = board->addWallForColorBoard(index, tile);
                             } else if(boardId == GREY_BOARD) {
-                                board->addWall(index,colPos-1,tile);
+                                board->addWall(index, colPos, tile);
                             }
-                            score += calculator->calculateScoreFromWall(board->getWall(), colPos, index, boardSize);
+                            score += calculator->calculateScoreFromWall(board->getWall(), 
+                                colPos, index, boardSize);
                         }
                     }
                 } else {
@@ -556,11 +572,11 @@ int GameManager::moveTilesFromPatternLines(Player* player) {
     return score;
 }
 
-int GameManager::userPromptForWall(AbstractBoard* board, int index) {
-    std::cout << "Pick a position where you want to move the tile at pattern lines " 
-        << (index+1) << std::endl;
-    std::cout << "Enter a number from 1 to 5" << std::endl;
-    std::cout << C_PINK << USER_PROMPT << C_RESET << " ";
+int GameManager::userPromptForWall(AbstractBoard* board, int index, Tile tile) {
+    std::cout << "\n" << "Pick a position where you want to move the tile " << colour(tile) 
+        << tile << C_RESET << " at pattern lines " << (index+1) << std::endl;
+    std::cout << "\n" << "Enter a number from 1 to 5" << "\n" << std::endl;
+    std::cout << C_LIGHTYELLOW << USER_PROMPT << C_RESET << " ";
     std::string input;
     bool isTurnFinished = false;
     bool isEOF = false;
@@ -571,7 +587,8 @@ int GameManager::userPromptForWall(AbstractBoard* board, int index) {
             isTurnFinished = true;
             isEOF = true;
         } else if(input == COMMAND_HELP) {
-            std::cout << "Enter from 1 to 5. Choose a number that does not have any colour" << std::endl;
+            std::cout << "\n" << "Enter from 1 to 5. Choose a empty position that does not" 
+                << " have that colour in a corresponding row and column" << "\n" << std::endl;
         } else {
             try {
                 colPos = std::stoi(input);
@@ -581,18 +598,18 @@ int GameManager::userPromptForWall(AbstractBoard* board, int index) {
                 
             }
             if(0 < colPos && colPos <= board->getBoardSize()) {
-                if(!board->isWallPositionFilled(index,colPos-1)) {
-                    std::cout << "Turn successfully" << std::endl;
+                if(!board->isWallPositionFilled(index, colPos-1, tile)) {
+                    std::cout << "\n" << C_GREEN << "Turn successfully" 
+                        << C_RESET << std::endl;
                     isTurnFinished = true;
-                } else {
-                    std::cout << "That position already had a colour. Please choose again!" << std::endl;
-                }
+                } 
             } else {
-                std::cout << "Please enter a number from 1 to 5" << std::endl;
+                std::cout << "\n" << C_RED << "Please enter a number from 1 to 5" 
+                    << C_RESET << "\n" << std::endl;
             }
         }
         if(!isTurnFinished) {
-            std::cout << C_PINK << USER_PROMPT << C_RESET << " ";
+            std::cout << C_LIGHTYELLOW << USER_PROMPT << C_RESET << " ";
         }
     }
 
@@ -601,7 +618,6 @@ int GameManager::userPromptForWall(AbstractBoard* board, int index) {
     }
     if(isEOF) {
         colPos = -1;
-        std::cout << "HERE" << std::endl;
     } 
     return colPos;
 }
@@ -621,10 +637,11 @@ void GameManager::showWinner() {
         winner = player2;
     } 
     if(winner != nullptr) {
-        std::cout << C_REDORANGE << "Player " << winner->getName() << " wins!" << C_RESET << std::endl;
+        std::cout << C_REDORANGE << "Player " << winner->getName() 
+            << " wins!" << C_RESET << "\n" << std::endl;
     } else {
         std::cout << C_REDORANGE << "Victory is shared for " << player1->getName() << " and " 
-            << player2->getName() << "!" << C_RESET << std::endl;
+            << player2->getName() << "!" << C_RESET << "\n" << std::endl;
     }
     std::cout << C_GREEN << BREAK_LINE << C_RESET << std::endl;
 }

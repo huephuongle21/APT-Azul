@@ -87,7 +87,7 @@ class GameManager {
         AbstractBoard* board, LinkedList* boxLid, Tile* chosenFactory, Tile** patternLines, Vector* center,
         int floorLineMaxSize);
 
-    int userPromptForWall(AbstractBoard* board, int index);
+    int userPromptForWall(AbstractBoard* board, int index, Tile tile);
 
     private:
 

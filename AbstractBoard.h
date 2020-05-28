@@ -62,7 +62,7 @@ class AbstractBoard {
 
     int getFloorLineMaxSize();
 
-    bool isWallPositionFilled(int row, int col);
+    bool isWallPositionFilled(int row, int col, Tile tile);
 
     protected:
 
