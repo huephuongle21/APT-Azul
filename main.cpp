@@ -173,32 +173,76 @@ bool startNewGame(int seed) {
         }
     }
 
-    std::cout << "\n" << "Enter a name for player 1" << "\n\n" << C_LIGHTYELLOW 
-        << USER_PROMPT << C_RESET " ";    
-    std::string player1Name;
-    getline(std::cin, player1Name);
-    while(player1Name.empty() && !std::cin.eof()) {
-        std::cout << "\n" << C_RED << "Please enter name" << C_RESET 
-            << "\n\n" << C_LIGHTYELLOW << USER_PROMPT << C_RESET " ";
+    bool is2PlayerMode = true;
+
+    if(!std::cin.eof() && boardId == REGULAR_BOARD) {
+        std::cout << std::endl;
+        std::cout << C_BOLDBLUE << "Choose a mode to play" << C_RESET << std::endl;
+        std::cout << C_GREEN << BREAK_LINE << C_RESET << std::endl;
+        std::cout << "1. Single-player mode" << std::endl;
+        std::cout << "2. Two-player mode" << std::endl;
+        std::cout << C_LIGHTYELLOW << USER_PROMPT << C_RESET << " ";
+        bool isQuit = false;
+        std::string input;
+        while(!isQuit && getline(std::cin, input)) {
+            if(input == "1") {
+                is2PlayerMode = false;
+                isQuit = true;
+            } else if(input == "2") {
+                isQuit = true;
+            } else {
+                std::cout << "\n" << C_RED << "Invalid Input" 
+                    << C_RESET << "\n" << std::endl;
+            }
+            if(!isQuit && !std::cin.eof()) {
+                std::cout << C_LIGHTYELLOW << USER_PROMPT << C_RESET << " ";
+            }
+        }
+    }
+    if(!std::cin.eof() && is2PlayerMode) {
+        std::cout << "\n" << "Enter a name for player 1" << "\n\n" << C_LIGHTYELLOW 
+            << USER_PROMPT << C_RESET " ";    
+        std::string player1Name;
         getline(std::cin, player1Name);
-    }  
-    if(!std::cin.eof()) {
-        std::cout << "\n" << "Enter a name for player 2" << "\n\n" << C_LIGHTYELLOW 
-            << USER_PROMPT << C_RESET " ";
-        std::string player2Name;
-        getline(std::cin, player2Name);
-        while(player2Name.empty() && !std::cin.eof()) {
+        while(player1Name.empty() && !std::cin.eof()) {
             std::cout << "\n" << C_RED << "Please enter name" << C_RESET 
                 << "\n\n" << C_LIGHTYELLOW << USER_PROMPT << C_RESET " ";
+            getline(std::cin, player1Name);
+        }  
+        if(!std::cin.eof()) {
+            std::cout << "\n" << "Enter a name for player 2" << "\n\n" << C_LIGHTYELLOW 
+                << USER_PROMPT << C_RESET " ";
+            std::string player2Name;
             getline(std::cin, player2Name);
+            while(player2Name.empty() && !std::cin.eof()) {
+                std::cout << "\n" << C_RED << "Please enter name" << C_RESET 
+                    << "\n\n" << C_LIGHTYELLOW << USER_PROMPT << C_RESET " ";
+                getline(std::cin, player2Name);
+            }
+            if(!std::cin.eof()) {
+                std::cout << std::endl;        
+                GameManager* gm = new GameManager(player1Name, player2Name, seed, boardId);
+                isEOF = gm->startGame(true);
+                delete gm;
+            }
+        }  
+    } else if(!std::cin.eof() && !is2PlayerMode) {
+        std::cout << "\n" << "Enter a name for player" << "\n\n" << C_LIGHTYELLOW 
+            << USER_PROMPT << C_RESET " ";    
+        std::string playerName;
+        getline(std::cin, playerName);
+        while(playerName.empty() && !std::cin.eof()) {
+            std::cout << "\n" << C_RED << "Please enter name" << C_RESET 
+                << "\n\n" << C_LIGHTYELLOW << USER_PROMPT << C_RESET " ";
+            getline(std::cin, playerName);
         }
         if(!std::cin.eof()) {
             std::cout << std::endl;        
-            GameManager* gm = new GameManager(player1Name, player2Name, seed, boardId);
+            GameManager* gm = new GameManager(playerName, seed);
             isEOF = gm->startGame(true);
             delete gm;
         }
-    }  
+    }
     return isEOF;
 }
 

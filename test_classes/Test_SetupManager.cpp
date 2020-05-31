@@ -9,8 +9,8 @@ int main(void) {
     
     LinkedList* tileBag = new LinkedList();
     LinkedList* boxLid = new LinkedList();
-    Factory factories[NUMBER_OF_FACTORY];
-    SetupManager* sm = new SetupManager(seed);
+    Factory factories[WALL_DIM];
+    SetupManager* sm = new SetupManager(seed, REGULAR_BOARD);
     
     std::cout << std::endl;
     std::cout << "Tile Bag:" << std::endl;
@@ -31,7 +31,7 @@ int main(void) {
     sm->populateFactories(tileBag, factories, boxLid);
 
      // Iterate through factories
-    for (int factoryIndex = 0; factoryIndex != NUMBER_OF_FACTORY; ++factoryIndex) {
+    for (int factoryIndex = 0; factoryIndex != WALL_DIM; ++factoryIndex) {
         
         // Print each tile colour
         for (int tileIndex = 0; tileIndex != FACTORY_SIZE; ++tileIndex) {

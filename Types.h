@@ -5,9 +5,11 @@
 #define FACTORY_SIZE            4
 
 #define WALL_DIM                5 
-#define PATTERN_LINES_SIZE      5
-#define NUMBER_OF_FACTORY       5
+#define A_WALL_DIM              6
+
+#define A_FLOOR_LINE_SIZE       8
 #define FLOOR_LINE_SIZE         7
+
 #define TILES_PER_COLOUR        20
 
 #define A_TILE_BAG_MAXIMUM      120
@@ -23,7 +25,9 @@
 
 /* The file must contain that number of lines 
 so that the game can be considered valid */
-#define NUM_LINES               36
+#define NUM_LINES_5TILE_BOARD   37
+#define NUM_LINES_6TILE_BOARD   41
+
 
 #define COMMAND_TURN            "turn"
 #define COMMAND_SAVE            "save"
@@ -35,8 +39,6 @@ so that the game can be considered valid */
 #define POINT_HORIZONTAL        2
 #define POINT_VERTICAL          7
 #define POINT_1_COLOUR         10
-
-#define FLOORLINE_POSITION      6
 
 #define C_RESET   "\033[0m"
 #define C_BLACK   "\033[30m"                /* Black */
@@ -54,16 +56,6 @@ so that the game can be considered valid */
 #define C_REDORANGE    "\u001b[38;5;9m"     /* Red orange */
 #define C_ERRORMESSAGE "\u001b[38;5;161m"   /* Colour for error message */
 #define C_GREY         "\u001b[38;5;243m"   /* Grey */
-
-#define C_BOLDCYAN    "\033[1m\033[36m"      /* Bold Cyan */
-#define C_BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
-#define C_BOLDBLACK   "\033[1m\033[30m"      /* Bold Black */
-#define C_BOLDRED     "\033[1m\033[31m"      /* Bold Red */
-#define C_BOLDGREEN   "\033[1m\033[32m"      /* Bold Green */
-#define C_BOLDYELLOW  "\033[1m\033[33m"      /* Bold Yellow */
-#define C_BOLDBLUE    "\033[1m\033[34m"      /* Bold Blue */
-#define C_BOLDMAGENTA "\033[1m\033[35m"      /* Bold Magenta */
-#define C_BRIGHTCYAN  "\u001b[36;1m"         /* Bright Cyan */
 
 #define NO_TILE       '.'
 #define RED           'R'
@@ -97,12 +89,8 @@ enum BoardOption {
 };
 
 typedef char Tile;
-typedef char Factory[FACTORY_SIZE];
+typedef Tile Factory[FACTORY_SIZE];
 typedef Tile** Wall;
-
-#define A_WALL_DIM 6
-#define A_FLOOR_LINE_SIZE 8
-#define A_NUM_PLAYABLE_COLOURS 6
 
 #define REGULAR_BOARD        1
 #define GREY_BOARD           2

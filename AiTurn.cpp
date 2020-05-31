@@ -1,10 +1,18 @@
 #include "AiTurn.h"
 
-AiTurn::AiTurn(int factoryChoice, Tile tileChoice, int patternLinesChoice, bool valid) {
+AiTurn::AiTurn(int factoryChoice, Tile tileChoice, 
+        int patternLinesChoice, bool valid, int numTilesTaken) {
     this->factoryChoice = factoryChoice;
     this->tileChoice = tileChoice;
     this->patternLinesChoice = patternLinesChoice;
     this->valid = valid;
+    this->numTilesTaken = numTilesTaken;
+    this->validPatternLines = true;
+}
+
+AiTurn::AiTurn(Tile tileChoice, int patternLinesChoice) {
+    this->tileChoice = tileChoice;
+    this->patternLinesChoice = patternLinesChoice;
 }
 
 AiTurn::~AiTurn() {
@@ -42,3 +50,18 @@ bool AiTurn::isValid() {
     return this->valid;
 }
 
+void AiTurn::setNumTilesTaken(int num) {
+    this->numTilesTaken = num;
+} 
+
+int AiTurn::getNumTilesTaken() {
+    return this->numTilesTaken;
+}
+
+void AiTurn::setPatternLines(bool valid) {
+    this->validPatternLines = valid;
+}
+
+bool AiTurn::isPatternLinesValid() {
+    return validPatternLines;
+}

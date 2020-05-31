@@ -9,9 +9,13 @@
 #include "ScoreCalculator.h"
 #include <iostream>
 #include <string>
+#include "AiPlayer.h"
+#include "AiManager.h"
 
 class GameManager {
     public:
+
+    GameManager(std::string playerName, int seed);
 
     // Constructor to load game from file
     GameManager();
@@ -21,7 +25,6 @@ class GameManager {
 
     ~GameManager();
 
-    // Set up table if isNewGame is true, otherwise, continue with the current state loaded from file
     bool startGame(bool isNewGame);
     
     bool loadGame(std::string filename);
@@ -47,6 +50,7 @@ class GameManager {
     /* Valid Turn: turn <factory> <colour> <storage row>
                    save <filename>
                    quit
+                   help
     */
     bool playerTurn(Player* player, std::string performTurn);
 
@@ -54,7 +58,8 @@ class GameManager {
     
     bool promptForColourChoice(char& colourChoice, int boardId);
 
-    bool promptForPatternLineChoice(Player* player, int& patternLineChoice, char& colourChoice, int boardSize);
+    bool promptForPatternLineChoice(Player* player, int& patternLineChoice, 
+        char& colourChoice, int boardSize);
 
     void takeTiles(int& factoryChoice, char& colour);
 
@@ -64,28 +69,27 @@ class GameManager {
 
     ScoreCalculator* getCalculator();
 
-    // Move tiles from patternLines to Wall and Box Lid, and calculate points for that corresponding tile. 
     int moveTilesFromPatternLines(Player* player);
 
     void moveTilesFromFactory(Player* player);
 
     bool commenceEndOfRound(Player* player);
 
-    // Calculate score end of game and show the winner
     void commenceEndOfGame();
 
     /* Player with higher points wins the game. In case of a tie, player 
     with more horizontal lines completed wins. Otherwise, victory is shared. */
     void showWinner();
 
-    void moveTilesToPatternLines(Player* player, int& factoryChoice, int& patternLineChoice, char& colourChoice);
+    void moveTilesToPatternLines(Player* player, int& factoryChoice, 
+        int& patternLineChoice, char& colourChoice);
 
-    void moveTilesFromCenter(LinkedList* boxLid, Tile** patternLines, Vector* center, 
+    int moveTilesFromCenter(LinkedList* boxLid, Tile** patternLines, Vector* center, 
         AbstractBoard* board, char& colourChoice, int& patternLineChoice, int floorLineMaxSize);
 
-    void moveTilesFromFactory(int& factoryChoice, char& colourChoice, int& patternLineChoice, 
-        AbstractBoard* board, LinkedList* boxLid, Tile* chosenFactory, Tile** patternLines, Vector* center,
-        int floorLineMaxSize);
+    int moveTilesFromFactory(int& factoryChoice, char& colourChoice, int& patternLineChoice, 
+        AbstractBoard* board, LinkedList* boxLid, Tile* chosenFactory, Tile** patternLines, 
+        Vector* center, int floorLineMaxSize);
 
     int userPromptForWall(AbstractBoard* board, int index, Tile tile);
 
@@ -101,6 +105,10 @@ class GameManager {
     int currentPlayerID;
 
     int roundCount;
+
+    bool isSingleMode;
+
+    AiManager* am;
 
 };
 

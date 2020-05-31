@@ -8,7 +8,10 @@ class AiTurn {
 
 public:
 
-    AiTurn(int factoryChoice, Tile tileChoice, int patternLinesChoice, bool valid);
+    AiTurn(int factoryChoice, Tile tileChoice, 
+        int patternLinesChoice, bool valid, int numTileTaken);
+
+    AiTurn(Tile tileChoice, int patternLinesChoice);
 
     ~AiTurn();
 
@@ -24,6 +27,14 @@ public:
 
     bool isValid();
 
+    void setNumTilesTaken(int num);
+
+    int getNumTilesTaken();
+
+    bool isPatternLinesValid();
+
+    void setPatternLines(bool valid);
+
 private:
     int factoryChoice;
 
@@ -32,6 +43,10 @@ private:
     int patternLinesChoice;
 
     bool valid;
+
+    int numTilesTaken;
+
+    bool validPatternLines;
 };
 
 #endif // AITURN_H

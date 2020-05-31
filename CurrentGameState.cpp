@@ -1,7 +1,8 @@
 #include "CurrentGameState.h"
+#include <iostream>
 
 CurrentGameState::CurrentGameState() {
-    floorLine = {0,0,0,0,0,0,0};
+    floorLineState = {-1,-1,-2,-2,-2,-3,-3};
     numEachColor = {0,0,0,0,0};
     numEachColumn = {0,0,0,0,0};
     numEachRow = {0,0,0,0,0};
@@ -12,31 +13,31 @@ CurrentGameState::CurrentGameState() {
             adjacent[i][j] = 0;
         }
     }
+    patternLinesState = {1,2,3,4,5};  
+    floorLineLength = 0;
 }
 
 CurrentGameState::~CurrentGameState() {
 
 }
 
-// Call after each round
-void CurrentGameState::updateAiPlayerState(AbstractBoard* board) {
-
-}
-
-// Call after each turn
-void CurrentGameState::addFloorLine(int numTiles) {
-    int index = 0;
-    while(index < numTiles) {
-        for(int i = 0; i != FLOOR_LINE_SIZE; i++) {
-            if(floorLine[i] == 0) {
-                floorLine[i] = 1;
-                index++;
+int CurrentGameState::updatePatternLines(int& patternLinesChoice, int numTilesTaken) {
+    int availablePlaces = patternLinesState[patternLinesChoice-1];
+    if(availablePlaces >= numTilesTaken) {
+        patternLinesState[patternLinesChoice-1] = (availablePlaces-numTilesTaken);
+    } else {
+        patternLinesState[patternLinesChoice-1] = 0;
+        int placeToFloor = numTilesTaken-availablePlaces;
+        for(int index = floorLineLength; index != (floorLineLength + placeToFloor); index++) {
+            if(index < FLOOR_LINE_SIZE) {
+                floorLineState[index] = 0;
             }
         }
     }
+    return patternLinesState[patternLinesChoice-1];
 }
 
-Tile CurrentGameState::getColourByIndex(int index) {
+Tile CurrentGameState::getTile(int index) {
     Tile tile = NO_TILE;
     if(index == 0) {
         tile = RED;
@@ -52,79 +53,174 @@ Tile CurrentGameState::getColourByIndex(int index) {
     return tile;
 } 
 
-// Call after each moveTilesFromPatternLines
+int CurrentGameState::getIndex(Tile tile) {
+    int index = -1;
+    if(tile == RED) {
+        index = 0;
+    } else if(tile == YELLOW) {
+        index = 1;
+    } else if(tile == DARK_BLUE) {
+        index = 2;
+    } else if(tile == LIGHT_BLUE) {
+        index = 3;
+    } else if(tile == BLACK) {
+        index = 4;
+    }
+    return index;
+}
+
 void CurrentGameState::addTileAfterRound(Tile tile, int& row, int& col) {
     numEachColumn[col] += 1;
     numEachRow[row] += 1;
-
-    addTileByColor(numEachColor, tile);
+    numEachColor[getIndex(tile)] += 1;
 }
 
-void CurrentGameState::updateWall() {
-
-}
-
-void CurrentGameState::addTileByColor(std::array<int, NUM_PLAYABLE_COLOURS>& array, Tile tile) {
-    if(tile == RED) {
-        array[0] += 1;
-    } else if(tile == YELLOW) {
-        array[1] += 1;
-    } else if(tile == DARK_BLUE) {
-        array[2] += 1;
-    } else if(tile == LIGHT_BLUE) {
-        array[3] += 1;
-    } else if(tile == BLACK) {
-        array[4] += 1;
+void CurrentGameState::resetBoard(Tile** patternLines) {
+    floorLineState = {-1,-1,-2,-2,-2,-3,-3};
+    floorLineLength = 0;
+    int count = 0;
+    for(int i = 0; i != WALL_DIM; i++) {
+        for(int j = 0; j != i+1; j++) {
+            if(patternLines[i][j] != NO_TILE) {
+                count++;
+            }
+        }
+        patternLinesState[i] = i + 1 - count;
+        count = 0;
     }
-}
-
-// Call when end of round, pass in other player's points
-void CurrentGameState::updateEachRound(int ptherPlayerPoints) {
-    resetTable();
-    this->otherPlayerPoints = otherPlayerPoints;
 }
 
 void CurrentGameState::resetTable() {
     centerState = {0,0,0,0,0};
-    for(int i = 0; i != NUMBER_OF_FACTORY; i++) {
+    for(int i = 0; i != WALL_DIM; i++) {
         for(int j = 0; j != NUM_PLAYABLE_COLOURS; j++) {
             factoryState[i][j] = 0;
         }
     }
 }
 
-// After set up table
 void CurrentGameState::updateFactory(Tile* factory, int& pos) {
     for(int i = 0; i != FACTORY_SIZE; i++) {
         Tile tile = factory[i];
         if(tile != NO_TILE) {
-            if(tile == RED) {
-                factoryState[pos][0] += 1;
-            } else if(tile == YELLOW) {
-                factoryState[pos][1] += 1;
-            } else if(tile == DARK_BLUE) {
-                factoryState[pos][2] += 1;
-            } else if(tile == LIGHT_BLUE) {
-                factoryState[pos][3] += 1;
-            } else if(tile == BLACK) {
-                factoryState[pos][4] += 1;
-            }
+            factoryState[pos][getIndex(tile)] += 1;
         }
     }
 }
 
-// After player takes tile from that corresponding factory
-void CurrentGameState::resetFactory(int& pos) {
+std::array<int, NUM_PLAYABLE_COLOURS> CurrentGameState::getCenterState() {
+    return centerState;
+}
+
+void CurrentGameState::printTableState() {
+    std::cout << std::endl;
+    for(int i = 0; i != WALL_DIM; i++) {
+        for(int j = 0; j != NUM_PLAYABLE_COLOURS; j++) {
+            std::cout << factoryState[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << "\n" << std::endl;
     for(int i = 0; i != NUM_PLAYABLE_COLOURS; i++) {
-        factoryState[pos][i] = 0;
+        std::cout << centerState[i] << " ";
+    }
+    std::cout << "\n" << std::endl;
+    for(int i = 0; i != WALL_DIM; i++) {
+        std::cout << patternLinesState[i] << " ";
+    }
+    std::cout << "\n" << std::endl;
+}
+
+void CurrentGameState::resetFactory(int& pos, char& colourChoice) {   
+    for(int i = 0; i != NUM_PLAYABLE_COLOURS; i++) {
+        factoryState[pos-1][i] = 0;
     }
 }
 
 void CurrentGameState::updateCenter(Vector* center) {
+    centerState = {0,0,0,0,0};
     for(unsigned int i = 0; i != center->size(); i++) {
         Tile tile = center->get(i);
         if(tile != FIRST_PLAYER) {
-            addTileByColor(centerState, tile);
+            centerState[getIndex(tile)] += 1;
         }
     }
+}
+
+// Might move to heuristic class
+void CurrentGameState::updateAdjacent(int rowPos, int colPos) {
+    int score = 0;
+    int countRow = 0;
+    int countCol = 0;
+    for(int row = 0; row != WALL_DIM; row++) {
+        if(adjacent[row][colPos] != 0) {
+            score++;
+            countCol++;
+        }
+    }
+    for(int col = 0; col != WALL_DIM; col++) {
+        if(adjacent[rowPos][col] != 0) {
+            score++;
+            countRow++;
+        }
+    }
+    if(countRow == 1 || countCol == 1) {
+        score--;
+    }
+    adjacent[rowPos][colPos] = score;
+}
+
+int CurrentGameState::calculateMove(Wall wall, int factoryIndex, Tile colour, int patternLinesIndex, int numTilesTaken) {
+    int totalScore = 0;
+    if(numTilesTaken != 0 && patternLinesIndex != 5) {
+        int floorLinesPlaces = numTilesTaken - patternLinesState[patternLinesIndex];
+        if(floorLinesPlaces > 0) {
+            totalScore += subtractScore(floorLinesPlaces);
+        }
+        totalScore += addScore(wall, patternLinesIndex, colour);
+    }    
+    return totalScore;
+}
+
+int CurrentGameState::addScore(Wall wall , int row, Tile tile) {
+    int col = -1;
+    int addScore = 0;
+    for(int i = 0; i != WALL_DIM; i++) {
+        if(toupper(wall[row][i]) == tile) {
+            col = i;
+        }
+    }
+    if(col != -1) {
+        updateAdjacent(row,col);
+        addScore = adjacent[row][col];
+        adjacent[row][col] = 0;
+    }
+    return addScore;
+}
+
+int CurrentGameState::subtractScore(int numTiles) {
+    int subtract = 0;
+    int index = FLOOR_LINE_SIZE;
+    int tilesPlaced = 0;
+    for(int i = 0; i != FLOOR_LINE_SIZE; i++) {
+        if(floorLineState[i] != 0) {
+            if(i < index) {
+                index = i;
+            }
+        }
+    }
+    int possiblePosition = (WALL_DIM+1) - index;
+    if(possiblePosition < numTiles) {
+        tilesPlaced = possiblePosition;
+    } else {
+        tilesPlaced = numTiles;
+    }
+    for(int i = index; i != (index+tilesPlaced); i++) {
+        subtract += floorLineState[index];
+    }
+    return subtract;
+}
+
+std::array<std::array<int, NUM_PLAYABLE_COLOURS>, WALL_DIM> CurrentGameState::getFactoryState() {
+    return this->factoryState;
 }

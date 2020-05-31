@@ -2,135 +2,184 @@
 
 AiManager::AiManager() {
     listTurn = {};
-
-    listColour = {new TileList(RED), new TileList(YELLOW), new TileList(BLACK), 
-        new TileList(LIGHT_BLUE), new TileList(DARK_BLUE)};
-
-    listColourLength = NUM_PLAYABLE_COLOURS;
+    this->cgs = new CurrentGameState();
+    invalidTurn = {};
 }
 
 AiManager::~AiManager() {
-    for(unsigned int i = 0; i != listTurn.size(); i++) {
-        if(listTurn.at(i) != nullptr) {
-            delete listTurn.at(i);
-            listTurn.at(i) = nullptr;
-        }
-    }
-    listTurn.clear();
-    for(int i = 0; i != listColourLength; i++) {
-        delete listColour[i];
-        listColour[i] = nullptr;
-    }
-    listColourLength = 0;
+    clearVector(listTurn);
+    clearVector(invalidTurn);
+    delete cgs;
 }
 
-void AiManager::generatePossibleTurn(Table* table) {
-    Factory* factories = table->getFactories();
+void AiManager::clearVector(std::vector<AiTurn*> vector) {
+    for(unsigned int i = 0; i != vector.size(); i++) {
+        AiTurn* turn = vector.at(i);
+        delete turn;
+        turn = nullptr;
+    }
+    vector.clear();
+}
 
-    // Loop through all the factories to generate turn (except center factory)
-    for(int i = 0; i != NUMBER_OF_FACTORY; i++) {
-        for(int j = 0; j != FACTORY_SIZE; j++) {
-            Tile tile = factories[i][j];
-            if(tile != NO_TILE) {
-                listColour[getIndexByColour(tile)]->updateNumberOfTiles(1);
-                for(int index = 0; index != FLOORLINE_POSITION; index++) {
-                    AiTurn* turn = new AiTurn(i+1, tile, index+1, true);
-                    listTurn.push_back(turn);
+bool AiManager::isValidTurn(Tile tile, int patternLinesChoice) {
+    bool valid = true;
+    unsigned int size = invalidTurn.size();
+    if(size != 0) {
+        for(unsigned int i = 0; i != size; i++) {
+            AiTurn* turn = invalidTurn.at(i);
+            if(turn->getTileChoice() == tile && turn->getPatternLinesChoice() == patternLinesChoice) {
+                valid = false;
+            }
+        }
+    }
+    return valid;
+}
+
+void AiManager::generatePossibleTurn() {
+    std::array<std::array<int, NUM_PLAYABLE_COLOURS>, WALL_DIM> factory = cgs->getFactoryState();
+
+    for(int i = 0; i != WALL_DIM; i++) {
+        for(int j = 0; j != NUM_PLAYABLE_COLOURS; j++) {
+            int numTiles = factory[i][j];
+            if(numTiles != 0) {
+                Tile tile = cgs->getTile(j);
+                for(int turnIndex = 0; turnIndex != (WALL_DIM+1); turnIndex++) {
+                    if(isValidTurn(tile, turnIndex+1)) {
+                        AiTurn* turn = new AiTurn(i+1, tile, turnIndex+1, true, numTiles);
+                        listTurn.push_back(turn);
+                    }
                 }
             }
         }
     }
-    sortColor();
-
-    // Generate all possible turns for from center of table
-    for(int i = 0; i != listColourLength; i++) {
-        TileList* list = listColour[i];
-        if(list->getNumberOfTiles() != 0) {
-            Tile tile = list->getColour();
-            for(int index = 0; index != FLOORLINE_POSITION; index++) {
-                AiTurn* turn = new AiTurn(0, tile, index+1, true);
+    for(int i = 0; i != NUM_PLAYABLE_COLOURS; i++) {
+        Tile tile = cgs->getTile(i);
+        for(int j = 0; j != (WALL_DIM+1); j++) {
+            if(isValidTurn(tile, j+1)) {
+                AiTurn* turn = new AiTurn(0, tile, j+1, false, 0);
                 listTurn.push_back(turn);
             }
         }
     }
 }
 
-int AiManager::getIndexByColour(Tile tile) {
-    int index = -1;
-    for(int i = 0; i != listColourLength; i++) {
-        if(listColour[i]->getColour() == tile) {
-            index = i;
+void AiManager::updateGameState(Factory* factory) {
+    for(int i = 0; i != WALL_DIM; i++) {
+        cgs->updateFactory(factory[i], i);
+    }
+}
+
+void AiManager::updateByTurnFromFactory(Vector* center, int& factoryChoice, char& colourChoice) {
+    cgs->updateCenter(center);
+    std::array<int, NUM_PLAYABLE_COLOURS> centerState = cgs->getCenterState();
+    for(unsigned int i = 0; i != listTurn.size(); i++) {
+
+        AiTurn* turn = listTurn.at(i);
+        int index = turn->getFactoryChoice();
+        Tile tile = turn->getTileChoice();
+        int numTilesTaken = centerState[cgs->getIndex(tile)];
+
+        if(index == factoryChoice) {
+            turn->setValid(false);
+        } else if(index == 0 && numTilesTaken != 0) {
+            turn->setNumTilesTaken(numTilesTaken);
+            if(turn->isPatternLinesValid()) {
+                turn->setValid(true); 
+            }
         }
     }
-    return index;
+    cgs->resetFactory(factoryChoice, colourChoice);
 }
 
-void AiManager::sortColor() {
-    for(int i = 0; i != listColourLength; i++) {
-        TileList* tileList = listColour[i];
-        if(tileList->getNumberOfTiles() == 0) {
-            updateTurnByColour(tileList->getColour());
-        }     
+void AiManager::updateByTurnFromCenter(Vector* center) {
+    cgs->updateCenter(center);
+    cgs->printTableState();
+    std::array<int, NUM_PLAYABLE_COLOURS> centerState = cgs->getCenterState();
+    for(unsigned int i = 0; i != listTurn.size(); i++) {
+        AiTurn* turn = listTurn.at(i);
+        if(turn->getFactoryChoice() == 0) {
+            int numTiles = centerState[cgs->getIndex(turn->getTileChoice())];
+            turn->setNumTilesTaken(numTiles);
+            if(numTiles == 0) {
+                turn->setValid(false);
+            } else {
+                if(turn->isPatternLinesValid()) {
+                    turn->setValid(true); 
+                }
+            }
+        }
+    }
+    printTurn();
+}
+
+void AiManager::updateByAiTurn(int& factoryChoice, int& patternLinesChoice, char& colourChoice, int numTilesTaken) {
+    int availableTiles = cgs->updatePatternLines(patternLinesChoice, numTilesTaken);
+    for(unsigned int i = 0; i != listTurn.size(); i++) {
+        AiTurn* turn = listTurn.at(i);
+        if(turn->getPatternLinesChoice() == patternLinesChoice) {
+            Tile tile = turn->getTileChoice();
+            if(tile != colourChoice) {
+                turn->setValid(false);
+                turn->setPatternLines(false);
+            } else if(availableTiles == 0 && tile == colourChoice) {
+                turn->setValid(false);
+                turn->setPatternLines(false);
+            }
+        }
     }
 }
 
-// std::vector<AITurn*>& AIManager::getListOfTurn() {
-//     return listTurn;
-// }
+void AiManager::updateWall(int row, int col, Tile tile, Wall wall) {
+    cgs->addTileAfterRound(tile, row, col);
+    cgs->updateAdjacent(row, col);
+    AiTurn* turn = new AiTurn(tile, row+1);
+    invalidTurn.push_back(turn);
+}
 
-void AiManager::printPossibleTiles() {
-    for(int i = 0; i != listColourLength; i++) {
-        TileList* list = listColour[i];
-        std::cout << list->getColour() << " " << list->getNumberOfTiles() << std::endl;
+void AiManager::clearEndOfRound(AbstractBoard* board) {
+    Tile** patternLines = board->getPatternLines();
+    cgs->resetTable();
+    cgs->resetBoard(patternLines);
+    clearVector(listTurn);
+    for(int i = 1; i != (WALL_DIM+1); i++) {
+        if(!board->isPatternLinesEmpty(i)) {
+            Tile tile = patternLines[i-1][0];
+            for(int j = 0; j != NUM_PLAYABLE_COLOURS; j++) {
+                if(j != cgs->getIndex(tile)) {
+                    AiTurn* turn = new AiTurn(cgs->getTile(j), i);
+                    invalidTurn.push_back(turn);
+                }
+            }
+        }
     }
-    std::cout << std::endl;
 }
 
 void AiManager::printTurn() {
     for(unsigned int i = 0; i != listTurn.size(); i++) {
         if(listTurn.at(i)->isValid()) {
-            std::cout << listTurn.at(i)->toString() << std::endl;
+            std::cout << listTurn.at(i)->toString() << " " 
+                << listTurn.at(i)->getNumTilesTaken() << " " << std::endl;
         }
     }
 }
 
-void AiManager::updateByTurnFromFactory(int& factoryChoice, char& colourChoice) {
-    int count = 0;
-    for(unsigned int i = 0; i != listTurn.size(); i++) {
-        AiTurn* turn = listTurn.at(i);
-        if(turn->getFactoryChoice() == factoryChoice) {
-            if(turn->getTileChoice() == colourChoice) {
-                count++;
-            }
-            turn->setValid(false);
-        }
-    }
-    int numTiles = count/FLOORLINE_POSITION;
-    int minus = 0-numTiles;
-    listColour[getIndexByColour(colourChoice)]->updateNumberOfTiles(minus);
-    sortColor();
-}
-
-void AiManager::updateTurnByColour(Tile colour) {
-    for(unsigned int i = 0; i != listTurn.size(); i++) {
-        AiTurn* turn = listTurn.at(i);
-        if(turn->getTileChoice() == colour) {
-            turn->setValid(false);
-        }
-    }
-}
-
-void AiManager::updateByTurnFromCenter(char& colourChoice, Table* table, int numTilesTaken) {
-    if(table->isAllFactoriesEmpty()) {
-        for(unsigned int i = 0; i != listTurn.size(); i++) {
-            AiTurn* turn = listTurn.at(i);
-            if(turn->getTileChoice() == colourChoice) {
-                turn->setValid(false);
+AiTurn* AiManager::createPotentialTurn(Wall wall) {
+    int mScore = -15;
+    AiTurn* mTurn = nullptr;
+    for(unsigned int index = 0; index != listTurn.size(); index++) {
+        AiTurn* turn = listTurn.at(index);
+        if(turn->isValid()) {
+            int factoryChoice = turn->getFactoryChoice();
+            Tile color = turn->getTileChoice();
+            int patternLinesChoice = turn->getPatternLinesChoice();
+            int numTilesTaken = turn->getNumTilesTaken();
+            int score = cgs->calculateMove(wall, factoryChoice-1, color, patternLinesChoice-1, numTilesTaken);
+            if(score > mScore) {
+                mScore = score;
+                mTurn = turn;
             }
         }
-    } else {
-        int minus = 0-numTilesTaken;
-        listColour[getIndexByColour(colourChoice)]->updateNumberOfTiles(minus);
-        sortColor();
+        
     }
+    return mTurn;
 }

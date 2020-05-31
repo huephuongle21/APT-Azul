@@ -24,7 +24,7 @@ public:
 
     // Factory Methods
     void populateFactories(LinkedList* tileBag, 
-        Factory factories[NUMBER_OF_FACTORY], LinkedList* boxLid);
+        Factory factories[WALL_DIM], LinkedList* boxLid);
 
     void addFirstPlayerTileToCenter(Vector* center);
 

@@ -3,7 +3,6 @@
 #include <iostream>
 
 AbstractBoard::AbstractBoard(int boardSize, int boardId) {
-    floorLineMaxSize = boardSize+2;
     floorLineLength = 0;
     numberOfRowsCompleted = 0;
     this->boardSize = boardSize;
@@ -15,6 +14,11 @@ AbstractBoard::AbstractBoard(int boardSize, int boardId) {
         }
     }
     createWall();
+    if(boardId == ADVANCED_6TILE_BOARD) {
+        floorLineMaxSize = A_FLOOR_LINE_SIZE;
+    } else {
+        floorLineMaxSize = FLOOR_LINE_SIZE;
+    }
     floorLine = new Tile[floorLineMaxSize];
 }
 

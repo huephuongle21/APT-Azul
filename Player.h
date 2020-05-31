@@ -4,6 +4,7 @@
 #include <string>
 #include "AbstractBoard.h"
 #include <iostream>
+#include "AiManager.h"
 
 class Player {
 
@@ -15,7 +16,7 @@ public:
     // Constructor to load game from file
     Player(int id);
 
-    ~Player();
+    virtual ~Player();
 
     std::string getName();
 
@@ -36,7 +37,7 @@ public:
     void toStringEndOfRound(int& addScore, int& roundCount);
 
     void createBoard(int boardId);
-
+    
 private:
 
     std::string playerName;

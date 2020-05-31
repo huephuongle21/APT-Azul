@@ -57,7 +57,7 @@ void printFactory(std::ostream& outStream, Tile factory[]) {
 }
 
 void printFactoryToFile(std::ostream& outStream, Factory* factories) {
-    for(int i = 0; i != NUMBER_OF_FACTORY; i++) {
+    for(int i = 0; i != WALL_DIM; i++) {
         for(int j = 0; j != FACTORY_SIZE; j++) {
             outStream << factories[i][j];
         }
@@ -182,9 +182,9 @@ bool readGame(std::istream& inStream, Table* table, int* currentPlayerID,
     if(read) {
         if(boardId != REGULAR_BOARD && boardId != GREY_BOARD && boardId != ADVANCED_6TILE_BOARD) {
             read = false;
-        } else if(boardId == ADVANCED_6TILE_BOARD && size != 39) {
+        } else if(boardId == ADVANCED_6TILE_BOARD && size != NUM_LINES_6TILE_BOARD) {
             read = false;
-        } else if((boardId == REGULAR_BOARD || boardId == GREY_BOARD) && size != 37) {
+        } else if((boardId == REGULAR_BOARD || boardId == GREY_BOARD) && size != NUM_LINES_5TILE_BOARD) {
             read = false;
         } else {
             while(index != size && read) {
@@ -197,7 +197,7 @@ bool readGame(std::istream& inStream, Table* table, int* currentPlayerID,
                     readLinkedList(table->getBoxLid(), lines[++index]);
 
                     Factory* factory = table->getFactories();
-                    for(int i = 0; i != NUMBER_OF_FACTORY; i++) {
+                    for(int i = 0; i != WALL_DIM; i++) {
                         readFactory(factory[i], lines[++index]);
                     }
 

@@ -103,10 +103,10 @@ void SetupManager::refillTileBagFromBoxLid(LinkedList* tileBag, LinkedList* boxL
 }
 
 void SetupManager::populateFactories(LinkedList* tileBag, 
-        Factory factories[NUMBER_OF_FACTORY], LinkedList* boxLid) {
+        Factory factories[WALL_DIM], LinkedList* boxLid) {
 
     // Iterate through factories
-    for (int factoryIndex = 0; factoryIndex != NUMBER_OF_FACTORY; ++factoryIndex) {
+    for (int factoryIndex = 0; factoryIndex != WALL_DIM; ++factoryIndex) {
 
         // Ensure there are enough tiles to fill the factory.
         if (tileBag->size() < FACTORY_SIZE) {

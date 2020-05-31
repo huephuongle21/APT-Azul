@@ -54,7 +54,7 @@ private:
 
     LinkedList* boxLid;
 
-    Factory factories[NUMBER_OF_FACTORY];
+    Factory factories[WALL_DIM];
 
     Tile chosenFactory[FACTORY_SIZE];
 

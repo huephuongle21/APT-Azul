@@ -1,6 +1,7 @@
 #include "GameManager.h"
 #include "SetupManager.h"
 #include "Utility.h"
+#include "AiPlayer.h"
 
 #include <iostream>
 #include <fstream>
@@ -13,6 +14,8 @@ GameManager::GameManager() {
     this->table = new Table(0,0);
     this->calculator = new ScoreCalculator();
     this->roundCount = 1;
+    this->isSingleMode = false;
+    this->am = nullptr;
 }
 
 GameManager::GameManager(std::string player1Name, std::string player2Name, int seed, int boardId) {
@@ -22,20 +25,41 @@ GameManager::GameManager(std::string player1Name, std::string player2Name, int s
     this->table = new Table(seed, boardId);
     this->calculator = new ScoreCalculator();
     this->roundCount = 1;
+    this->isSingleMode = false;
+    this->am = nullptr;
+}
+
+GameManager::GameManager(std::string playerName, int seed) {
+    this->player1 = new Player(playerName, 1, REGULAR_BOARD);
+    this->player2 = new AiPlayer(); 
+    currentPlayerID = player1->getID();
+    this->table = new Table(seed, REGULAR_BOARD);
+    this->calculator = new ScoreCalculator();
+    this->roundCount = 1;
+    this->isSingleMode = true;
+    this->am = new AiManager();
 }
 
 GameManager::~GameManager() {
     delete player1;
-    delete player2;
     delete table;
     delete calculator;
+    delete player2;
+    if(am != nullptr) {
+        delete am;
+    }
 }
 
 bool GameManager::startGame(bool isNewGame) {
     if(isNewGame) {
         table->setupGame();
     }
+    if(isSingleMode) {
+        am->updateGameState(table->getFactories());
 
+        am->generatePossibleTurn();
+        am->printTurn(); //Delete
+    }
     std::cout << "\n" << C_BLUE << "Let's Play!" << C_RESET << "\n" << std::endl;
    
     bool gameOver = false;
@@ -44,20 +68,24 @@ bool GameManager::startGame(bool isNewGame) {
     while(!gameOver) {
         isEOF = commenceRound();
         
-        // If player enters EOF, end the game. Otherwise, check for end of game condition
         if(isEOF) {
             gameOver = isEOF;
         } else if(!isEOF) {
             bool endGame = isEndGame();
             if(!endGame) {
-                // refill table if game doesn't end and start new round
                 table->refillTable();
+                if(isSingleMode) {
+                    // Havent tested
+                    am->updateGameState(table->getFactories());
+                    am->generatePossibleTurn();
+                    std::cout << "Update for new round" << std::endl;
+                    am->printTurn();
+                }
                 roundCount++;
             }
             gameOver = endGame;
         }
     }
-    // if game ends not because of EOF, commence end of game
     if(!isEOF) {
         commenceEndOfGame();
     }
@@ -65,7 +93,6 @@ bool GameManager::startGame(bool isNewGame) {
 }
 
 void GameManager::commenceEndOfGame() {
-    // Modify score end of game
     calculator->calculateScoreEndOfGame(player1);
     calculator->calculateScoreEndOfGame(player2);
     std::cout << "\n" << C_BROWN << "=== GAME OVER ===" << C_RESET << "\n" << std::endl;
@@ -182,20 +209,16 @@ bool GameManager::commenceEndOfRound(Player* player) {
             floorLine, board->getFloorLineLength(), board->getBoardSize());
     }
 
-    // Move tiles from patternLines to Wall and Box Lid
     int addScore = moveTilesFromPatternLines(player);
     if(addScore != -1) {
-        // Calculate score end of round
         int score = calculator->calculateScoreEachRound(player, addScore);
 
-        // Print player's board and their updating points
         printBoard(std::cout, player->getName(), board->getWall(), board->getPatternLines(), 
             floorLine, board->getFloorLineLength(), board->getBoardSize());
-            
+          
         player->toStringEndOfRound(score, roundCount);
         std::cout << C_GREEN << BREAK_LINE << C_RESET << "\n" << std::endl;
 
-        // Clear floor line after each round
         for(int index = 0; index != floorLineLength; index++) {
             Tile tile = floorLine[index];
             if(tile == FIRST_PLAYER) {
@@ -206,6 +229,11 @@ bool GameManager::commenceEndOfRound(Player* player) {
             }
         }
         board->clearFloorLine();
+        if(isSingleMode) {
+            am->clearEndOfRound(board); //Clear board and table after each round
+            std::cout << "When clear for end of round" << std::endl;
+            am->printTurn();
+        }
     } else {
         isEOF = true;
     }
@@ -225,7 +253,7 @@ void GameManager::printTableAndBoard(Player* player) {
     printCenter(std::cout, table->getCenter());
 
     Factory* factory = table->getFactories();
-    for(int i = 0; i != NUMBER_OF_FACTORY; i++) {
+    for(int i = 0; i != WALL_DIM; i++) {
         std::cout << (i+1) << ": ";
         printFactory(std::cout, factory[i]);
     }
@@ -241,34 +269,43 @@ bool GameManager::commenceTurn(Player* player) {
     std::string input;
     bool isTurnFinished = false;
     bool isEOF = false;
-    
-    while(!isTurnFinished && getline(std::cin, input)) {
 
-        std::string typeOfCommand = input.substr(0, 4);
-
-        if(typeOfCommand == COMMAND_TURN && playerTurn(player, input)) {
-            std::cout << "\n" << C_GREEN << "Turn successful." << C_RESET << "\n" << std::endl;
-            isTurnFinished = true;
-        } else if(input == COMMAND_EXIST) {
-            isTurnFinished = true;
-            isEOF = true;
-        } else if(input == COMMAND_HELP) {
-            printInstructions();
-            std::cout << std::endl;
-            std::cout << "\n" << "Please continue your turn" << "\n" << std::endl;
-        } else if(typeOfCommand == COMMAND_SAVE && saveGame(input)) {
-            std::cout << "\n" << "Please continue your turn" << "\n" << std::endl;
-        } else if(typeOfCommand != COMMAND_TURN && typeOfCommand != COMMAND_SAVE 
-                && input != COMMAND_EXIST) {
-            std::cout << "\n" << "Invalid Input." << "\n" << std::endl;
+    if(isSingleMode && player->getID() == 3) {
+        // generate and call playerTurn(player, input) 
+        AiTurn* turn = am->createPotentialTurn(player->getBoard()->getWall());     
+        if(turn != nullptr) {
+            std::cout << turn->toString();
+            playerTurn(player, turn->toString());
         }
-        if(!isTurnFinished && !std::cin.eof()) {
-            std::cout << C_LIGHTYELLOW << USER_PROMPT << C_RESET << " ";
-        } 
-    }
+    } else {   
+        while(!isTurnFinished && getline(std::cin, input)) {
 
-    if(std::cin.eof()) {
-        isEOF = true;
+            std::string typeOfCommand = input.substr(0, 4);
+
+            if(typeOfCommand == COMMAND_TURN && playerTurn(player, input)) {
+                std::cout << "\n" << C_GREEN << "Turn successful." << C_RESET << "\n" << std::endl;
+                isTurnFinished = true;
+            } else if(input == COMMAND_EXIST) {
+                isTurnFinished = true;
+                isEOF = true;
+            } else if(input == COMMAND_HELP) {
+                printInstructions();
+                std::cout << std::endl;
+                std::cout << "\n" << "Please continue your turn" << "\n" << std::endl;
+            } else if(typeOfCommand == COMMAND_SAVE && saveGame(input)) {
+                std::cout << "\n" << "Please continue your turn" << "\n" << std::endl;
+            } else if(typeOfCommand != COMMAND_TURN && typeOfCommand != COMMAND_SAVE 
+                    && input != COMMAND_EXIST) {
+                std::cout << "\n" << "Invalid Input." << "\n" << std::endl;
+            }
+            if(!isTurnFinished && !std::cin.eof()) {
+                std::cout << C_LIGHTYELLOW << USER_PROMPT << C_RESET << " ";
+            } 
+        }
+
+        if(std::cin.eof()) {
+            isEOF = true;
+        }
     }
         
     return isEOF;    
@@ -298,6 +335,7 @@ bool GameManager::isEndRound() {
 bool GameManager::playerTurn(Player* player, std::string input) {
     int boardId = player->getBoard()->getBoardId();
     int boardSize = player->getBoard()->getBoardSize();
+
     std::stringstream playerTurn(input);
     std::string command;
     int factoryChoice;
@@ -332,25 +370,42 @@ void GameManager::moveTilesToPatternLines(Player* player, int& factoryChoice,
     Tile* chosenFactory = table->getChosenFactory();
     LinkedList* boxLid = table->getBoxLid();
     int floorLineMaxSize = board->getFloorLineMaxSize();
+    int tilesTaken = 0;
 
     if(factoryChoice == 0) {
-        moveTilesFromCenter(boxLid, patternLines, center, board, colourChoice, 
+        tilesTaken = moveTilesFromCenter(boxLid, patternLines, center, board, colourChoice, 
             patternLineChoice, floorLineMaxSize);
+        if(isSingleMode) {
+            am->updateByTurnFromCenter(center);
+            std::cout << "Update by Center Turn" << std::endl;
+            am->printTurn();
+        }
     } else {
-        moveTilesFromFactory(factoryChoice, colourChoice, patternLineChoice, board, boxLid, 
+        tilesTaken = moveTilesFromFactory(factoryChoice, colourChoice, patternLineChoice, board, boxLid, 
             chosenFactory, patternLines, center, floorLineMaxSize);
+            if(isSingleMode) {
+                // call updateFactory (gameState and turn)
+                am->updateByTurnFromFactory(center, factoryChoice, colourChoice);
+                std::cout << "Update by Factory Turn" << std::endl;
+                am->printTurn();
+            }
     }
     table->clearChosenFactory();
+    if(isSingleMode && player->getID() == 3) {
+        // update player's board (patternLines & floorLine)
+        am->updateByAiTurn(factoryChoice, patternLineChoice, colourChoice, tilesTaken);
+        std::cout << "Update by Ai Turn" << std::endl;
+        am->printTurn();
+    }
 }
 
-void GameManager::moveTilesFromFactory(int& factoryChoice, char& colourChoice, 
+int GameManager::moveTilesFromFactory(int& factoryChoice, char& colourChoice, 
         int& patternLineChoice, AbstractBoard* board, LinkedList* boxLid, Tile* chosenFactory, 
         Tile** patternLines, Vector* center, int floorLineMaxSize) {
     
     int tilesPlaced = 0;
     takeTiles(factoryChoice, colourChoice);
     for(int i = 0; i != FACTORY_SIZE; ++i) {
-        // If player chooses to add to floorline instead of pattern line
         Tile tile = chosenFactory[i];
         if(tile == colourChoice && patternLineChoice == (floorLineMaxSize-1)) {
             if(board->getFloorLineLength() < floorLineMaxSize) {
@@ -358,40 +413,36 @@ void GameManager::moveTilesFromFactory(int& factoryChoice, char& colourChoice,
             } else {
                 boxLid->addFront(tile);
             }
-        // If there's already placed tiles in the pattern line, keep moving to the next index.
         } else if(tile == colourChoice && tilesPlaced < patternLineChoice) {
             if(patternLines[patternLineChoice - 1][tilesPlaced] != NO_TILE) {
                 while(patternLines[patternLineChoice - 1][tilesPlaced] != NO_TILE) {
                     ++tilesPlaced;
                 }
-                // When the first empty slot has been found place the tile
                 board->addPatternLines(patternLineChoice - 1, tilesPlaced, tile);
                 ++tilesPlaced;
-            // Otherwise just place the tile in the first spot of the pattern line
             } else {
                 board->addPatternLines(patternLineChoice - 1, tilesPlaced, tile);
                 ++tilesPlaced;
             }       
-        // If it's not the picked colour, move the tiles to the centre
         } else if(tile != colourChoice){
             center->add(tile);
-        // If the pattern line is full, move the remaining tiles of that colour to the floor line.
         } else if(tile == colourChoice && tilesPlaced >= patternLineChoice) {
             if(board->getFloorLineLength() < floorLineMaxSize) {
                 board->addFloorLine(tile);
             } else {
                 boxLid->addFront(tile);
             }
+            ++tilesPlaced;
         }
-    }
+    } 
+    return tilesPlaced;
 }
 
-void GameManager::moveTilesFromCenter(LinkedList* boxLid, Tile** patternLines, Vector* center, 
+int GameManager::moveTilesFromCenter(LinkedList* boxLid, Tile** patternLines, Vector* center, 
         AbstractBoard* board, char& colourChoice, int& patternLineChoice, int floorLineMaxSize) {
     int tilesPlaced = 0;
     for(unsigned int i = 0; i != center->size(); ++i) {
         Tile tile = center->get(i);
-        // Gives the first player tile to whoever takes from the centre of the board first
         if(tile == FIRST_PLAYER) {
             if(board->getFloorLineLength() == floorLineMaxSize) {
                 boxLid->addFront(board->getFloorLine()[0]);
@@ -400,14 +451,12 @@ void GameManager::moveTilesFromCenter(LinkedList* boxLid, Tile** patternLines, V
                 board->addFloorLine(tile); 
             }
         }
-        // If player chooses to place tiles in floor line.
         if(tile == colourChoice && patternLineChoice == (floorLineMaxSize-1)) {
             if(board->getFloorLineLength() < floorLineMaxSize) {
                 board->addFloorLine(tile);
             } else {
                 boxLid->addFront(tile);
             }
-        // Same as above, move along if there's already tiles in the pattern line.
         } else if(tile == colourChoice && tilesPlaced < patternLineChoice) {
             if(patternLines[patternLineChoice - 1][tilesPlaced] != NO_TILE) {
                 while(patternLines[patternLineChoice - 1][tilesPlaced] != NO_TILE) {
@@ -415,19 +464,17 @@ void GameManager::moveTilesFromCenter(LinkedList* boxLid, Tile** patternLines, V
                 }
                 board->addPatternLines(patternLineChoice - 1, tilesPlaced, tile);
                 ++tilesPlaced;
-            // Otherwise just place the tile in the first spot of the pattern line
             } else {
                 board->addPatternLines(patternLineChoice - 1, tilesPlaced, tile);
                 ++tilesPlaced;
             }
-        // If the pattern line is full, move the remaining tiles of that colour to the floor line.
         } else if(tile == colourChoice && tilesPlaced >= patternLineChoice) {
             if(board->getFloorLineLength() < floorLineMaxSize) {
                 board->addFloorLine(tile);
             } else {
-                // If the floor line is full, add to the box
                 boxLid->addFront(tile);
             }
+            ++tilesPlaced;
         }
     }
     for(int i = center->size(); i >= 0; --i) {
@@ -436,6 +483,7 @@ void GameManager::moveTilesFromCenter(LinkedList* boxLid, Tile** patternLines, V
             center->remove(i);
         }
     }
+    return tilesPlaced;
 }
 
 bool GameManager::promptForFactoryChoice(int& factoryChoice, char& colourChoice, int boardId) {
@@ -528,6 +576,7 @@ ScoreCalculator* GameManager::getCalculator() {
 }
 
 int GameManager::moveTilesFromPatternLines(Player* player) {
+    // Need to update current game state for wall if single mode
     int score = 0;
     AbstractBoard* board = player->getBoard();
     int boardId = board->getBoardId();
@@ -555,6 +604,9 @@ int GameManager::moveTilesFromPatternLines(Player* player) {
                             }
                             score += calculator->calculateScoreFromWall(board->getWall(), 
                                 colPos, index, boardSize);
+                            if(isSingleMode && player->getID() == 3) {
+                                am->updateWall(index, colPos, tile, board->getWall()); /////////
+                            }
                         }
                     }
                 } else {

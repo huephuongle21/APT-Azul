@@ -5,9 +5,9 @@
 #include "AiTurn.h"
 #include "Table.h"
 #include "Types.h"
-#include "TileList.h"
 #include "Vector.h"
 #include <array>
+#include "CurrentGameState.h"
 
 class AiManager {
 
@@ -17,29 +17,37 @@ public:
 
     ~AiManager();
 
-    void generatePossibleTurn(Table* table); //Tested
+    void generatePossibleTurn();
 
-    void sortColor(); //Tested
+    void updateByTurnFromFactory(Vector* center, int& factoryChoice, char& colourChoice);
 
-    void updateByTurnFromFactory(int& factoryChoice, char& colourChoice); //Tested
+    void updateByTurnFromCenter(Vector* center);
 
-    void updateTurnByColour(Tile colour); //Tested
+    void printTurn(); 
 
-    void updateByTurnFromCenter(char& colourChoice, Table* table, int numTilesTaken);
+    AiTurn* createPotentialTurn(Wall wall);
 
-    int getIndexByColour(Tile colour); //Tested
+    void updateGameState(Factory* factory);
 
-    void printPossibleTiles(); //Tested
+    void clearEndOfRound(AbstractBoard* board);
 
-    void printTurn(); //Tested
+    void updateByAiTurn(int& factoryChoice, int& patternLinesChoice, char& colourChoice, int numTilesTaken);
+
+    void clearVector(std::vector<AiTurn*> vector);
+
+    void updateTurnByWall(Wall wall);
+
+    bool isValidTurn(Tile tile, int patternLinesChoice);
+
+    void updateWall(int row, int col, Tile tile, Wall wall);
 
 private:
 
     std::vector<AiTurn*> listTurn;
 
-    std::array<TileList*, NUM_PLAYABLE_COLOURS> listColour;
+    std::vector<AiTurn*> invalidTurn;
 
-    int listColourLength;
+    CurrentGameState* cgs;
 
 };
 

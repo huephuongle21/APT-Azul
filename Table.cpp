@@ -6,13 +6,13 @@ Table::Table(int seed, int boardId) {
 
     this->seedNumber = seed;
 
-    for(int i = 0; i < NUMBER_OF_FACTORY; i++) {
+    for(int i = 0; i < WALL_DIM; i++) {
         for(int j = 0; j < FACTORY_SIZE; j++) {
             factories[i][j] = NO_TILE;
         }
     }
 
-    for(int i = 0; i < NUMBER_OF_FACTORY; i++) {
+    for(int i = 0; i < WALL_DIM; i++) {
         chosenFactory[i] = NO_TILE;
     }
 
@@ -64,7 +64,7 @@ bool Table::isFactoryEmpty(int& pos) {
 
 bool Table::isAllFactoriesEmpty() {
     bool isEmpty = true;
-    for(int i = 0; i != NUMBER_OF_FACTORY; i++) {
+    for(int i = 0; i != WALL_DIM; i++) {
         if(!isFactoryEmpty(i)) {
             isEmpty = false;
         }
