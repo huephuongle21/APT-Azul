@@ -14,7 +14,7 @@ public:
     Player(std::string playerName, int id, int boardId);
 
     // Constructor to load game from file
-    Player(int id);
+    Player();
 
     virtual ~Player();
 
@@ -37,7 +37,9 @@ public:
     void toStringEndOfRound(int& addScore, int& roundCount);
 
     void createBoard(int boardId);
-    
+
+    void setId(int id);
+
 private:
 
     std::string playerName;

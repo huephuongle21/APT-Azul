@@ -52,4 +52,8 @@ std::string colour(char tile);
 
 void printInstructions();
 
+bool isValidId(int id);
+
+void printValidCommand();
+
 #endif // UTILITY_H

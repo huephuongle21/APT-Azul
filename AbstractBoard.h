@@ -33,7 +33,7 @@ class AbstractBoard {
 
     bool isPatternLinesEmpty(int& pos);
 
-    bool isPatternLinesFilled(int& pos);
+    bool isPatternLinesFilled(int pos);
 
     Tile removeFromPatternLines(int& pos);
 

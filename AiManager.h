@@ -1,19 +1,14 @@
 #ifndef AIMANAGER_H
 #define AIMANAGER_H
 
-#include "Types.h"
-#include "AiTurn.h"
 #include "Table.h"
-#include "Types.h"
-#include "Vector.h"
-#include <array>
-#include "CurrentGameState.h"
+#include "Heuristic.h"
 
 class AiManager {
 
 public:
 
-    AiManager();
+    AiManager(int boardId);
 
     ~AiManager();
 
@@ -21,25 +16,29 @@ public:
 
     void updateByTurnFromFactory(Vector* center, int& factoryChoice, char& colourChoice);
 
-    void updateByTurnFromCenter(Vector* center);
+    void setCenterTurnAndState(Vector* center, AbstractBoard* board);
 
     void printTurn(); 
 
-    AiTurn* createPotentialTurn(Wall wall);
+    AiTurn* getTurn(Wall wall);
 
     void updateGameState(Factory* factory);
 
-    void clearEndOfRound(AbstractBoard* board);
+    void clearEndOfRound(AbstractBoard* board, bool isLoadGame);
 
     void updateByAiTurn(int& factoryChoice, int& patternLinesChoice, char& colourChoice, int numTilesTaken);
-
-    void clearVector(std::vector<AiTurn*> vector);
 
     void updateTurnByWall(Wall wall);
 
     bool isValidTurn(Tile tile, int patternLinesChoice);
 
-    void updateWall(int row, int col, Tile tile, Wall wall);
+    void updateWall(int row, int col, Tile tile);
+
+    void updateForLoadGame(AbstractBoard* board, Factory* factory, Vector* vector);
+
+    void printInvalidTurn();
+
+    void setTurnByPatternLines(AbstractBoard* board);
 
 private:
 
@@ -48,6 +47,12 @@ private:
     std::vector<AiTurn*> invalidTurn;
 
     CurrentGameState* cgs;
+
+    unsigned int startIndex;
+
+    int boardSize;
+
+    Heuristic* heuristic;
 
 };
 

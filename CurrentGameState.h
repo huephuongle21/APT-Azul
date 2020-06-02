@@ -4,12 +4,11 @@
 #include "Types.h"
 #include "AbstractBoard.h"
 #include "Vector.h"
-#include <array>
 
 class CurrentGameState {
 
 public:
-    CurrentGameState();
+    CurrentGameState(int boardSize);
 
     ~CurrentGameState();
 
@@ -17,7 +16,7 @@ public:
 
     void addTileAfterRound(Tile tile, int& row, int& col);
 
-    void resetTable();
+    void resetTable(int boardSize);
 
     void resetBoard(Tile** patternLines);
 
@@ -25,37 +24,47 @@ public:
 
     void updateFactory(Tile* factory, int& pos);
 
+    void setPatternLines(Tile** patternLines);
+
     int updatePatternLines(int& patternLinesChoice, int numTilesTaken);
 
     void resetFactory(int& pos, char& colourChoice);
 
-    void updateAdjacent(int row, int col);
-
     int getIndex(Tile tile);
-
-    int calculateMove(Wall wall, int factoryIndex, Tile colour, int patternLinesIndex, int numTilesTaken);
-
-    int subtractScore(int nTiles);
-
-    int addScore(Wall wall, int row, Tile tile);
 
     void printTableState();
 
-    std::array<std::array<int, NUM_PLAYABLE_COLOURS>, WALL_DIM> getFactoryState();
+    void setFloorLine(Tile* floorLine, int floorLineLength);
 
-    std::array<int, NUM_PLAYABLE_COLOURS> getCenterState();
+    int** getFactoryState();
+
+    int* getCenterState();
+
+    int* getPatternLinesState();
+
+    void setAdjacent(int row, int col);
+
+    void createDefaultFloorLine();
+
+    int getFloorLineMaxSize();
+
+    int* getFloorLineState();
+
+    int** getAdjacent();
 
 private:
-    std::array<int, FLOOR_LINE_SIZE> floorLineState;
-    std::array<int, NUM_PLAYABLE_COLOURS> numEachColor;
-    std::array<int, WALL_DIM> numEachColumn;
-    std::array<int, WALL_DIM> numEachRow;
-    std::array<int, NUM_PLAYABLE_COLOURS> centerState;
-    std::array<std::array<int, NUM_PLAYABLE_COLOURS>, WALL_DIM> factoryState;
-    int otherPlayerPoints;
-    int adjacent[WALL_DIM][WALL_DIM];
-    std::array<int, WALL_DIM> patternLinesState;
+    int* floorLineState;
+    int* numEachColor;
+    int* numEachColumn;
+    int* numEachRow;
+    int* centerState;
+    int** factoryState;
+    int** adjacent;
+    int* patternLinesState;
     int floorLineLength;
+    int boardSize;
+    int floorLineMaxSize;
+    int* defaultFloorLine;
 };
 
 #endif // CURRENTGAMESTATE_H

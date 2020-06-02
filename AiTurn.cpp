@@ -13,6 +13,10 @@ AiTurn::AiTurn(int factoryChoice, Tile tileChoice,
 AiTurn::AiTurn(Tile tileChoice, int patternLinesChoice) {
     this->tileChoice = tileChoice;
     this->patternLinesChoice = patternLinesChoice;
+    this->valid = false;
+    this->validPatternLines = false;
+    this->numTilesTaken = 0;
+    this->factoryChoice = -1;
 }
 
 AiTurn::~AiTurn() {

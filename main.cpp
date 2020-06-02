@@ -59,14 +59,14 @@ int main(int argc, char** argv) {
         } else if(option == quit) {
             isQuit = true;
         } else {
-            std::cout << "\n" << C_RED << "Invalid Input" << C_RESET << "\n" << std::endl;
+            std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET
+                << "  Invalid Input" << "\n" << std::endl;
         }
         if(!isQuit && !std::cin.eof()) {
             std::cout << C_LIGHTYELLOW << USER_PROMPT << C_RESET " ";
         }
     }
-    std::cout << std::endl;
-    std::cout << "Goodbye" << std::endl;
+    std::cout << "\n\n" << U_GOODBYE << " Goodbye" << std::endl;
 
     delete studentArr;
 }
@@ -98,23 +98,26 @@ void processSeed(int argc, char** argv, int* seed) {
 
 void printMenu() {
     std::cout << std::endl;
-    std::cout << C_BOLDBLUE << "Menu" << C_RESET << std::endl;
+    std::cout << C_BLUE << U_MENU << C_RESET << "  Menu" << std::endl;
     std::cout << C_GREEN << "----" << C_RESET << std::endl;
     std::cout << "1. New Game" << std::endl;
     std::cout << "2. Load Game" << std::endl;
     std::cout << "3. Display Credits" << std::endl;
     std::cout << "4. Quit" << std::endl;  
-    std::cout << "\n" << "(Choose '1', '2', '3' or '4')" << "\n" << std::endl;  
+    std::cout << "\n" << C_MAGENTA << U_KEYBOARD << C_RESET
+        << "  Choose '1', '2', '3' or '4'" << "\n" << std::endl;  
 }
 
 void printBoardOption() {
     std::cout << std::endl;
-    std::cout << C_BOLDBLUE << "Choose one type of board which you want to play" << C_RESET << std::endl;
+    std::cout << C_BLUE << U_MENU << C_RESET 
+        << "  Choose one type of board which you want to play" << std::endl;
     std::cout << C_GREEN << BREAK_LINE << C_RESET << std::endl;
     std::cout << "1. Regular Board" << std::endl;
     std::cout << "2. Advanced Grey Board" << std::endl;
     std::cout << "3. Advanced 6-tile Modes" << std::endl; 
-    std::cout << "\n" << "(Choose '1', '2' or '3')" << "\n" << std::endl;
+    std::cout << "\n" << C_MAGENTA << U_KEYBOARD << C_RESET 
+        << "  Choose '1', '2' or '3'" << "\n" << std::endl;
 }
 
 Option resolveInput(std::string input) {
@@ -165,8 +168,8 @@ bool startNewGame(int seed) {
             boardId = ADVANCED_6TILE_BOARD;
             isQuit = true;
         } else {
-            std::cout << "\n" << C_RED << "Invalid Input" 
-                << C_RESET << "\n" << std::endl;
+            std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET
+                << "  Invalid Input" << "\n" << std::endl;
         }
         if(!isQuit && !std::cin.eof()) {
             std::cout << C_LIGHTYELLOW << USER_PROMPT << C_RESET << " ";
@@ -175,12 +178,13 @@ bool startNewGame(int seed) {
 
     bool is2PlayerMode = true;
 
-    if(!std::cin.eof() && boardId == REGULAR_BOARD) {
+    if(!std::cin.eof() && (boardId == REGULAR_BOARD || boardId == ADVANCED_6TILE_BOARD)) {
         std::cout << std::endl;
-        std::cout << C_BOLDBLUE << "Choose a mode to play" << C_RESET << std::endl;
+        std::cout << C_BLUE << U_MENU << C_RESET 
+            << "  Choose a mode to play" << std::endl;
         std::cout << C_GREEN << BREAK_LINE << C_RESET << std::endl;
         std::cout << "1. Single-player mode" << std::endl;
-        std::cout << "2. Two-player mode" << std::endl;
+        std::cout << "2. Two-player mode" << "\n" << std::endl;
         std::cout << C_LIGHTYELLOW << USER_PROMPT << C_RESET << " ";
         bool isQuit = false;
         std::string input;
@@ -191,58 +195,54 @@ bool startNewGame(int seed) {
             } else if(input == "2") {
                 isQuit = true;
             } else {
-                std::cout << "\n" << C_RED << "Invalid Input" 
-                    << C_RESET << "\n" << std::endl;
+                std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET 
+                    << "  Invalid Input" << "\n" << std::endl;
             }
             if(!isQuit && !std::cin.eof()) {
                 std::cout << C_LIGHTYELLOW << USER_PROMPT << C_RESET << " ";
             }
         }
     }
-    if(!std::cin.eof() && is2PlayerMode) {
-        std::cout << "\n" << "Enter a name for player 1" << "\n\n" << C_LIGHTYELLOW 
-            << USER_PROMPT << C_RESET " ";    
+
+    if(!std::cin.eof()) {
+        std::cout << "\n" << C_MAGENTA << U_KEYBOARD << C_RESET << "  Enter a name for player 1" 
+            << "\n\n" << C_LIGHTYELLOW << USER_PROMPT << C_RESET " ";    
         std::string player1Name;
         getline(std::cin, player1Name);
         while(player1Name.empty() && !std::cin.eof()) {
-            std::cout << "\n" << C_RED << "Please enter name" << C_RESET 
-                << "\n\n" << C_LIGHTYELLOW << USER_PROMPT << C_RESET " ";
+            std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET 
+                << "  Please enter name" << "\n\n" << C_LIGHTYELLOW << USER_PROMPT << C_RESET " ";
             getline(std::cin, player1Name);
         }  
         if(!std::cin.eof()) {
-            std::cout << "\n" << "Enter a name for player 2" << "\n\n" << C_LIGHTYELLOW 
-                << USER_PROMPT << C_RESET " ";
+            if(is2PlayerMode) {
+                std::cout << "\n" << C_MAGENTA << U_KEYBOARD << C_RESET << "  Enter a name for player 2" 
+                    << "\n\n" << C_LIGHTYELLOW << USER_PROMPT << C_RESET " ";
+            } else if(!is2PlayerMode) {
+                std::cout << "\n" << C_MAGENTA << U_KEYBOARD << C_RESET 
+                    << "  Enter a name for player 2 (The computer who you will play with)" 
+                    << "\n\n" << C_LIGHTYELLOW << USER_PROMPT << C_RESET " ";
+            }
             std::string player2Name;
             getline(std::cin, player2Name);
             while(player2Name.empty() && !std::cin.eof()) {
-                std::cout << "\n" << C_RED << "Please enter name" << C_RESET 
-                    << "\n\n" << C_LIGHTYELLOW << USER_PROMPT << C_RESET " ";
+                std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET 
+                    << "  Please enter name" << "\n\n" << C_LIGHTYELLOW << USER_PROMPT << C_RESET " ";
                 getline(std::cin, player2Name);
             }
             if(!std::cin.eof()) {
-                std::cout << std::endl;        
-                GameManager* gm = new GameManager(player1Name, player2Name, seed, boardId);
+                std::cout << std::endl;
+                GameManager* gm = nullptr;
+                if(is2PlayerMode) {
+                    gm = new GameManager(player1Name, player2Name, seed, boardId, false);
+                } else if(!is2PlayerMode) {
+                    gm = new GameManager(player1Name, player2Name, seed, boardId, true);
+                }     
                 isEOF = gm->startGame(true);
                 delete gm;
             }
         }  
-    } else if(!std::cin.eof() && !is2PlayerMode) {
-        std::cout << "\n" << "Enter a name for player" << "\n\n" << C_LIGHTYELLOW 
-            << USER_PROMPT << C_RESET " ";    
-        std::string playerName;
-        getline(std::cin, playerName);
-        while(playerName.empty() && !std::cin.eof()) {
-            std::cout << "\n" << C_RED << "Please enter name" << C_RESET 
-                << "\n\n" << C_LIGHTYELLOW << USER_PROMPT << C_RESET " ";
-            getline(std::cin, playerName);
-        }
-        if(!std::cin.eof()) {
-            std::cout << std::endl;        
-            GameManager* gm = new GameManager(playerName, seed);
-            isEOF = gm->startGame(true);
-            delete gm;
-        }
-    }
+    } 
     return isEOF;
 }
 
@@ -253,16 +253,17 @@ bool loadGameFromFile() {
         << C_LIGHTYELLOW << USER_PROMPT << C_RESET " ";
     std::string filename;
     getline(std::cin, filename);
-    
-    while(!gm->loadGame(filename) && !std::cin.eof()) {
+    bool valid = false;
+    while(!std::cin.eof() && !valid) {
         if(filename.empty()) {
-            std::cout << "\n" << C_RED << "Please enter file name" << 
-                C_RESET << "\n\n" << C_LIGHTYELLOW << USER_PROMPT << C_RESET " ";
+            std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET 
+                << "  Please enter file name" << "\n\n" << C_LIGHTYELLOW << USER_PROMPT << C_RESET " ";
+            getline(std::cin, filename);
+        } else if (gm->loadGame(filename)) {
+            valid = true;
         } else {
-            std::cout << "Please enter again" << "\n\n" 
-                << C_LIGHTYELLOW << USER_PROMPT << C_RESET " ";
+            getline(std::cin, filename);
         }
-        getline(std::cin, filename);
     }
     if(!std::cin.eof()) {
         isEOF = gm->startGame(false);

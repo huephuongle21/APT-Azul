@@ -10,9 +10,9 @@ Player::Player(std::string playerName, int id, int boardId) {
     createBoard(boardId);
 }
 
-Player::Player(int id) {
+Player::Player() {
     this->playerName = "";
-    this->id = id;
+    this->id = 0;
     this->playerPoints = 0;
     this->playerBoard = nullptr;
 }
@@ -54,6 +54,10 @@ void Player::addPoints(int points) {
     }
 }
 
+void Player::setId(int id) {
+    this->id = id;
+}
+
 AbstractBoard* Player::getBoard() {
     return this->playerBoard;
 }
@@ -64,6 +68,7 @@ void Player::toStringEndOfGame() {
 }
 
 void Player::toStringEndOfRound(int& addScore, int& roundCount) {
+    std::cout << C_MAGENTA << U_CALCULATOR << C_RESET << " ";
     if(addScore == 0) {
         std::cout << playerName << " remains the same points in round " 
             << roundCount << "." << std::endl;

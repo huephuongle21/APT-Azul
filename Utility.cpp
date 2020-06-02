@@ -96,9 +96,11 @@ void printPlayer(std::ostream& outStream, Player* player) {
 
     std::string name = player->getName();
     int score = player->getPoints();
+    int id = player->getID();
 
     outStream << "# Name" << "\n" << name << "\n" << std::endl;
     outStream << "# Score" << "\n" << score << "\n" << std::endl;
+    outStream << "# Player ID" << "\n" << id << "\n" << std::endl;
     
     printBoard(outStream, player->getBoard());
 }
@@ -158,8 +160,7 @@ void printFloorLine(std::ostream& outStream, Tile* floorLine, int length) {
 bool readGame(std::istream& inStream, Table* table, int* currentPlayerID, 
         Player* player1, Player* player2) {
 
-    // Modify save game to have boardId
-    int boardId = 0; //setboardId later and pass to readPlayer
+    int boardId = 0; 
     bool read = true;
     std::string line;  
     std::vector<std::string> lines;                             
@@ -180,22 +181,27 @@ bool readGame(std::istream& inStream, Table* table, int* currentPlayerID,
         read = false;
     }
     if(read) {
-        if(boardId != REGULAR_BOARD && boardId != GREY_BOARD && boardId != ADVANCED_6TILE_BOARD) {
+        if(!isValidId(boardId)) {
+            std::cout << "Invalid 1" << std::endl;
             read = false;
         } else if(boardId == ADVANCED_6TILE_BOARD && size != NUM_LINES_6TILE_BOARD) {
+            std::cout << "Invalid 2" << std::endl;
             read = false;
         } else if((boardId == REGULAR_BOARD || boardId == GREY_BOARD) && size != NUM_LINES_5TILE_BOARD) {
+            std::cout << "Invalid 3" << std::endl;
             read = false;
         } else {
             while(index != size && read) {
                 LinkedList* tileBag = table->getTileBag();
                 readLinkedList(tileBag, lines[++index]);
-                if(tileBag->size() == 0) {
+
+                LinkedList* boxLid = table->getBoxLid();
+                readLinkedList(boxLid, lines[++index]);
+                if(tileBag->size() == 0 && boxLid->size() == 0) {
+                    std::cout << "Invalid 4" << std::endl;
                     read = false;
                 }
                 if(read) {
-                    readLinkedList(table->getBoxLid(), lines[++index]);
-
                     Factory* factory = table->getFactories();
                     for(int i = 0; i != WALL_DIM; i++) {
                         readFactory(factory[i], lines[++index]);
@@ -206,26 +212,37 @@ bool readGame(std::istream& inStream, Table* table, int* currentPlayerID,
                     try {
                         table->setSeedNumber(std::stoi(lines[++index]));
                     } catch (const std::invalid_argument&) {
+                        std::cout << "Invalid 5" << std::endl;
                         read = false;
                     } catch (const std::out_of_range&) {
+                        std::cout << "Invalid 6" << std::endl;
                         read = false;
                     }
                     if(read) {
                         try {
                             *currentPlayerID = std::stoi(lines[++index]);
-                            if(*currentPlayerID != 1 && *currentPlayerID != 2) {
+                            if(!isValidId(*currentPlayerID)) {
+                                std::cout << "Invalid 7" << std::endl;
                                 read = false;
                             }
                         } catch (const std::invalid_argument&) {
+                            std::cout << "Invalid 8" << std::endl;
                             read = false;
                         } catch (const std::out_of_range&) {
+                            std::cout << "Invalid 9" << std::endl;
                             read = false;
                         }   
                         if(read) {
                             read = readPlayer(player1, lines, &index, boardId);
+                            // if grey board and playerId = 3 => false
                             if(read) {
+                                std::cout << "Invalid 10" << std::endl;
                                 read = readPlayer(player2, lines, &index, boardId);
                                 index++;
+                            }
+                            if(player1->getID() == player2->getID()) {
+                                std::cout << "Invalid 11" << std::endl;
+                                read = false;
                             }
                         }
                     }
@@ -280,6 +297,18 @@ bool readPlayer(Player* player, std::vector<std::string>& lines, int* i, int boa
         read = false;
     }
     if(read) {
+        try {
+            int id = std::stoi(lines[++(*i)]);  
+            if(!isValidId(id)) {
+                read = false;
+            } else {
+                player->setId(id);
+            }
+        } catch (const std::invalid_argument&) {
+            read = false;
+        } catch (const std::out_of_range&) {
+            read = false;
+        }
         player->createBoard(boardId);
         readBoard(lines, i, player->getBoard());
     }
@@ -354,7 +383,7 @@ void printBoard(std::ostream& outStream, std::string playerName, Wall wall, Tile
         outStream << "\n";
     }
 
-    outStream << (boardSize+1) << ": broken: ";
+    outStream << "\n" << (boardSize+1) << ": broken: ";
     for(int i = 0; i != length; i++) {
         if(floorLine[i] != NO_TILE) {
             Tile tile = floorLine[i];
@@ -396,4 +425,18 @@ void printInstructions() {
             std::cout << line << '\n';
         }
     }
+}
+
+bool isValidId(int id) {
+    bool valid = true;
+    if(id != 1 && id != 2 && id != 3) {
+        valid = false;
+    }
+    return valid;
+}
+
+void printValidCommand() {
+    std::cout << "\n" << U_TIPS << " Valid command:" << "\n";
+    std::cout << TURN << "\n" << SAVE << "\n" << COMMAND_HELP << "\n" 
+        << COMMAND_EXIST << std::endl;
 }

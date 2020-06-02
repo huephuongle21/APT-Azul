@@ -9,19 +9,16 @@
 #include "ScoreCalculator.h"
 #include <iostream>
 #include <string>
-#include "AiPlayer.h"
 #include "AiManager.h"
 
 class GameManager {
     public:
 
-    GameManager(std::string playerName, int seed);
-
     // Constructor to load game from file
     GameManager();
 
     // Constructor to start new game
-    GameManager(std::string player1Name, std::string player2Name, int seed, int boardId);
+    GameManager(std::string player1Name, std::string player2Name, int seed, int boardId, bool isSingleMode);
 
     ~GameManager();
 

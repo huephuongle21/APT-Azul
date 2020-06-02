@@ -33,6 +33,9 @@ Alice
 # Score
 20
 
+# Player ID
+1
+
 # Pattern Lines
 .
 RR
@@ -56,6 +59,9 @@ _
 Bob
 
 # Score
+2
+
+# Player ID 
 2
 
 # Pattern Lines

@@ -1,15 +1,14 @@
 #include "GameManager.h"
 #include "SetupManager.h"
 #include "Utility.h"
-#include "AiPlayer.h"
 
 #include <iostream>
 #include <fstream>
 #include <sstream>
 
 GameManager::GameManager() {
-    this->player1 = new Player(1);
-    this->player2 = new Player(2);
+    this->player1 = new Player();
+    this->player2 = new Player();
     currentPlayerID = 0;
     this->table = new Table(0,0);
     this->calculator = new ScoreCalculator();
@@ -18,26 +17,21 @@ GameManager::GameManager() {
     this->am = nullptr;
 }
 
-GameManager::GameManager(std::string player1Name, std::string player2Name, int seed, int boardId) {
-    this->player1 = new Player(player1Name, 1, boardId);
-    this->player2 = new Player(player2Name, 2, boardId);
+GameManager::GameManager(std::string player1Name, std::string player2Name, int seed, 
+        int boardId, bool isSingleMode) {
+    this->player1 = new Player(player1Name, PLAYER1_ID, boardId);
     currentPlayerID = player1->getID();
     this->table = new Table(seed, boardId);
     this->calculator = new ScoreCalculator();
     this->roundCount = 1;
-    this->isSingleMode = false;
-    this->am = nullptr;
-}
-
-GameManager::GameManager(std::string playerName, int seed) {
-    this->player1 = new Player(playerName, 1, REGULAR_BOARD);
-    this->player2 = new AiPlayer(); 
-    currentPlayerID = player1->getID();
-    this->table = new Table(seed, REGULAR_BOARD);
-    this->calculator = new ScoreCalculator();
-    this->roundCount = 1;
-    this->isSingleMode = true;
-    this->am = new AiManager();
+    this->isSingleMode = isSingleMode;
+    if(isSingleMode) {
+        this->player2 = new Player(player2Name, AIPLAYER_ID, boardId);
+        this->am = new AiManager(boardId);
+    } else {
+        this->player2 = new Player(player2Name, PLAYER2_ID, boardId);
+        this->am = nullptr;
+    }
 }
 
 GameManager::~GameManager() {
@@ -45,20 +39,16 @@ GameManager::~GameManager() {
     delete table;
     delete calculator;
     delete player2;
-    if(am != nullptr) {
-        delete am;
-    }
+    delete am;
 }
 
 bool GameManager::startGame(bool isNewGame) {
     if(isNewGame) {
         table->setupGame();
-    }
-    if(isSingleMode) {
-        am->updateGameState(table->getFactories());
-
-        am->generatePossibleTurn();
-        am->printTurn(); //Delete
+        if(isSingleMode) {
+            am->updateGameState(table->getFactories());
+            am->generatePossibleTurn();
+        }
     }
     std::cout << "\n" << C_BLUE << "Let's Play!" << C_RESET << "\n" << std::endl;
    
@@ -75,11 +65,8 @@ bool GameManager::startGame(bool isNewGame) {
             if(!endGame) {
                 table->refillTable();
                 if(isSingleMode) {
-                    // Havent tested
                     am->updateGameState(table->getFactories());
                     am->generatePossibleTurn();
-                    std::cout << "Update for new round" << std::endl;
-                    am->printTurn();
                 }
                 roundCount++;
             }
@@ -109,17 +96,27 @@ bool GameManager::loadGame(std::string loadPath) {
     inFile.open(loadPath);
 
     if(inFile.fail()) {
-        std::cout << "\n" << C_RED << "File does not exist!" 
-            << C_RESET << "\n" << std::endl;
+        std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET 
+            << "  File does not exist!" << "\n\n" << C_LIGHTYELLOW << USER_PROMPT << C_RESET " ";
         isLoaded = false;
     } else {
         if(readGame(inFile, table, &currentPlayerID, player1, player2)) {
+            if(player2->getID() == AIPLAYER_ID || player1->getID() == AIPLAYER_ID) {
+                Player* player = getPlayer(AIPLAYER_ID);
+                if(player != nullptr) {
+                    AbstractBoard* board = player->getBoard();
+                    this->am = new AiManager(board->getBoardId());
+                    this->isSingleMode = true;
+                    am->updateForLoadGame(board, table->getFactories(), table->getCenter());
+                }
+            }
             inFile.close();
-            std::cout << "\n" << C_GREEN << "Azul game successfully loaded" 
-                << C_RESET << "\n" << std::endl;
+            std::cout << "\n" << C_GREEN << U_CORRECT_TICK << C_RESET
+                << "  Azul game successfully loaded" << "\n" << std::endl;
         } else {
-            std::cout << "\n" << C_RED << "File does not contain a valid game!" 
-                << C_RESET << "\n" << std::endl;
+            std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET 
+                << "  File does not contain a valid game!" << "\n\n" << C_LIGHTYELLOW 
+                << USER_PROMPT << C_RESET " ";
             isLoaded = false;
         }
     }
@@ -142,20 +139,22 @@ bool GameManager::saveGame(std::string input) {
         os.open(savePath);
 
         if(os.fail()) {
-            std::cout << "\n" << C_RED << "Could not create save." 
-                << C_RESET << "\n" << std::endl;
+            std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET
+                << "  Could not create save." << "\n" << std::endl;
         } else {
             printGame(os, table, currentPlayerID, player1, player2);
             os.close();
 
-            std::cout << "\n" << C_GREEN << "Save successful!" << C_RESET << std::endl;
-            std::cout << "Game saved as: '" << C_GREEN << savePath 
+            std::cout << "\n" << C_GREEN << U_CORRECT_TICK << C_RESET
+                << " Save successful!" << std::endl;
+            std::cout << "  Game saved as: '" << C_GREEN << savePath 
                 << C_RESET << "'" << std::endl;
             saved = true;
         }   
     } else {
-        std::cout << "\n" << "Invalid save command" << std::endl;
-        std::cout << C_RED << "save [save path]" << C_RESET << "\n" << std::endl;
+        std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET
+            << "  Invalid save command" << "\n" << std::endl;
+        std::cout << U_TIPS << " " << SAVE << "\n" << std::endl;
     }     
     return saved; 
 }
@@ -212,7 +211,8 @@ bool GameManager::commenceEndOfRound(Player* player) {
     int addScore = moveTilesFromPatternLines(player);
     if(addScore != -1) {
         int score = calculator->calculateScoreEachRound(player, addScore);
-
+        
+        std::cout << std::endl;
         printBoard(std::cout, player->getName(), board->getWall(), board->getPatternLines(), 
             floorLine, board->getFloorLineLength(), board->getBoardSize());
           
@@ -230,9 +230,7 @@ bool GameManager::commenceEndOfRound(Player* player) {
         }
         board->clearFloorLine();
         if(isSingleMode) {
-            am->clearEndOfRound(board); //Clear board and table after each round
-            std::cout << "When clear for end of round" << std::endl;
-            am->printTurn();
+            am->clearEndOfRound(board, false); 
         }
     } else {
         isEOF = true;
@@ -245,10 +243,10 @@ void GameManager::printTableAndBoard(Player* player) {
     AbstractBoard* board = player->getBoard();
     std::string name = player->getName();
 
-    std::cout << std::endl;
+    std::cout << C_GREEN << BREAK_LINE << C_RESET << "\n" << std::endl;
     std::cout << "TURN FOR PLAYER: " << name << "\n" << std::endl;
 
-    std::cout << "Factories:" << std::endl;
+    std::cout << "Factories:" << "\n" << std::endl;
     std::cout << "0: ";
     printCenter(std::cout, table->getCenter());
 
@@ -270,11 +268,11 @@ bool GameManager::commenceTurn(Player* player) {
     bool isTurnFinished = false;
     bool isEOF = false;
 
-    if(isSingleMode && player->getID() == 3) {
-        // generate and call playerTurn(player, input) 
-        AiTurn* turn = am->createPotentialTurn(player->getBoard()->getWall());     
+    if(isSingleMode && player->getID() == AIPLAYER_ID) {
+        am->printTurn();
+        AiTurn* turn = am->getTurn(player->getBoard()->getWall());     
         if(turn != nullptr) {
-            std::cout << turn->toString();
+            std::cout << turn->toString() << std::endl;
             playerTurn(player, turn->toString());
         }
     } else {   
@@ -283,20 +281,23 @@ bool GameManager::commenceTurn(Player* player) {
             std::string typeOfCommand = input.substr(0, 4);
 
             if(typeOfCommand == COMMAND_TURN && playerTurn(player, input)) {
-                std::cout << "\n" << C_GREEN << "Turn successful." << C_RESET << "\n" << std::endl;
+                std::cout << "\n" << C_GREEN << U_CORRECT_TICK << C_RESET 
+                    << " Turn successful." << "\n" << std::endl;
                 isTurnFinished = true;
             } else if(input == COMMAND_EXIST) {
                 isTurnFinished = true;
                 isEOF = true;
             } else if(input == COMMAND_HELP) {
-                printInstructions();
-                std::cout << std::endl;
-                std::cout << "\n" << "Please continue your turn" << "\n" << std::endl;
+                printValidCommand();
+                std::cout << "\n" << C_MAGENTA << U_KEYBOARD << C_RESET
+                    << "  Please continue your turn" << "\n" << std::endl;
             } else if(typeOfCommand == COMMAND_SAVE && saveGame(input)) {
-                std::cout << "\n" << "Please continue your turn" << "\n" << std::endl;
+                std::cout << "\n" << C_MAGENTA << U_KEYBOARD << C_RESET
+                    << "  Please continue your turn" << "\n" << std::endl;
             } else if(typeOfCommand != COMMAND_TURN && typeOfCommand != COMMAND_SAVE 
                     && input != COMMAND_EXIST) {
-                std::cout << "\n" << "Invalid Input." << "\n" << std::endl;
+                std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET 
+                    << "  Invalid Input." << "\n" << std::endl;
             }
             if(!isTurnFinished && !std::cin.eof()) {
                 std::cout << C_LIGHTYELLOW << USER_PROMPT << C_RESET << " ";
@@ -346,9 +347,9 @@ bool GameManager::playerTurn(Player* player, std::string input) {
     if(input.length() != COMMAND_TURN_LENGTH 
             || !(playerTurn >> command >> factoryChoice >> colourChoice >> patternLineChoice)
             || command != COMMAND_TURN) {
-        std::cout << "\n" << "Invalid turn command" << "\n" << std::endl;
-        std::cout << C_RED << "turn [factory choice] [colour choice] [pattern line choice]" 
-            << C_RESET << "\n" << std::endl;
+        std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET
+            << "  Invalid turn command" << "\n" << std::endl;
+        std::cout << U_TIPS << " " << TURN << "\n" << std::endl;
         isTurnValid = false;
     } else {
         isTurnValid = promptForFactoryChoice(factoryChoice, colourChoice, boardId) 
@@ -376,26 +377,18 @@ void GameManager::moveTilesToPatternLines(Player* player, int& factoryChoice,
         tilesTaken = moveTilesFromCenter(boxLid, patternLines, center, board, colourChoice, 
             patternLineChoice, floorLineMaxSize);
         if(isSingleMode) {
-            am->updateByTurnFromCenter(center);
-            std::cout << "Update by Center Turn" << std::endl;
-            am->printTurn();
+            am->setCenterTurnAndState(center, getPlayer(AIPLAYER_ID)->getBoard());
         }
     } else {
         tilesTaken = moveTilesFromFactory(factoryChoice, colourChoice, patternLineChoice, board, boxLid, 
             chosenFactory, patternLines, center, floorLineMaxSize);
             if(isSingleMode) {
-                // call updateFactory (gameState and turn)
                 am->updateByTurnFromFactory(center, factoryChoice, colourChoice);
-                std::cout << "Update by Factory Turn" << std::endl;
-                am->printTurn();
             }
     }
     table->clearChosenFactory();
-    if(isSingleMode && player->getID() == 3) {
-        // update player's board (patternLines & floorLine)
+    if(isSingleMode && player->getID() == AIPLAYER_ID) {
         am->updateByAiTurn(factoryChoice, patternLineChoice, colourChoice, tilesTaken);
-        std::cout << "Update by Ai Turn" << std::endl;
-        am->printTurn();
     }
 }
 
@@ -457,6 +450,7 @@ int GameManager::moveTilesFromCenter(LinkedList* boxLid, Tile** patternLines, Ve
             } else {
                 boxLid->addFront(tile);
             }
+            ++tilesPlaced;
         } else if(tile == colourChoice && tilesPlaced < patternLineChoice) {
             if(patternLines[patternLineChoice - 1][tilesPlaced] != NO_TILE) {
                 while(patternLines[patternLineChoice - 1][tilesPlaced] != NO_TILE) {
@@ -495,8 +489,8 @@ bool GameManager::promptForFactoryChoice(int& factoryChoice, char& colourChoice,
                 && table->findColourInFactory(factoryChoice, colourChoice)) {
             isValid = true;  
         } else if (factoryChoice < 0 || factoryChoice > 5) {
-            std::cout << "\n" << C_RED << "Factory choice varies from 0 to 5" 
-                << C_RESET << "\n" << std::endl;
+            std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET 
+                << "  Factory choice varies from 0 to 5" << "\n" << std::endl;
         }
     }
     return isValid;
@@ -507,12 +501,12 @@ bool GameManager::promptForColourChoice(char& colourChoice, int boardId) {
     if(colourChoice != RED && colourChoice != YELLOW && colourChoice != DARK_BLUE     
             && colourChoice != LIGHT_BLUE && colourChoice != BLACK) {
         if(boardId == REGULAR_BOARD || boardId == GREY_BOARD) {
-            std::cout << "\n" << C_RED << "Invalid choice of colour. Should be "
-                << "'R', 'Y', 'B', 'L' or 'B'" << C_RESET << "\n" << std::endl;
+            std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET 
+                << "  Invalid choice of colour. Should be 'R', 'Y', 'B', 'L' or 'B'" << "\n" << std::endl;
             isValid = false;
         } else if(boardId == ADVANCED_6TILE_BOARD && colourChoice != ORANGE) {
-            std::cout << "\n" << C_RED << "Invalid choice of colour. Should be "
-                << "'R', 'Y', 'B', 'L', 'B' or 'O'" << C_RESET << "\n" << std::endl;
+            std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET 
+                << "  Invalid choice of colour. Should be 'R', 'Y', 'B', 'L', 'B' or 'O'" << "\n" << std::endl;
             isValid = false;
         }
     }
@@ -526,13 +520,13 @@ bool GameManager::promptForPatternLineChoice(Player* player, int& patternLineCho
         isValid = true;
     } else if (0 < patternLineChoice && patternLineChoice <= boardSize) {
         if(player->getBoard()->findColourInBoard(colourChoice, patternLineChoice, boardSize)) {
-            std::cout << "\n" << C_RED << "Cannot place tiles to that pattern lines" 
-                << C_RESET << "\n" << std::endl;
+            std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET 
+                << "  Cannot place tiles to that pattern lines" << "\n" << std::endl;
             isValid = false;
         }
     } else {
-        std::cout << "\n" << C_RED << "Pattern lines choice varies from 1 to " << (boardSize+1) 
-            << C_RESET << "\n " << std::endl;
+        std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET 
+            << "  Pattern lines choice varies from 1 to " << (boardSize+1) << "\n" << std::endl;
         isValid = false;
     }
     return isValid;
@@ -560,11 +554,13 @@ void GameManager::setCurrentPlayerID(int currentPlayerID) {
 }
 
 Player* GameManager::getPlayer(int id) {
-    if(id == 1) {
-        return player1;
-    } else {
-        return player2;
+    Player* player = nullptr;
+    if(player1->getID() == id) {
+        player = player1;
+    } else if(player2->getID() == id) {
+        player = player2;
     }
+    return player;
 }
 
 Table* GameManager::getTable() {
@@ -576,7 +572,6 @@ ScoreCalculator* GameManager::getCalculator() {
 }
 
 int GameManager::moveTilesFromPatternLines(Player* player) {
-    // Need to update current game state for wall if single mode
     int score = 0;
     AbstractBoard* board = player->getBoard();
     int boardId = board->getBoardId();
@@ -604,8 +599,8 @@ int GameManager::moveTilesFromPatternLines(Player* player) {
                             }
                             score += calculator->calculateScoreFromWall(board->getWall(), 
                                 colPos, index, boardSize);
-                            if(isSingleMode && player->getID() == 3) {
-                                am->updateWall(index, colPos, tile, board->getWall()); /////////
+                            if(isSingleMode && player->getID() == AIPLAYER_ID) { //
+                                am->updateWall(index, colPos, tile);
                             }
                         }
                     }
@@ -627,7 +622,8 @@ int GameManager::moveTilesFromPatternLines(Player* player) {
 int GameManager::userPromptForWall(AbstractBoard* board, int index, Tile tile) {
     std::cout << "\n" << "Pick a position where you want to move the tile " << colour(tile) 
         << tile << C_RESET << " at pattern lines " << (index+1) << std::endl;
-    std::cout << "\n" << "Enter a number from 1 to 5" << "\n" << std::endl;
+    std::cout << "\n" << C_MAGENTA << U_KEYBOARD << C_RESET 
+        << "  Enter a number from 1 to 5" << "\n" << std::endl;
     std::cout << C_LIGHTYELLOW << USER_PROMPT << C_RESET << " ";
     std::string input;
     bool isTurnFinished = false;
@@ -639,8 +635,11 @@ int GameManager::userPromptForWall(AbstractBoard* board, int index, Tile tile) {
             isTurnFinished = true;
             isEOF = true;
         } else if(input == COMMAND_HELP) {
-            std::cout << "\n" << "Enter from 1 to 5. Choose a empty position that does not" 
-                << " have that colour in a corresponding row and column" << "\n" << std::endl;
+            std::cout << "\n" << U_TIPS << "  Enter from 1 to 5. Choose a empty position that " 
+                << "does not have that colour in a corresponding row and column" << "\n" << std::endl;
+        } else if(input.empty()) {
+            std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET << "  Please enter a number"
+                << "\n" << std::endl;
         } else {
             try {
                 colPos = std::stoi(input);
@@ -651,13 +650,13 @@ int GameManager::userPromptForWall(AbstractBoard* board, int index, Tile tile) {
             }
             if(0 < colPos && colPos <= board->getBoardSize()) {
                 if(!board->isWallPositionFilled(index, colPos-1, tile)) {
-                    std::cout << "\n" << C_GREEN << "Turn successfully" 
-                        << C_RESET << std::endl;
+                    std::cout << "\n" << C_GREEN << U_CORRECT_TICK << C_RESET 
+                        << "  Turn successfully" << std::endl;
                     isTurnFinished = true;
                 } 
             } else {
-                std::cout << "\n" << C_RED << "Please enter a number from 1 to 5" 
-                    << C_RESET << "\n" << std::endl;
+                std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET 
+                    << "  Please enter a number from 1 to 5" << "\n" << std::endl;
             }
         }
         if(!isTurnFinished) {
@@ -689,11 +688,10 @@ void GameManager::showWinner() {
         winner = player2;
     } 
     if(winner != nullptr) {
-        std::cout << C_REDORANGE << "Player " << winner->getName() 
-            << " wins!" << C_RESET << "\n" << std::endl;
+        std::cout << U_TROPHY << " Player " << winner->getName() << " wins!" << "\n" << std::endl;
     } else {
-        std::cout << C_REDORANGE << "Victory is shared for " << player1->getName() << " and " 
-            << player2->getName() << "!" << C_RESET << "\n" << std::endl;
+        std::cout << U_TROPHY << " Victory is shared for " << player1->getName() << " and " 
+            << player2->getName() << "!" << "\n" << std::endl;
     }
     std::cout << C_GREEN << BREAK_LINE << C_RESET << std::endl;
 }

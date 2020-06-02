@@ -13,9 +13,8 @@ int main(void) {
     printCenterToFile(std::cout, table->getCenter());
 
     // Generate all possible turns
-    ai->generatePossibleTurn(table);
+    ai->generatePossibleTurn();
     ai->printTurn();
-    ai->printPossibleTiles();
 
 
     // // Player takes first turn from factory 2
