@@ -11,20 +11,30 @@ class Heuristic {
 
     ~Heuristic();
 
-    void calculateAdjacent(int** adjacent, int row, int col);
-
-    AiTurn* createPotentialTurn(CurrentGameState* cgs, Wall wall, int startIndex, std::vector<AiTurn*>& listTurn);
-
-    int subtractScore(int* floorLineState, int floorLineLineMaxSize, int numTiles);
-
-    int addScore(int** adjacent, Wall wall , int row, Tile tile);
-
-    int calculateMove(CurrentGameState* cgs, Wall wall, int factoryIndex, Tile colour, int patternLinesIndex, int numTilesTaken);
+    std::string createPotentialTurn(CurrentGameState* cgs, Wall wall, int startIndex, std::vector<AiTurn*>& listTurn);
 
     private:
 
     int boardSize;
 
+    bool needFill(int* patternLinesState, int patternLinesIndex, int numTilesTaken);
+
+    bool isFullFill(CurrentGameState* cgs, Tile tile, Wall wall, int patternLinesIndex);
+
+    void clearVector(std::vector<AiTurn*> vector);
+    
+    int findCol(Wall wall, int patternLinesIndex, Tile tile);
+
+    AiTurn* sortScore(std::vector<AiTurn*>& list, int** adjacent, Wall wall);
+
+    void calculateAdjacent(int** adjacent, int row, int col);
+
+    int subtractScore(int* floorLineState, int floorLineLineMaxSize, int numTiles);
+
+    int addScore(int** adjacent, Wall wall , int row, Tile tile);
+
+    int calculateMove(int* patternLinesState, int** adjacent, int* floorLineState, int maxSize, 
+        Wall wall, int factoryIndex, Tile colour, int patternLinesIndex, int numTilesTaken);
 };
 
 #endif // HEURISTIC_H

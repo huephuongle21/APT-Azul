@@ -18,9 +18,9 @@ public:
 
     void setCenterTurnAndState(Vector* center, AbstractBoard* board);
 
-    void printTurn(); 
+//    void printTurn(); 
 
-    AiTurn* getTurn(Wall wall);
+    std::string getTurn(Wall wall);
 
     void updateGameState(Factory* factory);
 
@@ -36,9 +36,13 @@ public:
 
     void updateForLoadGame(AbstractBoard* board, Factory* factory, Vector* vector);
 
-    void printInvalidTurn();
+//    void printInvalidTurn();
 
     void setTurnByPatternLines(AbstractBoard* board);
+
+    void sortInvalidTurn();
+
+    void createPatternLinesConstraint();
 
 private:
 

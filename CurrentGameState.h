@@ -32,7 +32,7 @@ public:
 
     int getIndex(Tile tile);
 
-    void printTableState();
+//    void printTableState();
 
     void setFloorLine(Tile* floorLine, int floorLineLength);
 
@@ -51,6 +51,12 @@ public:
     int* getFloorLineState();
 
     int** getAdjacent();
+
+    int* getNumEachColor();
+
+    int* getNumEachColumn();
+
+    void updateFloorLine(int placeToFloor);
 
 private:
     int* floorLineState;

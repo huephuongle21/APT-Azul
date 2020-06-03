@@ -47,6 +47,7 @@ bool GameManager::startGame(bool isNewGame) {
         table->setupGame();
         if(isSingleMode) {
             am->updateGameState(table->getFactories());
+            am->createPatternLinesConstraint();
             am->generatePossibleTurn();
         }
     }
@@ -229,7 +230,7 @@ bool GameManager::commenceEndOfRound(Player* player) {
             }
         }
         board->clearFloorLine();
-        if(isSingleMode) {
+        if(isSingleMode && player->getID() == AIPLAYER_ID) {
             am->clearEndOfRound(board, false); 
         }
     } else {
@@ -269,11 +270,12 @@ bool GameManager::commenceTurn(Player* player) {
     bool isEOF = false;
 
     if(isSingleMode && player->getID() == AIPLAYER_ID) {
-        am->printTurn();
-        AiTurn* turn = am->getTurn(player->getBoard()->getWall());     
-        if(turn != nullptr) {
-            std::cout << turn->toString() << std::endl;
-            playerTurn(player, turn->toString());
+        std::string turn = am->getTurn(player->getBoard()->getWall());     
+        if(turn != NO_TURN) {
+            std::cout << turn << std::endl;
+            playerTurn(player, turn);
+        } else {
+            std::cout << "Skip turn" << "\n" << std::endl;
         }
     } else {   
         while(!isTurnFinished && getline(std::cin, input)) {
@@ -395,7 +397,7 @@ void GameManager::moveTilesToPatternLines(Player* player, int& factoryChoice,
 int GameManager::moveTilesFromFactory(int& factoryChoice, char& colourChoice, 
         int& patternLineChoice, AbstractBoard* board, LinkedList* boxLid, Tile* chosenFactory, 
         Tile** patternLines, Vector* center, int floorLineMaxSize) {
-    
+    int count = 0;
     int tilesPlaced = 0;
     takeTiles(factoryChoice, colourChoice);
     for(int i = 0; i != FACTORY_SIZE; ++i) {
@@ -409,6 +411,7 @@ int GameManager::moveTilesFromFactory(int& factoryChoice, char& colourChoice,
         } else if(tile == colourChoice && tilesPlaced < patternLineChoice) {
             if(patternLines[patternLineChoice - 1][tilesPlaced] != NO_TILE) {
                 while(patternLines[patternLineChoice - 1][tilesPlaced] != NO_TILE) {
+                    ++count;
                     ++tilesPlaced;
                 }
                 board->addPatternLines(patternLineChoice - 1, tilesPlaced, tile);
@@ -428,12 +431,13 @@ int GameManager::moveTilesFromFactory(int& factoryChoice, char& colourChoice,
             ++tilesPlaced;
         }
     } 
-    return tilesPlaced;
+    return tilesPlaced-count;
 }
 
 int GameManager::moveTilesFromCenter(LinkedList* boxLid, Tile** patternLines, Vector* center, 
         AbstractBoard* board, char& colourChoice, int& patternLineChoice, int floorLineMaxSize) {
     int tilesPlaced = 0;
+    int count = 0;
     for(unsigned int i = 0; i != center->size(); ++i) {
         Tile tile = center->get(i);
         if(tile == FIRST_PLAYER) {
@@ -454,6 +458,7 @@ int GameManager::moveTilesFromCenter(LinkedList* boxLid, Tile** patternLines, Ve
         } else if(tile == colourChoice && tilesPlaced < patternLineChoice) {
             if(patternLines[patternLineChoice - 1][tilesPlaced] != NO_TILE) {
                 while(patternLines[patternLineChoice - 1][tilesPlaced] != NO_TILE) {
+                    ++count;
                     ++tilesPlaced;
                 }
                 board->addPatternLines(patternLineChoice - 1, tilesPlaced, tile);
@@ -477,7 +482,7 @@ int GameManager::moveTilesFromCenter(LinkedList* boxLid, Tile** patternLines, Ve
             center->remove(i);
         }
     }
-    return tilesPlaced;
+    return tilesPlaced-count;
 }
 
 bool GameManager::promptForFactoryChoice(int& factoryChoice, char& colourChoice, int boardId) {

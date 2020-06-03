@@ -13,6 +13,8 @@ public:
 
     AiTurn(Tile tileChoice, int patternLinesChoice);
 
+    AiTurn(AiTurn& other);
+
     ~AiTurn();
 
     int getFactoryChoice() const;

@@ -20,7 +20,7 @@
 
 #define USER_PROMPT             "\u25BA"
 #define EMPTY_COLLECTION        '_'
-#define NO_SEED_CHOICE          "?"
+#define NO_TURN                 "?"
 #define BREAK_LINE              "-------------------"
 
 /* The file must contain that number of lines 

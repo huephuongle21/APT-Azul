@@ -32,10 +32,10 @@ int main(int argc, char** argv) {
     std::cout << C_BOLDBLUE << "Welcome to Azul!" << C_RESET << std::endl;
     std::cout << C_GREEN << BREAK_LINE << C_RESET << std::endl;
     printInstructions();
-    std::cout << '\n' <<C_GREEN << BREAK_LINE << C_RESET << "\n" << std::endl;
+    std::cout << '\n' << C_GREEN << BREAK_LINE << C_RESET << "\n" << std::endl;
     
     printMenu();
-    std::cout << "\n" <<C_LIGHTYELLOW << USER_PROMPT << C_RESET " ";
+    std::cout << C_LIGHTYELLOW << USER_PROMPT << C_RESET " ";
     bool isQuit = false;
     std::string input;
     

@@ -29,13 +29,14 @@ AiManager::~AiManager() {
 }
 
 bool AiManager::isValidTurn(Tile tile, int patternLinesChoice) {
-    bool valid = true;
+    bool valid = false;
     unsigned int size = invalidTurn.size();
     if(size != 0) {
         for(unsigned int i = 0; i != size; i++) {
             AiTurn* turn = invalidTurn.at(i);
-            if(turn->getTileChoice() == tile && turn->getPatternLinesChoice() == patternLinesChoice) {
-                valid = false;
+            if(turn->isValid() && turn->isPatternLinesValid() && turn->getTileChoice() == tile 
+                    && turn->getPatternLinesChoice() == patternLinesChoice) {
+                valid = true;
             }
         }
     }
@@ -43,7 +44,6 @@ bool AiManager::isValidTurn(Tile tile, int patternLinesChoice) {
 }
 
 void AiManager::generatePossibleTurn() {
-    printInvalidTurn();
     int** factory = cgs->getFactoryState();
 
     for(int i = 0; i != WALL_DIM; i++) {
@@ -52,7 +52,7 @@ void AiManager::generatePossibleTurn() {
             if(numTiles != 0) {
                 Tile tile = cgs->getTile(j);
                 for(int turnIndex = 0; turnIndex != (boardSize+1); turnIndex++) {
-                    if(isValidTurn(tile, turnIndex+1)) {
+                    if(isValidTurn(tile, turnIndex+1) || turnIndex == boardSize) {
                         AiTurn* turn = new AiTurn(i+1, tile, turnIndex+1, true, numTiles);
                         listTurn.push_back(turn);
                     }
@@ -63,13 +63,12 @@ void AiManager::generatePossibleTurn() {
     for(int i = 0; i != boardSize; i++) {
         Tile tile = cgs->getTile(i);
         for(int j = 0; j != (boardSize+1); j++) {
-            if(isValidTurn(tile, j+1)) {
+            if(isValidTurn(tile, j+1) || j == boardSize) {
                 AiTurn* turn = new AiTurn(0, tile, j+1, false, 0);
                 listTurn.push_back(turn);
             }
         }
     }
-    printTurn();
 }
 
 void AiManager::updateGameState(Factory* factory) { 
@@ -115,7 +114,6 @@ void AiManager::setTurnByPatternLines(AbstractBoard* board) {
 
 void AiManager::setCenterTurnAndState(Vector* center, AbstractBoard* board) {
     cgs->updateCenter(center);
-    cgs->printTableState();
     int* centerState = cgs->getCenterState();
     for(unsigned int i = startIndex; i != listTurn.size(); i++) {
         AiTurn* turn = listTurn.at(i);
@@ -136,16 +134,15 @@ void AiManager::setCenterTurnAndState(Vector* center, AbstractBoard* board) {
 
 void AiManager::updateByAiTurn(int& factoryChoice, int& patternLinesChoice, char& colourChoice, int numTilesTaken) {
     int availableTiles = cgs->updatePatternLines(patternLinesChoice, numTilesTaken);
-    for(unsigned int i = startIndex; i != listTurn.size(); i++) {
-        AiTurn* turn = listTurn.at(i);
-        if(turn->getPatternLinesChoice() == patternLinesChoice) {
-            Tile tile = turn->getTileChoice();
-            if(tile != colourChoice) {
-                turn->setValid(false);
-                turn->setPatternLines(false);
-            } else if(availableTiles == 0 && tile == colourChoice) {
-                turn->setValid(false);
-                turn->setPatternLines(false);
+    if(availableTiles != -1) {
+        for(unsigned int i = startIndex; i != listTurn.size(); i++) {
+            AiTurn* turn = listTurn.at(i);
+            if(turn->getPatternLinesChoice() == patternLinesChoice) {
+                Tile tile = turn->getTileChoice();
+                if((tile != colourChoice) || (availableTiles == 0 && tile == colourChoice)) {
+                    turn->setValid(false);
+                    turn->setPatternLines(false);
+                } 
             }
         }
     }
@@ -154,8 +151,28 @@ void AiManager::updateByAiTurn(int& factoryChoice, int& patternLinesChoice, char
 void AiManager::updateWall(int row, int col, Tile tile) { 
     cgs->addTileAfterRound(tile, row, col);
     cgs->setAdjacent(row, col);
-    AiTurn* turn = new AiTurn(tile, row+1);
-    invalidTurn.push_back(turn);
+    for(unsigned int i = 0; i != invalidTurn.size(); i++) {
+        AiTurn* turn = invalidTurn.at(i);
+        if(turn->getPatternLinesChoice() == row+1) {
+            Tile color = turn->getTileChoice();
+            if(color == tile) {
+                turn->setValid(false);
+                turn->setPatternLines(false);
+            } else if(color != tile && turn->isValid()) {
+                turn->setPatternLines(true);
+            }
+        }
+    }
+}
+
+void AiManager::createPatternLinesConstraint() {
+    for(int i = 0; i != boardSize; i++) {
+        Tile color = cgs->getTile(i);
+        for(int j = 0; j != boardSize; j++) {
+            AiTurn* turn = new AiTurn(color, j+1);
+            invalidTurn.push_back(turn);
+        }
+    }
 }
 
 void AiManager::clearEndOfRound(AbstractBoard* board, bool isLoadGame) {
@@ -168,44 +185,59 @@ void AiManager::clearEndOfRound(AbstractBoard* board, bool isLoadGame) {
     for(int i = 1; i != (boardSize+1); i++) {
         if(!board->isPatternLinesEmpty(i) && !board->isPatternLinesFilled(i-1)) {
             Tile tile = patternLines[i-1][0];
-            for(int j = 0; j != boardSize; j++) {
-                if(j != cgs->getIndex(tile)) {
-                    AiTurn* turn = new AiTurn(cgs->getTile(j), i);
-                    invalidTurn.push_back(turn);
+            for(unsigned int j = 0; j != invalidTurn.size(); j++) {
+                AiTurn* turn = invalidTurn.at(j);
+                if(turn->getPatternLinesChoice() == i) {
+                    if(turn->getTileChoice() == tile) {
+                        turn->setPatternLines(true);
+                    } else {
+                        turn->setPatternLines(false);
+                    }
                 }
+                
             }
         } else if(isLoadGame && board->isPatternLinesFilled(i-1)) {
-            AiTurn* turn = new AiTurn(patternLines[i-1][0], i);
-            invalidTurn.push_back(turn);
+            for(unsigned int j = 0; j != invalidTurn.size(); j++) {
+                AiTurn* turn = invalidTurn.at(j);
+                if(turn->getPatternLinesChoice() == i) {
+                    turn->setPatternLines(false);             
+                }               
+            }
         }
     }
 }
 
-void AiManager::printInvalidTurn() {
-    for(unsigned int i = 0; i != invalidTurn.size(); i++) {
-        std::cout << invalidTurn.at(i)->getTileChoice() << " " 
-            << invalidTurn.at(i)->getPatternLinesChoice() << std::endl;
-    }
-}
+// void AiManager::printInvalidTurn() {
+//     std::cout << "Print all invalid turn\n" << std::endl;
+//     for(unsigned int i = 0; i != invalidTurn.size(); i++) {
+//         AiTurn* turn = invalidTurn.at(i);
+//         if(!turn->isValid() || !turn->isPatternLinesValid()) {
+//             std::cout << invalidTurn.at(i)->getTileChoice() << " " 
+//                 << invalidTurn.at(i)->getPatternLinesChoice() << std::endl;
+//         }
+//     }
+// }
 
-void AiManager::printTurn() {
-    for(unsigned int i = startIndex; i != listTurn.size(); i++) {
-        if(listTurn.at(i)->isValid()) {
-            std::cout << listTurn.at(i)->toString() << " " 
-                << listTurn.at(i)->getNumTilesTaken() << " " << std::endl;
-        }
-    }
-}
+// void AiManager::printTurn() {
+//     for(unsigned int i = startIndex; i != listTurn.size(); i++) {
+//         if(listTurn.at(i)->isValid()) {
+//             std::cout << listTurn.at(i)->toString() << " " 
+//                 << listTurn.at(i)->getNumTilesTaken() << " " << std::endl;
+//         }
+//     }
+// }
 
-AiTurn* AiManager::getTurn(Wall wall) {
-    AiTurn* mTurn = heuristic->createPotentialTurn(cgs, wall, startIndex, listTurn);
+std::string AiManager::getTurn(Wall wall) {
+    std::string mTurn = heuristic->createPotentialTurn(cgs, wall, startIndex, listTurn);
     return mTurn;
 }
 
 void AiManager::updateForLoadGame(AbstractBoard* board, Factory* factory, Vector* vector) {
+    // test for load game still needed
     // Update pattern lines's state
     cgs->setPatternLines(board->getPatternLines());
     // Add invalid turn from pattern lines
+    createPatternLinesConstraint();
     clearEndOfRound(board, true);
     // Update wall and add invalid turn from wall
     Wall wall = board->getWall();
@@ -217,7 +249,6 @@ void AiManager::updateForLoadGame(AbstractBoard* board, Factory* factory, Vector
             }
         }
     }
-    // Create method to update floor line state
     cgs->setFloorLine(board->getFloorLine(), board->getFloorLineLength());
     updateGameState(factory);
     generatePossibleTurn();

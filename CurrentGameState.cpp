@@ -85,19 +85,29 @@ CurrentGameState::~CurrentGameState() {
 }
 
 int CurrentGameState::updatePatternLines(int& patternLinesChoice, int numTilesTaken) {
-    int availablePlaces = patternLinesState[patternLinesChoice-1];
-    if(availablePlaces >= numTilesTaken) {
-        patternLinesState[patternLinesChoice-1] = (availablePlaces-numTilesTaken);
+    int toReturn = -1;
+    if(patternLinesChoice-1 == boardSize) {
+        updateFloorLine(numTilesTaken);
     } else {
-        patternLinesState[patternLinesChoice-1] = 0;
-        int placeToFloor = numTilesTaken-availablePlaces;
-        for(int index = floorLineLength; index != (floorLineLength + placeToFloor); index++) {
-            if(index < FLOOR_LINE_SIZE) {
-                floorLineState[index] = 0;
-            }
+        int availablePlaces = patternLinesState[patternLinesChoice-1];
+        if(availablePlaces >= numTilesTaken) {
+            patternLinesState[patternLinesChoice-1] = (availablePlaces-numTilesTaken);
+        } else {
+            patternLinesState[patternLinesChoice-1] = 0;
+            int placeToFloor = numTilesTaken-availablePlaces;
+            updateFloorLine(placeToFloor);
+        }
+        toReturn = patternLinesState[patternLinesChoice-1];
+    }
+    return toReturn;
+}
+
+void CurrentGameState::updateFloorLine(int placeToFloor) {
+    for(int index = floorLineLength; index != (floorLineLength + placeToFloor); index++) {
+        if(index < FLOOR_LINE_SIZE) {
+            floorLineState[index] = 0;
         }
     }
-    return patternLinesState[patternLinesChoice-1];
 }
 
 Tile CurrentGameState::getTile(int index) {
@@ -156,15 +166,15 @@ void CurrentGameState::setFloorLine(Tile* floorLine, int floorLineLength) {
             floorLineState[i] = 0;
         }
     }
-    for(int i = 0; i != FLOOR_LINE_SIZE; i++) {
-        std::cout << floorLineState[i] << " ";
-    }
-    std::cout << std::endl;
+    // for(int i = 0; i != FLOOR_LINE_SIZE; i++) {
+    //     std::cout << floorLineState[i] << " ";
+    // }
+    // std::cout << std::endl;
 }
 
 void CurrentGameState::setPatternLines(Tile** patternLines) {
     int count = 0;
-    for(int i = 0; i != WALL_DIM; i++) {
+    for(int i = 0; i != boardSize; i++) {
         for(int j = 0; j != i+1; j++) {
             if(patternLines[i][j] != NO_TILE) {
                 count++;
@@ -173,6 +183,8 @@ void CurrentGameState::setPatternLines(Tile** patternLines) {
         patternLinesState[i] = i + 1 - count;
         count = 0;
     }
+    // std::cout << "After end of round" << std::endl;
+    // printTableState();
 }
 
 void CurrentGameState::resetTable(int boardSize) {
@@ -199,24 +211,24 @@ int* CurrentGameState::getCenterState() {
     return centerState;
 }
 
-void CurrentGameState::printTableState() {
-    std::cout << std::endl;
-    for(int i = 0; i != WALL_DIM; i++) {
-        for(int j = 0; j != boardSize; j++) {
-            std::cout << factoryState[i][j] << " ";
-        }
-        std::cout << std::endl;
-    }
-    std::cout << "\n" << std::endl;
-    for(int i = 0; i != boardSize; i++) {
-        std::cout << centerState[i] << " ";
-    }
-    std::cout << "\n" << std::endl;
-    for(int i = 0; i != boardSize; i++) {
-        std::cout << patternLinesState[i] << " ";
-    }
-    std::cout << "\n" << std::endl;
-}
+// void CurrentGameState::printTableState() {
+//     std::cout << std::endl;
+//     for(int i = 0; i != WALL_DIM; i++) {
+//         for(int j = 0; j != boardSize; j++) {
+//             std::cout << factoryState[i][j] << " ";
+//         }
+//         std::cout << std::endl;
+//     }
+//     std::cout << "\n" << std::endl;
+//     for(int i = 0; i != boardSize; i++) {
+//         std::cout << centerState[i] << " ";
+//     }
+//     std::cout << "\n" << std::endl;
+//     for(int i = 0; i != boardSize; i++) {
+//         std::cout << patternLinesState[i] << " ";
+//     }
+//     std::cout << "\n" << std::endl;
+// }
 
 void CurrentGameState::resetFactory(int& pos, char& colourChoice) {   
     for(int i = 0; i != boardSize; i++) {
@@ -258,4 +270,12 @@ int* CurrentGameState::getFloorLineState() {
 
 int** CurrentGameState::getAdjacent() {
     return adjacent;
+}
+
+int* CurrentGameState::getNumEachColor() {
+    return numEachColor;
+}
+
+int* CurrentGameState::getNumEachColumn() {
+    return numEachColumn;
 }
