@@ -167,6 +167,8 @@ bool startNewGame(int seed) {
         } else if(option == advanced6Tile) {
             boardId = ADVANCED_6TILE_BOARD;
             isQuit = true;
+        } else if(input == COMMAND_EXIST) {
+            isQuit = true;
         } else {
             std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET
                 << "  Invalid Input" << "\n" << std::endl;
@@ -178,13 +180,15 @@ bool startNewGame(int seed) {
 
     bool is2PlayerMode = true;
 
-    if(!std::cin.eof() && (boardId == REGULAR_BOARD || boardId == ADVANCED_6TILE_BOARD)) {
+    if(boardId != 0 && !std::cin.eof() && (boardId == REGULAR_BOARD || boardId == ADVANCED_6TILE_BOARD)) {
         std::cout << std::endl;
         std::cout << C_BLUE << U_MENU << C_RESET 
             << "  Choose a mode to play" << std::endl;
         std::cout << C_GREEN << BREAK_LINE << C_RESET << std::endl;
         std::cout << "1. Single-player mode" << std::endl;
-        std::cout << "2. Two-player mode" << "\n" << std::endl;
+        std::cout << "2. Two-player mode" << std::endl;
+        std::cout << "\n" << C_MAGENTA << U_KEYBOARD << C_RESET 
+            << "  Choose '1' or '2'" << "\n" << std::endl;
         std::cout << C_LIGHTYELLOW << USER_PROMPT << C_RESET << " ";
         bool isQuit = false;
         std::string input;
@@ -194,6 +198,9 @@ bool startNewGame(int seed) {
                 isQuit = true;
             } else if(input == "2") {
                 isQuit = true;
+            } else if(input == COMMAND_EXIST) {
+                isQuit = true;
+                boardId = 0;
             } else {
                 std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET 
                     << "  Invalid Input" << "\n" << std::endl;
@@ -204,7 +211,7 @@ bool startNewGame(int seed) {
         }
     }
 
-    if(!std::cin.eof()) {
+    if(boardId != 0 && !std::cin.eof()) {
         std::cout << "\n" << C_MAGENTA << U_KEYBOARD << C_RESET << "  Enter a name for player 1" 
             << "\n\n" << C_LIGHTYELLOW << USER_PROMPT << C_RESET " ";    
         std::string player1Name;

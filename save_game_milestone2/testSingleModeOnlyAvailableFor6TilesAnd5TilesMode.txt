@@ -4,26 +4,26 @@
 2
 
 # Tile Bag
-YLULBUYUYULRBYYRUYBB
+YRBRYLBUBYYBRYYBLUUYYRRUULLRBULBURLRRLUBYYBRRLBLLULULRBRLRBL
 
 # Box Lid
-BYBBBBYYYLLBRRRRYLLRRRUBBLLLLLUUUBBYRRL
+BBBYRRY
 
 # Factories
-BUYL
-URUU
 ....
-RBBU
-UYYL
+....
+....
+....
+....
 
 # Centre of Table
-FLL
+L
 
 # Seed for Program
-1591010837
+1591285050
 
 # Current Player's ID
-1
+2
 
 # --- Player 1 ---
 
@@ -31,54 +31,54 @@ FLL
 Alice
 
 # Score
-11
-
-# Player ID
-1
-
-# Pattern Lines
-.
-..
-UU.
-....
-R....
-
-# Wall
-.YR..
-L.Y..
-..B.R
-RU...
-...L.
-
-# Floor Line
-_
-
-# --- Player 2 ---
-
-# Name
-Genie
-
-# Score
-17
+3
 
 # Player ID
 3
 
 # Pattern Lines
-.
-UU
-...
-....
-.....
+R
+BB
+BB.
+UUU.
+YYYYY
 
 # Wall
-.YR..
-.BYR.
-.L..R
-....Y
-....B
+.....
+Y....
+R....
+.....
+.....
 
 # Floor Line
-_
+FYRR
+
+# --- Player 2 ---
+
+# Name
+Bob
+
+# Score
+1
+
+# Player ID
+2
+
+# Pattern Lines
+U
+LL
+...
+LLL.
+UUUUU
+
+# Wall
+.....
+Y....
+B....
+.....
+.....
+
+# Floor Line
+U
 
 # ---SAVE ENDS---

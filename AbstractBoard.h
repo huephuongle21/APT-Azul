@@ -16,7 +16,6 @@ class AbstractBoard {
 
     void addPatternLines(int row, int col, Tile value);
 
-    // Add tile to wall when load game from file
     void addWall(int row, int col, Tile value);
 
     int addWallForColorBoard(int& pos, Tile value);
@@ -37,7 +36,6 @@ class AbstractBoard {
 
     Tile removeFromPatternLines(int& pos);
 
-    // Clear floor line after each round
     void clearFloorLine();
 
     int getNumberOfRowsCompleted();

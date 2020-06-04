@@ -18,15 +18,14 @@ public:
 
     void setCenterTurnAndState(Vector* center, AbstractBoard* board);
 
-//    void printTurn(); 
-
     std::string getTurn(Wall wall);
 
     void updateGameState(Factory* factory);
 
     void clearEndOfRound(AbstractBoard* board, bool isLoadGame);
 
-    void updateByAiTurn(int& factoryChoice, int& patternLinesChoice, char& colourChoice, int numTilesTaken);
+    void updateByAiTurn(int& factoryChoice, int& patternLinesChoice, 
+        char& colourChoice, int numTilesTaken);
 
     void updateTurnByWall(Wall wall);
 
@@ -35,8 +34,6 @@ public:
     void updateWall(int row, int col, Tile tile);
 
     void updateForLoadGame(AbstractBoard* board, Factory* factory, Vector* vector);
-
-//    void printInvalidTurn();
 
     void setTurnByPatternLines(AbstractBoard* board);
 

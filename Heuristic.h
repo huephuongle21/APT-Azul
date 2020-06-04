@@ -11,13 +11,14 @@ class Heuristic {
 
     ~Heuristic();
 
-    std::string createPotentialTurn(CurrentGameState* cgs, Wall wall, int startIndex, std::vector<AiTurn*>& listTurn);
+    std::string createPotentialTurn(CurrentGameState* cgs, Wall wall, int startIndex, 
+        std::vector<AiTurn*>& listTurn);
 
     private:
 
     int boardSize;
 
-    bool needFill(int* patternLinesState, int patternLinesIndex, int numTilesTaken);
+    bool needFill(int* patternLinesState, int patternLinesIndex);
 
     bool isFullFill(CurrentGameState* cgs, Tile tile, Wall wall, int patternLinesIndex);
 
@@ -34,7 +35,10 @@ class Heuristic {
     int addScore(int** adjacent, Wall wall , int row, Tile tile);
 
     int calculateMove(int* patternLinesState, int** adjacent, int* floorLineState, int maxSize, 
-        Wall wall, int factoryIndex, Tile colour, int patternLinesIndex, int numTilesTaken);
+        Wall wall, Tile colour, int patternLinesIndex, int numTilesTaken);
+
+    AiTurn* chooseTurnFromFirstPriority(std::vector<AiTurn*>& firstPriority, 
+        int* floorLineState, int maxSize, int* patternLinesState);
 };
 
 #endif // HEURISTIC_H

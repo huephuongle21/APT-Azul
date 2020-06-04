@@ -32,8 +32,6 @@ public:
 
     int getIndex(Tile tile);
 
-//    void printTableState();
-
     void setFloorLine(Tile* floorLine, int floorLineLength);
 
     int** getFactoryState();

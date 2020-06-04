@@ -2,7 +2,8 @@
 
 RegularBoard::RegularBoard() :
     AbstractBoard(WALL_DIM, REGULAR_BOARD) {
-        char defaultWall[WALL_DIM][WALL_DIM] = {{W_DARK_BLUE, W_YELLOW, W_RED, W_BLACK, W_LIGHT_BLUE},
+        char defaultWall[WALL_DIM][WALL_DIM] = {
+            {W_DARK_BLUE, W_YELLOW, W_RED, W_BLACK, W_LIGHT_BLUE},
             {W_LIGHT_BLUE, W_DARK_BLUE, W_YELLOW, W_RED, W_BLACK},
             {W_BLACK, W_LIGHT_BLUE, W_DARK_BLUE, W_YELLOW, W_RED},
             {W_RED, W_BLACK, W_LIGHT_BLUE, W_DARK_BLUE, W_YELLOW},

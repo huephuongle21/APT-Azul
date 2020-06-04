@@ -7,7 +7,7 @@ void printGame(std::ostream& outStream, Table* table, int currentPlayerID,
 
     outStream << "# ---SAVE BEGINS---" << "\n" << std::endl;
 
-    outStream << "# Board Id" << "\n" << player1->getBoard()->getBoardId() << "\n" << std::endl;
+    outStream << "# Board Id" << "\n" << player1->getBoard()->getBoardId() << "\n\n";
 
     outStream << "# Tile Bag" << std::endl;
     printLinkedList(outStream, table->getTileBag());
@@ -21,7 +21,7 @@ void printGame(std::ostream& outStream, Table* table, int currentPlayerID,
     outStream << "\n" << "# Centre of Table" << std::endl;
     printCenterToFile(outStream, table->getCenter());
     
-    outStream << "\n" << "# Seed for Program" << "\n" << table->getSeedNumber() << "\n" << std::endl;
+    outStream << "\n" << "# Seed for Program" << "\n" << table->getSeedNumber() << "\n\n";
 
     outStream << "# Current Player's ID" << "\n" << currentPlayerID << "\n" << std::endl;
 
@@ -143,7 +143,6 @@ void printWall(std::ostream& outStream, Wall wall, int boardSize) {
 }
 
 void printFloorLine(std::ostream& outStream, Tile* floorLine, int length) {
-
     if(length == 0) {        
         outStream << EMPTY_COLLECTION;
     } else {
@@ -182,13 +181,11 @@ bool readGame(std::istream& inStream, Table* table, int* currentPlayerID,
     }
     if(read) {
         if(!isValidId(boardId)) {
-            std::cout << "Invalid 1" << std::endl;
             read = false;
         } else if(boardId == ADVANCED_6TILE_BOARD && size != NUM_LINES_6TILE_BOARD) {
-            std::cout << "Invalid 2" << std::endl;
             read = false;
-        } else if((boardId == REGULAR_BOARD || boardId == GREY_BOARD) && size != NUM_LINES_5TILE_BOARD) {
-            std::cout << "Invalid 3" << std::endl;
+        } else if((boardId == REGULAR_BOARD || boardId == GREY_BOARD) 
+                && size != NUM_LINES_5TILE_BOARD) {
             read = false;
         } else {
             while(index != size && read) {
@@ -198,7 +195,6 @@ bool readGame(std::istream& inStream, Table* table, int* currentPlayerID,
                 LinkedList* boxLid = table->getBoxLid();
                 readLinkedList(boxLid, lines[++index]);
                 if(tileBag->size() == 0 && boxLid->size() == 0) {
-                    std::cout << "Invalid 4" << std::endl;
                     read = false;
                 }
                 if(read) {
@@ -212,36 +208,28 @@ bool readGame(std::istream& inStream, Table* table, int* currentPlayerID,
                     try {
                         table->setSeedNumber(std::stoi(lines[++index]));
                     } catch (const std::invalid_argument&) {
-                        std::cout << "Invalid 5" << std::endl;
                         read = false;
                     } catch (const std::out_of_range&) {
-                        std::cout << "Invalid 6" << std::endl;
                         read = false;
                     }
                     if(read) {
                         try {
                             *currentPlayerID = std::stoi(lines[++index]);
                             if(!isValidId(*currentPlayerID)) {
-                                std::cout << "Invalid 7" << std::endl;
                                 read = false;
                             }
                         } catch (const std::invalid_argument&) {
-                            std::cout << "Invalid 8" << std::endl;
                             read = false;
                         } catch (const std::out_of_range&) {
-                            std::cout << "Invalid 9" << std::endl;
                             read = false;
                         }   
                         if(read) {
                             read = readPlayer(player1, lines, &index, boardId);
-                            // if grey board and playerId = 3 => false
                             if(read) {
-                                std::cout << "Invalid 10" << std::endl;
                                 read = readPlayer(player2, lines, &index, boardId);
                                 index++;
                             }
-                            if(player1->getID() == player2->getID()) {
-                                std::cout << "Invalid 11" << std::endl;
+                            if(read && player1->getID() == player2->getID()) {
                                 read = false;
                             }
                         }
@@ -298,8 +286,10 @@ bool readPlayer(Player* player, std::vector<std::string>& lines, int* i, int boa
     }
     if(read) {
         try {
-            int id = std::stoi(lines[++(*i)]);  
+            int id = std::stoi(lines[++(*i)]); 
             if(!isValidId(id)) {
+                read = false;
+            } else if(id == AIPLAYER_ID && boardId == GREY_BOARD) {
                 read = false;
             } else {
                 player->setId(id);
@@ -309,8 +299,10 @@ bool readPlayer(Player* player, std::vector<std::string>& lines, int* i, int boa
         } catch (const std::out_of_range&) {
             read = false;
         }
-        player->createBoard(boardId);
-        readBoard(lines, i, player->getBoard());
+        if(read) {
+            player->createBoard(boardId);
+            readBoard(lines, i, player->getBoard());
+        }
     }
     return read;
 }
@@ -354,7 +346,8 @@ void readBoard(std::vector<std::string>& lines, int* i, AbstractBoard* board) {
     *i = index;
 }
 
-void printBoard(std::ostream& outStream, std::string playerName, Wall wall, Tile** patternLines, Tile* floorLine, int length, int boardSize) {
+void printBoard(std::ostream& outStream, std::string playerName, Wall wall, 
+        Tile** patternLines, Tile* floorLine, int length, int boardSize) {
     std::cout << "Mosaic for " << playerName << ":" << "\n" << std::endl;
     for(int row = 0; row != boardSize; row++) {
         std::cout << (row+1) << ": ";
@@ -412,12 +405,9 @@ std::string colour(char tile) {
 }
 
 void printInstructions() {
-
     std::string instructionsPath = "azul_guide.txt";
-
     std::ifstream ifs(instructionsPath);
-    std::string line;
-    
+    std::string line;    
     while(getline(ifs, line)) {
         if(line[0] == '=') {
             std::cout << C_LIGHTYELLOW << line << C_RESET << '\n';

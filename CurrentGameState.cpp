@@ -166,10 +166,6 @@ void CurrentGameState::setFloorLine(Tile* floorLine, int floorLineLength) {
             floorLineState[i] = 0;
         }
     }
-    // for(int i = 0; i != FLOOR_LINE_SIZE; i++) {
-    //     std::cout << floorLineState[i] << " ";
-    // }
-    // std::cout << std::endl;
 }
 
 void CurrentGameState::setPatternLines(Tile** patternLines) {
@@ -183,8 +179,6 @@ void CurrentGameState::setPatternLines(Tile** patternLines) {
         patternLinesState[i] = i + 1 - count;
         count = 0;
     }
-    // std::cout << "After end of round" << std::endl;
-    // printTableState();
 }
 
 void CurrentGameState::resetTable(int boardSize) {
@@ -210,25 +204,6 @@ void CurrentGameState::updateFactory(Tile* factory, int& pos) {
 int* CurrentGameState::getCenterState() {
     return centerState;
 }
-
-// void CurrentGameState::printTableState() {
-//     std::cout << std::endl;
-//     for(int i = 0; i != WALL_DIM; i++) {
-//         for(int j = 0; j != boardSize; j++) {
-//             std::cout << factoryState[i][j] << " ";
-//         }
-//         std::cout << std::endl;
-//     }
-//     std::cout << "\n" << std::endl;
-//     for(int i = 0; i != boardSize; i++) {
-//         std::cout << centerState[i] << " ";
-//     }
-//     std::cout << "\n" << std::endl;
-//     for(int i = 0; i != boardSize; i++) {
-//         std::cout << patternLinesState[i] << " ";
-//     }
-//     std::cout << "\n" << std::endl;
-// }
 
 void CurrentGameState::resetFactory(int& pos, char& colourChoice) {   
     for(int i = 0; i != boardSize; i++) {

@@ -18,7 +18,8 @@ class GameManager {
     GameManager();
 
     // Constructor to start new game
-    GameManager(std::string player1Name, std::string player2Name, int seed, int boardId, bool isSingleMode);
+    GameManager(std::string player1Name, std::string player2Name, int seed, 
+            int boardId, bool isSingleMode);
 
     ~GameManager();
 

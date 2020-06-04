@@ -19,8 +19,6 @@ public:
 
    void remove(unsigned int index);
 
-   void removeByName(Tile tile);
-
    void clear();
 
 private:

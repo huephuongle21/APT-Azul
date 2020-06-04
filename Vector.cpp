@@ -45,17 +45,3 @@ void Vector::remove(unsigned int index) {
 void Vector::clear() {
    tileVector.clear();
 }
-
-void Vector::removeByName(Tile tile) {
-   unsigned int size = tileVector.size();
-   if(size > 0) {
-         for(unsigned int index = 0; index != size; index++) {
-            if(get(index) == tile) {
-               for (unsigned int i = index; i < size - 1; ++i) {
-               tileVector[i] = tileVector[i + 1];
-               }
-               tileVector.pop_back();
-            }
-         }
-      }
-}

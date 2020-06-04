@@ -34,7 +34,8 @@ int ScoreCalculator::calculateScoreEachRound(Player* player, int& addScore) {
     return score;
 }
 
-int ScoreCalculator::calculateScoreFromWall(Wall wall, int& colPos, int& rowPos, int boardSize) {
+int ScoreCalculator::calculateScoreFromWall(Wall wall, int& colPos, 
+        int& rowPos, int boardSize) {
     int score = 0;
     int countRow = 0;
     int countCol = 0;

@@ -208,25 +208,17 @@ int AbstractBoard::getFloorLineMaxSize() {
 bool AbstractBoard::isWallPositionFilled(int row, int col, Tile tile) {
     bool isFilled = false;
     if(wall[row][col] == NO_TILE) {
-        for(int wRow = 0; wRow != boardSize; wRow++) {
-            if(wall[wRow][col] == tile && wRow != row) {
+        for(int index = 0; index != boardSize; index++) {
+            if((wall[index][col] == tile && index != row)
+                    || (wall[row][index] == tile && index != col)) {
                 std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET
-                    << "  The row or column already has this tile colour" << "\n" << std::endl;
+                    << "  The row or column already has this tile colour" << "\n\n";
                 isFilled = true;
-            }
-        }
-        if(!isFilled) {
-            for(int wCol = 0; wCol != boardSize; wCol ++) {
-                if(wall[row][wCol] == tile && wCol != col) {
-                    std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET 
-                        << "  The row or column already has this tile colour" << "\n" << std::endl;
-                    isFilled = true;
-                }
             }
         }
     } else {
         std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET 
-            << "  This position already has a corresponding tile" << "\n" << std::endl;
+            << "  This position already has a corresponding tile" << "\n\n";
         isFilled = true;
     }
     return isFilled;

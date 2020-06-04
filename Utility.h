@@ -45,8 +45,8 @@ bool readPlayer(Player* player, std::vector<std::string>& lines, int* index, int
 void readBoard(std::vector<std::string>& lines, int* index, AbstractBoard* board);
 
 // Print board during the game
-void printBoard(std::ostream& outStream, std::string playerName, Wall wall, Tile** patternLines, 
-        Tile* floorLine, int length, int boardSize);
+void printBoard(std::ostream& outStream, std::string playerName, Wall wall,
+        Tile** patternLines, Tile* floorLine, int length, int boardSize);
 
 std::string colour(char tile);
 

@@ -58,7 +58,7 @@ so that the game can be considered valid */
 #define C_REDORANGE    "\u001b[38;5;9m"     /* Red orange */
 #define C_ERRORMESSAGE "\u001b[38;5;161m"   /* Colour for error message */
 #define C_GREY         "\u001b[38;5;243m"   /* Grey */
-#define C_BOLDBLUE    "\033[1m\033[34m"      /* Bold Blue */
+#define C_BOLDBLUE     "\033[1m\033[34m"    /* Bold Blue */
 
 #define U_MENU            "\u2630"
 #define U_CORRECT_TICK    "\u2714"

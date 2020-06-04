@@ -9,7 +9,7 @@
 GameManager::GameManager() {
     this->player1 = new Player();
     this->player2 = new Player();
-    currentPlayerID = 0;
+    this->currentPlayerID = 0;
     this->table = new Table(0,0);
     this->calculator = new ScoreCalculator();
     this->roundCount = 1;
@@ -40,6 +40,8 @@ GameManager::~GameManager() {
     delete calculator;
     delete player2;
     delete am;
+    currentPlayerID = 0;
+    roundCount = 0;
 }
 
 bool GameManager::startGame(bool isNewGame) {
@@ -97,8 +99,8 @@ bool GameManager::loadGame(std::string loadPath) {
     inFile.open(loadPath);
 
     if(inFile.fail()) {
-        std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET 
-            << "  File does not exist!" << "\n\n" << C_LIGHTYELLOW << USER_PROMPT << C_RESET " ";
+        std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET  << "  File does not exist!" 
+            << "\n\n" << C_LIGHTYELLOW << USER_PROMPT << C_RESET " ";
         isLoaded = false;
     } else {
         if(readGame(inFile, table, &currentPlayerID, player1, player2)) {
@@ -271,9 +273,8 @@ bool GameManager::commenceTurn(Player* player) {
 
     if(isSingleMode && player->getID() == AIPLAYER_ID) {
         std::string turn = am->getTurn(player->getBoard()->getWall());     
-        if(turn != NO_TURN) {
+        if(turn != NO_TURN && playerTurn(player, turn)) {
             std::cout << turn << std::endl;
-            playerTurn(player, turn);
         } else {
             std::cout << "Skip turn" << "\n" << std::endl;
         }
@@ -382,8 +383,8 @@ void GameManager::moveTilesToPatternLines(Player* player, int& factoryChoice,
             am->setCenterTurnAndState(center, getPlayer(AIPLAYER_ID)->getBoard());
         }
     } else {
-        tilesTaken = moveTilesFromFactory(factoryChoice, colourChoice, patternLineChoice, board, boxLid, 
-            chosenFactory, patternLines, center, floorLineMaxSize);
+        tilesTaken = moveTilesFromFactory(factoryChoice, colourChoice, patternLineChoice, 
+            board, boxLid, chosenFactory, patternLines, center, floorLineMaxSize);
             if(isSingleMode) {
                 am->updateByTurnFromFactory(center, factoryChoice, colourChoice);
             }
@@ -507,11 +508,11 @@ bool GameManager::promptForColourChoice(char& colourChoice, int boardId) {
             && colourChoice != LIGHT_BLUE && colourChoice != BLACK) {
         if(boardId == REGULAR_BOARD || boardId == GREY_BOARD) {
             std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET 
-                << "  Invalid choice of colour. Should be 'R', 'Y', 'B', 'L' or 'B'" << "\n" << std::endl;
+                << "  Invalid choice of colour. Pick 'R', 'Y', 'B', 'L' or 'B'" << "\n\n";
             isValid = false;
         } else if(boardId == ADVANCED_6TILE_BOARD && colourChoice != ORANGE) {
             std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET 
-                << "  Invalid choice of colour. Should be 'R', 'Y', 'B', 'L', 'B' or 'O'" << "\n" << std::endl;
+                << "  Invalid choice of colour. Pick 'R', 'Y', 'B', 'L', 'B' or 'O'" << "\n\n";
             isValid = false;
         }
     }
@@ -531,7 +532,7 @@ bool GameManager::promptForPatternLineChoice(Player* player, int& patternLineCho
         }
     } else {
         std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET 
-            << "  Pattern lines choice varies from 1 to " << (boardSize+1) << "\n" << std::endl;
+            << "  Pattern lines choice varies from 1 to " << (boardSize+1) << "\n\n";
         isValid = false;
     }
     return isValid;
@@ -604,7 +605,7 @@ int GameManager::moveTilesFromPatternLines(Player* player) {
                             }
                             score += calculator->calculateScoreFromWall(board->getWall(), 
                                 colPos, index, boardSize);
-                            if(isSingleMode && player->getID() == AIPLAYER_ID) { //
+                            if(isSingleMode && player->getID() == AIPLAYER_ID) { 
                                 am->updateWall(index, colPos, tile);
                             }
                         }
@@ -613,7 +614,7 @@ int GameManager::moveTilesFromPatternLines(Player* player) {
                     index = (boardSize-1);
                 }
             }
-            if(index == (boardSize-1)) {
+            if(index == boardSize-1) {
                 finished = true;
             }
         }
@@ -628,7 +629,7 @@ int GameManager::userPromptForWall(AbstractBoard* board, int index, Tile tile) {
     std::cout << "\n" << "Pick a position where you want to move the tile " << colour(tile) 
         << tile << C_RESET << " at pattern lines " << (index+1) << std::endl;
     std::cout << "\n" << C_MAGENTA << U_KEYBOARD << C_RESET 
-        << "  Enter a number from 1 to 5" << "\n" << std::endl;
+        << "  Enter a number from 1 to 5 (Cannot save game during this stage)" << "\n\n";
     std::cout << C_LIGHTYELLOW << USER_PROMPT << C_RESET << " ";
     std::string input;
     bool isTurnFinished = false;
@@ -640,11 +641,11 @@ int GameManager::userPromptForWall(AbstractBoard* board, int index, Tile tile) {
             isTurnFinished = true;
             isEOF = true;
         } else if(input == COMMAND_HELP) {
-            std::cout << "\n" << U_TIPS << "  Enter from 1 to 5. Choose a empty position that " 
-                << "does not have that colour in a corresponding row and column" << "\n" << std::endl;
+            std::cout << "\n" << U_TIPS << "  Enter from 1 to 5. Choose a empty position that" 
+                << " does not have that colour in a corresponding row and column" << "\n\n";
         } else if(input.empty()) {
-            std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET << "  Please enter a number"
-                << "\n" << std::endl;
+            std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET 
+                << "  Please enter a number" << "\n" << std::endl;
         } else {
             try {
                 colPos = std::stoi(input);
@@ -673,7 +674,7 @@ int GameManager::userPromptForWall(AbstractBoard* board, int index, Tile tile) {
         isEOF = true;
     }
     if(isEOF) {
-        colPos = -1;
+        colPos = 0;
     } 
     return colPos;
 }
@@ -693,7 +694,7 @@ void GameManager::showWinner() {
         winner = player2;
     } 
     if(winner != nullptr) {
-        std::cout << U_TROPHY << " Player " << winner->getName() << " wins!" << "\n" << std::endl;
+        std::cout << U_TROPHY << " Player " << winner->getName() << " wins!" << "\n\n";
     } else {
         std::cout << U_TROPHY << " Victory is shared for " << player1->getName() << " and " 
             << player2->getName() << "!" << "\n" << std::endl;
