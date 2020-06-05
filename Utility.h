@@ -18,7 +18,7 @@ void printFactoryToFile(std::ostream& outStream, Factory* factories);
 
 void printCenterToFile(std::ostream& outStream, Vector* vector);
 
-void printCenter(std::ostream& outStream, Vector* vector);
+void printCenter(std::ostream& outStream, Vector* vectord);
 
 void printPlayer(std::ostream& outStream, Player* player);
 
@@ -34,15 +34,15 @@ void printFloorLine(std::ostream& outStream, Tile* floorLine, int length);
 bool readGame(std::istream& inStream, Table* table, int* currentPlayerID,
         Player* player1, Player* player2);
 
-void readLinkedList(LinkedList* list, std::string line);
+bool readLinkedList(LinkedList* list, std::string line, int boardId);
 
-void readFactory(Factory factory, std::string line);
+bool readFactory(Factory factory, std::string line, int boardId);
 
-void readCenter(Vector* centerOfTable, std::string line);
+bool readCenter(Vector* centerOfTable, std::string line, int boardId);
 
 bool readPlayer(Player* player, std::vector<std::string>& lines, int* index, int boardId);
 
-void readBoard(std::vector<std::string>& lines, int* index, AbstractBoard* board);
+bool readBoard(std::vector<std::string>& lines, int* index, AbstractBoard* board);
 
 // Print board during the game
 void printBoard(std::ostream& outStream, std::string playerName, Wall wall,
@@ -55,5 +55,7 @@ void printInstructions();
 bool isValidId(int id);
 
 void printValidCommand();
+
+bool isTileValid(int boardId, Tile tile);
 
 #endif // UTILITY_H

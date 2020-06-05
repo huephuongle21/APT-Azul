@@ -504,18 +504,17 @@ bool GameManager::promptForFactoryChoice(int& factoryChoice, char& colourChoice,
     
 bool GameManager::promptForColourChoice(char& colourChoice, int boardId) {
     bool isValid = true;
-    if(colourChoice != RED && colourChoice != YELLOW && colourChoice != DARK_BLUE     
-            && colourChoice != LIGHT_BLUE && colourChoice != BLACK) {
-        if(boardId == REGULAR_BOARD || boardId == GREY_BOARD) {
-            std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET 
-                << "  Invalid choice of colour. Pick 'R', 'Y', 'B', 'L' or 'B'" << "\n\n";
-            isValid = false;
-        } else if(boardId == ADVANCED_6TILE_BOARD && colourChoice != ORANGE) {
+    if(!isTileValid(boardId, colourChoice)) {
+        if(boardId == ADVANCED_6TILE_BOARD) {
             std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET 
                 << "  Invalid choice of colour. Pick 'R', 'Y', 'B', 'L', 'B' or 'O'" << "\n\n";
             isValid = false;
+        } else {
+            std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET 
+                << "  Invalid choice of colour. Pick 'R', 'Y', 'B', 'L' or 'B'" << "\n\n";
+            isValid = false;
         }
-    }
+    } 
     return isValid;
 }
 

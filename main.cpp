@@ -263,8 +263,8 @@ bool loadGameFromFile() {
     bool valid = false;
     while(!std::cin.eof() && !valid) {
         if(filename.empty()) {
-            std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET 
-                << "  Please enter file name" << "\n\n" << C_LIGHTYELLOW << USER_PROMPT << C_RESET " ";
+            std::cout << "\n" << C_RED << U_INCORRECT_TICK << C_RESET << "  Please enter file name" 
+                << "\n\n" << C_LIGHTYELLOW << USER_PROMPT << C_RESET " ";
             getline(std::cin, filename);
         } else if (gm->loadGame(filename)) {
             valid = true;

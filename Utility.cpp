@@ -190,27 +190,33 @@ bool readGame(std::istream& inStream, Table* table, int* currentPlayerID,
         } else {
             while(index != size && read) {
                 LinkedList* tileBag = table->getTileBag();
-                readLinkedList(tileBag, lines[++index]);
-
                 LinkedList* boxLid = table->getBoxLid();
-                readLinkedList(boxLid, lines[++index]);
-                if(tileBag->size() == 0 && boxLid->size() == 0) {
-                    read = false;
+                read = readLinkedList(tileBag, lines[++index], boardId);
+
+                if(read) {
+                    read = readLinkedList(boxLid, lines[++index], boardId);
+                    if(read && tileBag->size() == 0 && boxLid->size() == 0) {
+                        read = false;
+                    }
                 }
                 if(read) {
                     Factory* factory = table->getFactories();
-                    for(int i = 0; i != WALL_DIM; i++) {
-                        readFactory(factory[i], lines[++index]);
+                    int i = 0;
+                    while (read && i < WALL_DIM) {
+                        read = readFactory(factory[i], lines[++index], boardId);
+                        i++;
                     }
-
-                    readCenter(table->getCenter(), lines[++index]);
-
-                    try {
-                        table->setSeedNumber(std::stoi(lines[++index]));
-                    } catch (const std::invalid_argument&) {
-                        read = false;
-                    } catch (const std::out_of_range&) {
-                        read = false;
+                    if(read) {
+                        read = readCenter(table->getCenter(), lines[++index], boardId);
+                    }
+                    if(read) {
+                        try {
+                            table->setSeedNumber(std::stoi(lines[++index]));
+                        } catch (const std::invalid_argument&) {
+                            read = false;
+                        } catch (const std::out_of_range&) {
+                            read = false;
+                        }
                     }
                     if(read) {
                         try {
@@ -241,37 +247,60 @@ bool readGame(std::istream& inStream, Table* table, int* currentPlayerID,
     return read;
 }
 
-void readLinkedList(LinkedList* list, std::string line) {
+bool readLinkedList(LinkedList* list, std::string line, int boardId) {
+    list->clear();
     int size = line.length();
+    bool valid = true;
     if(line[0] != EMPTY_COLLECTION) {
         for(int i = 0; i != size; i++) {
-            list->addBack(line[i]);  
+            Tile tile = line[i];
+            if(isTileValid(boardId, tile)) {
+                list->addBack(tile); 
+            } else if(tile != NO_TILE) {
+                valid = false;
+            }
         }
     }
+    return valid;
 }
 
-void readFactory(Factory factory, std::string line) {    
+bool readFactory(Factory factory, std::string line, int boardId) {    
     int size = line.length();
+    bool valid = true;
     // If tile data exists, read it.
     if(line[0] != EMPTY_COLLECTION) {        
         for(int i = 0; i  != size; i++) {
-            factory[i] = line[i];
+            Tile tile = line[i];
+            if(isTileValid(boardId, tile) || tile == NO_TILE) {
+                factory[i] = line[i];
+            } else {
+                valid = false;
+            }
         }
     } else {
         // If no tile data exists, populate factories with NO_TILE char.
         for (int i = 0; i != FACTORY_SIZE; i++) {
             factory[i] = NO_TILE;
         }
-    }   
+    }  
+    return valid; 
 }
 
-void readCenter(Vector* centerOfTable, std::string line) {
+bool readCenter(Vector* centerOfTable, std::string line, int boardId) {
+    centerOfTable->clear();
     int size = line.length();
+    bool valid = true;
     if(line[0] != EMPTY_COLLECTION) {
         for(int i = 0; i != size; i++) {
-            centerOfTable->add(line[i]);  
+            Tile tile = line[i];
+            if(isTileValid(boardId, tile) || tile == FIRST_PLAYER) {
+                centerOfTable->add(tile);  
+            } else if(tile != NO_TILE) {
+                valid = false;
+            }
         }
     }
+    return valid;
 }
 
 bool readPlayer(Player* player, std::vector<std::string>& lines, int* i, int boardId) {
@@ -300,50 +329,67 @@ bool readPlayer(Player* player, std::vector<std::string>& lines, int* i, int boa
             read = false;
         }
         if(read) {
+            delete player->getBoard();
             player->createBoard(boardId);
-            readBoard(lines, i, player->getBoard());
+            read = readBoard(lines, i, player->getBoard());
         }
     }
     return read;
 }
 
-void readBoard(std::vector<std::string>& lines, int* i, AbstractBoard* board) {
+bool readBoard(std::vector<std::string>& lines, int* i, AbstractBoard* board) {
 
     int boardSize = board->getBoardSize();
-
+    int boardId = board->getBoardId();
     int index = *i;
+    bool valid = true;
 
     for(int row = 0; row != boardSize; row++) {
         int size = lines[++index].length();
         for(int col = 0; col != size; col++) {
 
             if (lines[index][col] != EMPTY_COLLECTION) {
-                board->addPatternLines(row, col, lines[index][col]);
-            } else {
-                board->addPatternLines(row, col, NO_TILE);
+                Tile tile = lines[index][col];
+                if(isTileValid(boardId, tile)) {
+                    board->addPatternLines(row, col, tile);
+                } else if(tile == NO_TILE) {
+                    board->addPatternLines(row, col, NO_TILE);
+                } else {
+                    valid = false;
+                }
             }
-
         }
     }
-
-    for(int row = 0; row != boardSize; row++) {
+    if(valid) {
+        for(int row = 0; row != boardSize; row++) {
+            int size = lines[++index].length();
+            for(int col = 0; col != size; col++) {
+                char tile = lines[index][col];
+                if(isTileValid(boardId, tile)) {
+                    board->addWall(row, col, tile);
+                } else if(tile != NO_TILE) {
+                    valid = false;
+                }
+            }
+        }
+    }
+    if(valid) {
+        board->clearFloorLine();
         int size = lines[++index].length();
-        for(int col = 0; col != size; col++) {
-            char tile = lines[index][col];
-            if(tile >= 'A' && tile <= 'Z') {
-                board->addWall(row, col, tile);
+        if(lines[index][0] != EMPTY_COLLECTION) {
+            for(int pos = 0; pos != size; pos++) {
+                Tile tile = lines[index][pos];
+                if(isTileValid(boardId, tile) || tile == FIRST_PLAYER) {
+                    board->addFloorLine(tile);
+                } else if(tile != NO_TILE) {
+                    valid = false;
+                }
             }
-        }
-    }
-    
-    int size = lines[++index].length();
-    if(lines[index][0] != EMPTY_COLLECTION) {
-        for(int pos = 0; pos != size; pos++) {
-            board->addFloorLine(lines[index][pos]);
         }
     }
 
     *i = index;
+    return valid;
 }
 
 void printBoard(std::ostream& outStream, std::string playerName, Wall wall, 
@@ -429,4 +475,17 @@ void printValidCommand() {
     std::cout << "\n" << U_TIPS << " Valid command:" << "\n";
     std::cout << TURN << "\n" << SAVE << "\n" << COMMAND_HELP << "\n" 
         << COMMAND_EXIST << std::endl;
+}
+
+bool isTileValid(int boardId, Tile tile) {
+    bool isValid = true;
+    if(tile != RED && tile != YELLOW && tile != DARK_BLUE     
+            && tile != LIGHT_BLUE && tile != BLACK) {
+        if(boardId == REGULAR_BOARD || boardId == GREY_BOARD) {
+            isValid = false;
+        } else if(boardId == ADVANCED_6TILE_BOARD && tile != ORANGE) {
+            isValid = false;
+        }
+    }
+    return isValid;
 }
