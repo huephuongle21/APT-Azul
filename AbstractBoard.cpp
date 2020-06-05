@@ -148,8 +148,10 @@ Tile AbstractBoard::removeFromPatternLines(int& pos) {
 }
 
 void AbstractBoard::clearFloorLine() {
-    for(int i = 0; i != floorLineLength; i++) {
-        floorLine[i] = NO_TILE;
+    if(floorLineLength > 0) {
+        for(int i = 0; i != floorLineLength; i++) {
+            floorLine[i] = NO_TILE;
+        }
     }
     floorLineLength = 0;
 }
