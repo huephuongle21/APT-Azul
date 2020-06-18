@@ -1,4 +1,3 @@
 # Azul_apt
 
-22/04/20
-Separated out the StudentCredit, created Makefile.
+A console-based Azul game for 2 players
