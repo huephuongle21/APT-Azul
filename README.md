@@ -1,3 +1,3 @@
-# Azul_apt
+# Azul
 
 A console-based Azul game for 2 players
